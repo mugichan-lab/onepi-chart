@@ -165,9 +165,13 @@ th{background:#f6f2ea;color:var(--sub);font-weight:500;font-size:12px}
 header{box-shadow:none}
 header::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:3px;background:repeating-linear-gradient(90deg,var(--gold) 0 40px,#f3d98f 40px 60px,var(--red) 60px 80px,var(--gold) 80px 100px);background-size:200px 3px;animation:stripe 6s linear infinite}
 .logo .mk{animation:bob 3.2s ease-in-out infinite}
-nav.top a{position:relative;transition:background .2s,opacity .2s}
-nav.top a::after{content:"";position:absolute;left:12px;right:12px;bottom:3px;height:2px;border-radius:2px;background:var(--gold);transform:scaleX(0);transition:transform .25s}
-nav.top a.on::after,nav.top a:hover::after{transform:scaleX(1)}
+nav.top{position:relative;padding:3px;border-radius:999px;background:rgba(255,255,255,.07)}
+nav.top a{position:relative;z-index:1;border-radius:999px;transition:color .25s,opacity .25s;opacity:.75}
+nav.top a.on,nav.top a:hover{background:none!important;opacity:1}
+nav.top a.on{color:var(--navy)}
+nav.top .pill{position:absolute;z-index:0;top:3px;bottom:3px;left:0;width:0;border-radius:999px;background:linear-gradient(135deg,#f6dd97,var(--gold));box-shadow:0 2px 10px rgba(212,162,55,.45);transition:transform .45s cubic-bezier(.34,1.56,.64,1),width .45s cubic-bezier(.34,1.56,.64,1),opacity .2s;pointer-events:none}
+nav.top.hov a.on:not(:hover){color:#fff}
+nav.top.hov a:hover{color:var(--navy)}
 nav.bottom a.on .ic{animation:popIn .35s ease}
 #app.anim>*{animation:fadeUp .45s cubic-bezier(.2,.8,.2,1) both}
 #app.anim>*:nth-child(2){animation-delay:.05s}#app.anim>*:nth-child(3){animation-delay:.1s}#app.anim>*:nth-child(4){animation-delay:.15s}#app.anim>*:nth-child(5){animation-delay:.2s}#app.anim>*:nth-child(n+6){animation-delay:.25s}
@@ -420,9 +424,18 @@ function statusNote(){
 }
 const NAV=[["home","ホーム","⌂"],["cards","カード一覧","☰"],["index","指数","📈"],["compare","比較","⚖"],["mylist","マイリスト","♡"],["box","BOX相場","▣"],["psa","PSA10","★"]];
 function navs(active){
-  document.getElementById("ntop").innerHTML=NAV.map(([k,l])=>`<a href="#${k}" class="${k===active?"on":""}">${l}</a>`).join("");
+  const nt=document.getElementById("ntop");
+  if(!nt.querySelector(".pill")){nt.innerHTML=`<span class="pill"></span>`+NAV.map(([k,l])=>`<a href="#${k}" data-k="${k}">${l}</a>`).join("");
+    nt.querySelectorAll("a").forEach(a=>{a.onmouseenter=()=>{nt.classList.add("hov");movePill(a)};});
+    nt.onmouseleave=()=>{nt.classList.remove("hov");movePill(nt.querySelector("a.on"))};
+    window.addEventListener("resize",()=>movePill(nt.querySelector("a.on")));
+    (document.fonts?document.fonts.ready:Promise.resolve()).then(()=>movePill(nt.querySelector("a.on")));}
+  nt.querySelectorAll("a").forEach(a=>a.classList.toggle("on",a.dataset.k===active));
+  if(!nt.classList.contains("hov"))movePill(nt.querySelector("a.on"));
   document.getElementById("nbot").innerHTML=NAV.filter(n=>n[0]!=="psa"&&n[0]!=="compare").map(([k,l,i])=>`<a href="#${k}" class="${k===active?"on":""}"><span class="ic">${i}</span>${l}</a>`).join("");
 }
+function movePill(a){const nt=document.getElementById("ntop"),p=nt.querySelector(".pill");if(!p)return;if(!a||!a.offsetWidth){p.style.opacity=0;return}
+  p.style.opacity=1;p.style.width=a.offsetWidth+"px";p.style.transform="translateX("+a.offsetLeft+"px)";}
 const go=uid=>{location.hash="card-"+uid};
 function bindCards(root){root.querySelectorAll("[data-uid]").forEach(e=>e.onclick=ev=>{if(ev.target.closest("a[href]"))return;go(e.dataset.uid)})}
 
