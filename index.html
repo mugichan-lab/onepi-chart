@@ -326,6 +326,27 @@ nav.top .pill{transition:transform .55s var(--ease),width .55s var(--ease),opaci
 .th.pic.noimg{background:linear-gradient(155deg,#4a5568,#0c1726)}
 .mqc .th.pic{aspect-ratio:240/335}
 .copyright{font-size:10px;color:var(--sub);text-align:center;padding:18px 10px 6px}
+
+/* ===== 軽量化：重い効果（ぼかし・常時アニメーション）を止める ===== */
+.block,.panel,.stat,.lrow,.gcard,.rel a,.slot,.sugg,.filters,.mqc,.hchips a,.live{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(28,24,58,.82)}
+.mqc,.hchips a,.live{background:rgba(36,31,72,.9)}
+nav.bottom{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(14,12,34,.97)}
+body::before{animation:none!important;inset:0;transform:none}
+.hero .blob{filter:none!important;animation:none!important;opacity:1!important}
+.hero .bl1{background:radial-gradient(closest-side,rgba(163,92,255,.45),transparent)!important}
+.hero .bl2{background:radial-gradient(closest-side,rgba(255,79,163,.38),transparent)!important}
+.hero .bl3{background:radial-gradient(closest-side,rgba(91,124,255,.4),transparent)!important}
+.badge.up,.btn.pri,.offlink,.logo .mk{animation:none!important}
+.bigprice{animation:none!important;background-position:0 0}
+.rk.r1::after,.rk.r2::after,.rk.r3::after,.th.gold::after{animation-iteration-count:1!important}
+.block{content-visibility:auto;contain-intrinsic-size:auto 420px}
+@media(max-width:760px){
+  header{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(14,12,34,.97)}
+  body::after{display:none}
+  .hero .blob{display:none}
+  .grad{animation:none!important}
+  #app.anim .mini,#app.anim .lrow,#app.anim .bxt tbody tr{animation:none!important}
+}
 </style>
 </head>
 <body>
