@@ -320,6 +320,7 @@ a,button,.btn,select,input,.block,.panel,.stat,.mini,.lrow,.gcard,.rel a,.mqc,.h
 .mini:hover .th,.lrow:hover .th,.rel a:hover .th{transform:rotate(-2deg) scale(1.04)}
 .btn:active{transform:scale(.97);transition-duration:.15s!important}
 nav.top .pill{transition:transform .55s var(--ease),width .55s var(--ease),opacity .3s var(--ease)!important}
+.btn.cpy{display:block;margin-top:5px;font-size:11px;padding:3px 9px;border-radius:999px}
 </style>
 </head>
 <body>
@@ -696,7 +697,7 @@ function renderDetail(uid){
     ${(()=>{const rows=[["cm","cs","ci","状態A（美品）"],["ua","ka","ia","状態A-"],["ub","kb","ib","状態B"],["uc","kc","ic","状態C"],["cp","kp","ip","PSA10"]].filter(([pf])=>cur(c,pf)!=null);
       return rows.length?rows.map(([pf,kf,idf,lab])=>{const pv=cur(c,pf),kv=cur(c,kf);return `<tr><td><a href="${crLink(c,idf)}" target="_blank" rel="noopener">カードラッシュ ↗</a></td><td>販売</td><td><span class="cond">${lab}</span></td><td>${kv>0?kv+"枚":"なし"}</td><td>${yen(pv)}</td></tr>`}).join("")
       :`<tr><td><a href="${crSearch(c)}" target="_blank" rel="noopener">カードラッシュ ↗</a></td><td>販売</td><td>—</td><td colspan="2">販売の記録なし</td></tr>`})()}
-    <tr><td><a href="https://akihabara-cardshop.com/onepice-kaitori/" target="_blank" rel="noopener">メルカード秋葉原 ↗</a><div class="foot">買取表ページで「${esc(c.id)}」を検索</div></td><td>買取</td><td>—</td><td>—</td><td>${yen(cur(c,"mb"))}</td></tr>
+    <tr><td><a href="https://akihabara-cardshop.com/onepice-kaitori/" target="_blank" rel="noopener">メルカード秋葉原 ↗</a>${/^(OP|ST|EB|PRB|P)\d*-\d{3}$/.test(c.id)?`<button class="btn cpy" data-copy="${esc(c.id)}">型番 ${esc(c.id)} をコピー</button>`:""}</td><td>買取</td><td>—</td><td>—</td><td>${yen(cur(c,"mb"))}</td></tr>
     <tr><td>遊々亭（参考・${YUYU_DATE}）</td><td>販売／買取</td><td>—</td><td>—</td><td>${yen(c.ysell)} ／ ${yen(c.ybuy)}</td></tr>
   </tbody></table></div>
   <p class="foot">状態はカードラッシュの基準です。状態A＝状態表記なし（小さな白カケ・擦れ程度）、A-＝小さな傷・光沢痕など、B＝目立つ白カケ・凹み・軽い折れなど、C＝折れ跡が残る・全体に傷が多い。リンクは価格の取得に使った商品ページに直接移動します（その日に商品が特定できない場合は型番の検索結果）。</p>
@@ -707,6 +708,7 @@ function renderDetail(uid){
   :`<div class="panel" style="margin-top:14px"><p class="foot" style="margin:0">このカード（プロモ・ドン!!カードなど）は毎日の価格取得の対象外です。遊々亭の参考価格（${YUYU_DATE}）：販売 ${yen(c.ysell)} ／ 買取 ${yen(c.ybuy)}</p></div>`}
   ${rel.length?`<h3 class="sh">関連カード</h3><div class="rel">${rel.map(x=>`<a href="#card-${x.uid}">${thumb(x,"sm")}<span>${esc(x.name)}<b>${yen(price(x))}</b></span></a>`).join("")}</div>`:""}`;
   document.getElementById("dw").onclick=()=>{toggleWatch(uid);renderDetail(uid)};
+  app.querySelectorAll("[data-copy]").forEach(b=>b.onclick=async()=>{try{await navigator.clipboard.writeText(b.dataset.copy);toast("コピーしました。メルカードの買取表の検索欄に貼り付けてください")}catch(e){toast("コピーできませんでした")}});
   document.getElementById("dp").onclick=()=>portDialog(c);
   document.getElementById("dc").onclick=()=>{let s=LS.get("opc-cmp",[]);if(!s.includes(uid)){s=[...s,uid].slice(-3);LS.set("opc-cmp",s)}location.hash="compare"};
   app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{DET.f=b.dataset.f;renderDetail(uid)});
