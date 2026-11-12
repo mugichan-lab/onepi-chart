@@ -4,7 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ワンピカ相場チャート</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script>
+(function(){var ua=navigator.userAgent||"",d=document.documentElement;
+ // LINEのアプリ内ブラウザは標準ブラウザで開き直す（LINE公式の仕組み）
+ if(/ Line\//i.test(ua)&&!/[?&]openExternalBrowser=1/.test(location.search)){location.replace(location.pathname+(location.search?location.search+"&":"?")+"openExternalBrowser=1"+location.hash);return;}
+ // 短時間に読み込みが繰り返された（ブラウザが落ちて再読み込みしている）場合は軽量モード
+ var n=0,t=Date.now();try{var o=JSON.parse(sessionStorage.getItem("opc-boot")||"null");if(o&&t-o.t<8000)n=o.n+1;sessionStorage.setItem("opc-boot",JSON.stringify({n:n,t:t}));}catch(e){}
+ if(n>=2||/ Line\/|FBAN|FBAV|Instagram|; wv\)/i.test(ua)||/[?&]lite=1/.test(location.search))d.classList.add("lite");
+ window.addEventListener("load",function(){setTimeout(function(){try{sessionStorage.removeItem("opc-boot")}catch(e){}},8000)});
+})();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root{color-scheme:light;
@@ -14,7 +23,7 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{font-family:"Noto Sans JP",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;padding-bottom:70px}
+body{font-family:system-ui,-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",sans-serif;background:var(--bg);color:var(--ink);font-size:14px;padding-bottom:70px}
 a{color:inherit}
 button{font:inherit;cursor:pointer;color:var(--ink)}
 input,select,textarea{color:var(--ink);background:#fff}
@@ -347,6 +356,15 @@ body::before{animation:none!important;inset:0;transform:none}
   .grad{animation:none!important}
   #app.anim .mini,#app.anim .lrow,#app.anim .bxt tbody tr{animation:none!important}
 }
+
+/* ===== 軽量モード（アプリ内ブラウザ・不安定な環境） ===== */
+.lite *,.lite *::before,.lite *::after{animation:none!important;transition:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;filter:none!important}
+.lite body::before,.lite body::after,.lite .hero .blob,.lite header::after{display:none!important}
+.lite .grad,.lite .bigprice,.lite .hstats b{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#ffd27a!important}
+.lite .hstats b,.lite .bigprice{color:#fff!important}
+.lite .block{content-visibility:visible}
+.lite .mq{-webkit-mask-image:none;mask-image:none;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.lite header{background:#0e0c22}
 </style>
 </head>
 <body>
@@ -596,7 +614,7 @@ function renderHome(){
   app.querySelectorAll("[data-sort]").forEach(a=>a.onclick=()=>{LIST.sort=a.dataset.sort;LIST.n=60;saveList();});
   // 高額カードの帯：常に自動で横に流す（マウスを乗せている間だけゆっくり減速して止まる）
   const mq=app.querySelector(".mq"),mt=mq&&mq.querySelector(".mqt");
-  if(mt){let x=0,rate=1,target=1,last=performance.now();const SPEED=45;
+  if(mt&&!document.documentElement.classList.contains("lite")){let x=0,rate=1,target=1,last=performance.now();const SPEED=45;
     const loop=t=>{if(!mt.isConnected)return;const dt=Math.min(.1,(t-last)/1000);last=t;rate+=(target-rate)*Math.min(1,dt*5);
       const half=mt.scrollWidth/2;x-=SPEED*rate*dt;if(half&&-x>=half)x+=half;mt.style.transform="translateX("+x+"px)";requestAnimationFrame(loop)};
     requestAnimationFrame(loop);
@@ -991,6 +1009,7 @@ function render(){
 }
 // 価格の数字をカウントアップ表示
 function countUp(){
+  if(document.documentElement.classList.contains("lite"))return;
   if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   app.querySelectorAll(".bigprice,.stat .v,.hstats .cnt").forEach(el=>{
     const m=el.textContent.match(/^([+−-]?)(¥?)([\d,]+)$/);if(!m)return;
