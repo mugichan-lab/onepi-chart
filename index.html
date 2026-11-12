@@ -294,7 +294,7 @@ const cur=(c,f)=>c.ki<0?null:lastVal(series(c,f));
 function chg(c,f,d){const a=series(c,f),n=lastVal(a);if(n==null||DATES.length<2)return null;const o=valAgo(a,Math.min(d,DATES.length-1));if(o==null||o===0)return null;return {now:n,old:o,diff:n-o,pct:(n-o)/o*100};}
 const price=c=>c.ki<0?c.ysell:(cur(c,"cm")??c.ysell);
 const isRef=c=>c.ki<0||cur(c,"cm")==null;
-const BUILD="2026-11-12 16:40";
+const BUILD="2026-11-12 21:40";
 
 async function loadDb(){
   // 毎日の相場は data/<日付>.json に保存（GitHub Pages 上の静的ファイル）
@@ -501,7 +501,9 @@ function renderDetail(uid){
   </div>
   <h3 class="sh">購入・在庫情報</h3>
   <div class="panel" style="padding:0;overflow:auto"><table><thead><tr><th>ショップ</th><th>種別</th><th>状態</th><th>在庫</th><th>最安値</th></tr></thead><tbody>
-    ${[["cm","cs","ci","状態A（美品）"],["ua","ka","ia","状態A-"],["ub","kb","ib","状態B"],["uc","kc","ic","状態C"],["cp","kp","ip","PSA10"]].map(([pf,kf,idf,lab])=>{const pv=cur(c,pf),kv=cur(c,kf);return `<tr><td><a href="${crLink(c,idf)}" target="_blank" rel="noopener">カードラッシュ ↗</a></td><td>販売</td><td><span class="cond">${lab}</span></td><td>${pv==null?"—":kv>0?kv+"枚":"なし"}</td><td>${yen(pv)}</td></tr>`}).join("")}
+    ${(()=>{const rows=[["cm","cs","ci","状態A（美品）"],["ua","ka","ia","状態A-"],["ub","kb","ib","状態B"],["uc","kc","ic","状態C"],["cp","kp","ip","PSA10"]].filter(([pf])=>cur(c,pf)!=null);
+      return rows.length?rows.map(([pf,kf,idf,lab])=>{const pv=cur(c,pf),kv=cur(c,kf);return `<tr><td><a href="${crLink(c,idf)}" target="_blank" rel="noopener">カードラッシュ ↗</a></td><td>販売</td><td><span class="cond">${lab}</span></td><td>${kv>0?kv+"枚":"なし"}</td><td>${yen(pv)}</td></tr>`}).join("")
+      :`<tr><td><a href="${crSearch(c)}" target="_blank" rel="noopener">カードラッシュ ↗</a></td><td>販売</td><td>—</td><td colspan="2">販売の記録なし</td></tr>`})()}
     <tr><td><a href="https://akihabara-cardshop.com/onepice-kaitori/" target="_blank" rel="noopener">メルカード秋葉原 ↗</a><div class="foot">買取表ページで「${esc(c.id)}」を検索</div></td><td>買取</td><td>—</td><td>—</td><td>${yen(cur(c,"mb"))}</td></tr>
     <tr><td>遊々亭（参考・${YUYU_DATE}）</td><td>販売／買取</td><td>—</td><td>—</td><td>${yen(c.ysell)} ／ ${yen(c.ybuy)}</td></tr>
   </tbody></table></div>
