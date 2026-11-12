@@ -229,7 +229,6 @@ nav.bottom a.on .ic{animation:popIn .35s ease}
 .mq{position:relative;overflow:hidden;margin:0 0 16px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
 .mqh{display:flex;align-items:center;gap:8px;margin:0 0 8px}.mqh h2{font-size:15px;margin:0;font-weight:900}
 .mqt{display:flex;gap:10px;width:max-content;animation:marquee var(--mqd,40s) linear infinite;padding:4px 0 8px}
-.mq:hover .mqt{animation-play-state:paused}
 .mqc{width:132px;flex:none;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px;cursor:pointer;transition:transform .2s,box-shadow .2s}
 .mqc:hover{transform:translateY(-4px);box-shadow:0 10px 20px rgba(23,50,79,.14)}
 .mqc .th{width:100%;aspect-ratio:63/88;height:auto}.mqc .th .r{font-size:16px}.mqc .th .n{font-size:10px}
@@ -309,6 +308,18 @@ a{color:inherit}
 .bh .more{color:#c8b9ff}
 .up{color:var(--up)}.down{color:var(--down)}
 .empty{color:var(--sub)}
+
+/* ===== なめらかさ調整：ホバーの反応をすべてゆっくり・自然なカーブに ===== */
+:root{--ease:cubic-bezier(.22,1,.36,1);--dur:.45s}
+a,button,.btn,select,input,.block,.panel,.stat,.mini,.lrow,.gcard,.rel a,.mqc,.hchips a,.sugg div,.bxt tbody tr,.th,.badge,.kv div,.slot,.offlink,nav.bottom a,nav.top a{
+  transition:background-color var(--dur) var(--ease),border-color var(--dur) var(--ease),color var(--dur) var(--ease),box-shadow .6s var(--ease),transform .6s var(--ease),opacity var(--dur) var(--ease),filter var(--dur) var(--ease)!important}
+.block:hover{transform:translateY(-2px)}
+.mini:hover{transform:translateX(2px)}
+.mqc:hover{transform:translateY(-3px)}
+.hchips a:hover{transform:translateY(-1px)}
+.mini:hover .th,.lrow:hover .th,.rel a:hover .th{transform:rotate(-2deg) scale(1.04)}
+.btn:active{transform:scale(.97);transition-duration:.15s!important}
+nav.top .pill{transition:transform .55s var(--ease),width .55s var(--ease),opacity .3s var(--ease)!important}
 </style>
 </head>
 <body>
@@ -551,6 +562,11 @@ function renderHome(){
   <p class="foot" style="margin-top:14px">販売価格・在庫：<a href="https://www.cardrush-op.jp/" target="_blank" rel="noopener">カードラッシュ</a>（状態なし品）／買取価格：<a href="https://akihabara-cardshop.com/onepice-kaitori/" target="_blank" rel="noopener">メルカード秋葉原</a>。当サイトはファンによる非公式サイトで、各社とは関係ありません。（ページ更新：${BUILD}）</p>`;
   bindCards(app);
   app.querySelectorAll("[data-sort]").forEach(a=>a.onclick=()=>{LIST.sort=a.dataset.sort;LIST.n=60;saveList();});
+  // 高額カードの帯：マウスを乗せるとゆっくり減速して止まり、離すとゆっくり加速
+  const mq=app.querySelector(".mq"),mt=mq&&mq.querySelector(".mqt");
+  if(mt&&mt.getAnimations){let raf;const tween=to=>{const an=mt.getAnimations()[0];if(!an)return;cancelAnimationFrame(raf);const from=an.playbackRate,t0=performance.now(),D=600;
+    const st=t=>{const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3);an.playbackRate=from+(to-from)*e;if(k<1)raf=requestAnimationFrame(st)};raf=requestAnimationFrame(st)};
+    mq.onmouseenter=()=>tween(0.0001);mq.onmouseleave=()=>tween(1);}
 }
 
 // ================= カード一覧 =================
