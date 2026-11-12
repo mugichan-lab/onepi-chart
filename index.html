@@ -150,6 +150,66 @@ th{background:#f6f2ea;color:var(--sub);font-weight:500;font-size:12px}
   .slots{grid-template-columns:1fr}
 }
 .bxt td{vertical-align:middle}.bxt tr.clk{cursor:pointer}.bxt tr.clk:hover{background:#faf6ea}.bxn{display:flex;gap:10px;align-items:center;min-width:240px}.bxt .num{text-align:right;white-space:nowrap}.th.box{box-shadow:inset 0 0 0 2px #e7c86a}
+
+/* ===== POP アニメーション ===== */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+@keyframes popIn{0%{opacity:0;transform:scale(.6)}70%{transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}
+@keyframes shine{0%{left:-60%}60%,100%{left:130%}}
+@keyframes bob{0%,100%{transform:rotate(-6deg) translateY(0)}50%{transform:rotate(6deg) translateY(-2px)}}
+@keyframes stripe{from{background-position:0 0}to{background-position:200px 0}}
+@keyframes pulseUp{0%,100%{box-shadow:0 0 0 0 rgba(198,47,47,.35)}50%{box-shadow:0 0 0 4px rgba(198,47,47,0)}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes heroShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes skel{from{background-position:-200px 0}to{background-position:200px 0}}
+header{box-shadow:none}
+header::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:3px;background:repeating-linear-gradient(90deg,var(--gold) 0 40px,#f3d98f 40px 60px,var(--red) 60px 80px,var(--gold) 80px 100px);background-size:200px 3px;animation:stripe 6s linear infinite}
+.logo .mk{animation:bob 3.2s ease-in-out infinite}
+nav.top a{position:relative;transition:background .2s,opacity .2s}
+nav.top a::after{content:"";position:absolute;left:12px;right:12px;bottom:3px;height:2px;border-radius:2px;background:var(--gold);transform:scaleX(0);transition:transform .25s}
+nav.top a.on::after,nav.top a:hover::after{transform:scaleX(1)}
+nav.bottom a.on .ic{animation:popIn .35s ease}
+#app.anim>*{animation:fadeUp .45s cubic-bezier(.2,.8,.2,1) both}
+#app.anim>*:nth-child(2){animation-delay:.05s}#app.anim>*:nth-child(3){animation-delay:.1s}#app.anim>*:nth-child(4){animation-delay:.15s}#app.anim>*:nth-child(5){animation-delay:.2s}#app.anim>*:nth-child(n+6){animation-delay:.25s}
+#app.anim .blocks>.block{animation:fadeUp .5s cubic-bezier(.2,.8,.2,1) both}
+#app.anim .blocks>.block:nth-child(2){animation-delay:.06s}#app.anim .blocks>.block:nth-child(3){animation-delay:.12s}#app.anim .blocks>.block:nth-child(4){animation-delay:.18s}#app.anim .blocks>.block:nth-child(5){animation-delay:.24s}#app.anim .blocks>.block:nth-child(6){animation-delay:.3s}
+.block,.panel,.stat{transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s}
+.block:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(23,50,79,.12)}
+.bh{background:linear-gradient(90deg,#fff 0%,#fbf6ea 100%)}
+.bh h2::before{content:"";display:inline-block;width:6px;height:15px;border-radius:3px;background:linear-gradient(var(--red),var(--gold));margin-right:7px;vertical-align:-2px}
+.mini,.lrow,.bxt tbody tr{transition:background .2s,transform .2s}
+#app.anim .mini,#app.anim .lrow,#app.anim .bxt tbody tr{animation:slideIn .4s cubic-bezier(.2,.8,.2,1) both}
+#app.anim .mini:nth-child(2),#app.anim .lrow:nth-child(2){animation-delay:.03s}#app.anim .mini:nth-child(3),#app.anim .lrow:nth-child(3){animation-delay:.06s}#app.anim .mini:nth-child(4),#app.anim .lrow:nth-child(4){animation-delay:.09s}#app.anim .mini:nth-child(5),#app.anim .lrow:nth-child(5){animation-delay:.12s}#app.anim .mini:nth-child(6),#app.anim .lrow:nth-child(6){animation-delay:.15s}#app.anim .mini:nth-child(7),#app.anim .lrow:nth-child(7){animation-delay:.18s}#app.anim .mini:nth-child(8),#app.anim .lrow:nth-child(8){animation-delay:.21s}#app.anim .mini:nth-child(9),#app.anim .lrow:nth-child(9){animation-delay:.24s}#app.anim .mini:nth-child(n+10),#app.anim .lrow:nth-child(n+10){animation-delay:.27s}
+.mini:hover{transform:translateX(3px)}
+.mini:hover .th,.lrow:hover .th,.rel a:hover .th{transform:rotate(-4deg) scale(1.08)}
+.th{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.rk.r1,.rk.r2,.rk.r3{position:relative;margin:0 auto;overflow:hidden;width:22px;height:22px;line-height:22px;border-radius:50%;color:#fff;font-size:12px}
+#app.anim .rk.r1,#app.anim .rk.r2,#app.anim .rk.r3{animation:popIn .5s ease both;animation-delay:.2s}
+.rk.r1{background:linear-gradient(135deg,#e9c46a,#b8861f);box-shadow:0 2px 6px rgba(201,154,46,.5)}
+.rk.r2{background:linear-gradient(135deg,#c9d1d9,#7d8792)}
+.rk.r3{background:linear-gradient(135deg,#d9a273,#9a5d2e)}
+.rk.r1::after,.rk.r2::after,.rk.r3::after,.th.gold::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);transform:skewX(-20deg);animation:shine 3s ease-in-out infinite}
+.rk.r2::after{animation-delay:.4s}.rk.r3::after{animation-delay:.8s}
+.badge{transition:transform .2s}
+.badge.up{animation:pulseUp 2.2s ease-in-out infinite}
+.badge.up::before{content:"▲ ";font-size:8px}.badge.down::before{content:"▼ ";font-size:8px}
+.btn{transition:transform .12s,background .2s,box-shadow .2s}
+.btn:active{transform:scale(.94)}
+.btn.on{box-shadow:0 3px 10px rgba(23,50,79,.25)}
+.bigprice{background:linear-gradient(90deg,var(--navy),var(--red),var(--gold),var(--navy));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:heroShift 8s ease infinite}
+.banner{position:relative;overflow:hidden}
+.banner.loading{background:linear-gradient(90deg,#fff8e6 0%,#fff 50%,#fff8e6 100%);background-size:400px 100%;animation:skel 1.2s linear infinite}
+.hero{position:relative;overflow:hidden;border-radius:18px;padding:18px 20px;margin:0 0 16px;color:#fff;background:linear-gradient(120deg,#17324f,#22476e,#7a1f3d,#b3261e,#d4a237);background-size:300% 300%;animation:heroShift 14s ease infinite,fadeUp .5s both}
+.hero h1{margin:0 0 4px;font-size:22px;font-weight:900;text-shadow:0 2px 0 rgba(0,0,0,.2)}
+.hero p{margin:0;font-size:12px;opacity:.9}
+.hero a{color:#ffe7a8;font-weight:700}
+.hero .bub{position:absolute;border-radius:50%;background:rgba(255,255,255,.12);animation:floaty 5s ease-in-out infinite}
+.hero .b1{width:90px;height:90px;right:-20px;top:-25px}.hero .b2{width:46px;height:46px;right:70px;bottom:-14px;animation-delay:1.2s}.hero .b3{width:22px;height:22px;right:140px;top:14px;animation-delay:2.1s}
+.hero .chips{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+.hero .chips a{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);color:#fff;text-decoration:none;border-radius:999px;padding:4px 11px;font-size:12px;transition:background .2s,transform .2s}
+.hero .chips a:hover{background:rgba(255,255,255,.3);transform:translateY(-2px)}
+.rel a{transition:transform .2s}.rel a:hover{transform:translateY(-3px)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -294,7 +354,7 @@ const cur=(c,f)=>c.ki<0?null:lastVal(series(c,f));
 function chg(c,f,d){const a=series(c,f),n=lastVal(a);if(n==null||DATES.length<2)return null;const o=valAgo(a,Math.min(d,DATES.length-1));if(o==null||o===0)return null;return {now:n,old:o,diff:n-o,pct:(n-o)/o*100};}
 const price=c=>c.ki<0?c.ysell:(cur(c,"cm")??c.ysell);
 const isRef=c=>c.ki<0||cur(c,"cm")==null;
-const BUILD="2026-11-12 21:40";
+const BUILD="2026-11-12 22:00";
 
 async function loadDb(){
   // 毎日の相場は data/<日付>.json に保存（GitHub Pages 上の静的ファイル）
@@ -325,7 +385,7 @@ let charts=[];const kill=()=>{charts.forEach(c=>c.destroy());charts=[]};
 function toast(t){const e=document.getElementById("toast");e.textContent=t;e.classList.add("on");setTimeout(()=>e.classList.remove("on"),1600)}
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 function statusNote(){
-  if(loadState==="loading") return `<div class="banner">価格データを読み込み中…</div>`;
+  if(loadState==="loading") return `<div class="banner loading">価格データを読み込み中…</div>`;
   if(loadState==="offline") return `<div class="banner">価格データを読み込めませんでした。時間をおいて再読み込みしてください。遊々亭の参考価格（${YUYU_DATE}時点）を表示しています。</div>`;
   if(loadState==="empty") return `<div class="banner">毎日の価格データはまだありません。初回の取得後に表示されます。</div>`;
   if(DATES.length<2) return `<div class="banner">価格の記録は ${DATES[0]} から始まりました。変動率・ランキング・推移グラフは2日目以降に表示されます。</div>`;
@@ -370,7 +430,8 @@ function renderHome(){
     return `<section class="block"><div class="bh"><h2>${title}</h2><span class="src">${src}</span><a class="more" href="#cards" data-sort="${key}">もっと見る ›</a></div>
     ${top.length?top.map((c,i)=>`<div class="mini" data-uid="${c.uid}"><div class="rk ${i<3?"r"+(i+1):""}">${i+1}</div>${thumb(c,"sm")}<div><div class="nm">${esc(c.name)}</div><div class="sub">${esc(c.id)} ・ ${esc(c.set)}</div></div><div class="pr">${yen(price(c))}<br>${S.show?S.show(c):`<span class="badge flat">在庫 ${cur(c,"cs")??"—"}</span>`}</div></div>`).join("")
       :`<div class="empty">${loadState==="ok"?"データが2日分以上たまると表示されます":"価格データの読み込み後に表示されます"}</div>`}</section>`;};
-  app.innerHTML=`${statusNote()}<h1 class="pt">ONE PIECEカードゲーム 相場ランキング</h1><p class="lead">${DATES.length?`最終更新 ${DATES[DATES.length-1]} ・ `:""}カードラッシュの販売価格・在庫とメルカード秋葉原の買取価格を毎日記録しています ・ <a href="#box">未開封BOXの相場はこちら ›</a></p>
+  app.innerHTML=`${statusNote()}<section class="hero"><span class="bub b1"></span><span class="bub b2"></span><span class="bub b3"></span><h1>ONE PIECEカードゲーム 相場ランキング</h1><p>${DATES.length?`最終更新 ${DATES[DATES.length-1]} ・ `:""}カードラッシュの販売価格・在庫とメルカード秋葉原の買取価格を毎日記録しています</p>
+  <div class="chips"><a href="#cards">☰ カード一覧</a><a href="#box">▣ 未開封BOX相場</a><a href="#index">📈 ワンピカ指数</a><a href="#psa">★ PSA10</a></div></section>
   <div class="blocks">${HOME_BLOCKS.map(blk).join("")}</div>
   <p class="foot" style="margin-top:14px">販売価格・在庫：<a href="https://www.cardrush-op.jp/" target="_blank" rel="noopener">カードラッシュ</a>（状態なし品）／買取価格：<a href="https://akihabara-cardshop.com/onepice-kaitori/" target="_blank" rel="noopener">メルカード秋葉原</a>。当サイトはファンによる非公式サイトで、各社とは関係ありません。（ページ更新：${BUILD}）</p>`;
   bindCards(app);
@@ -743,8 +804,9 @@ function renderBoxDetail(key){
 }
 
 // ================= ルーティング =================
+let animT;
 function render(){
-  kill();const h=location.hash.slice(1)||"home";
+  kill();app.classList.add("anim");clearTimeout(animT);animT=setTimeout(()=>app.classList.remove("anim"),1200);const h=location.hash.slice(1)||"home";
   const route=h.startsWith("card-")?"card":h.startsWith("bx-")?"bx":h;
   navs(route==="card"?"cards":route==="bx"?"box":route);
   if(route==="card") renderDetail(h.slice(5));
@@ -756,6 +818,16 @@ function render(){
   else if(route==="box") renderBox();
   else if(route==="bx") renderBoxDetail(h.slice(3));
   else renderHome();
+  countUp();
+}
+// 価格の数字をカウントアップ表示
+function countUp(){
+  if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  app.querySelectorAll(".bigprice,.stat .v").forEach(el=>{
+    const m=el.textContent.match(/^([+−-]?)¥([\d,]+)$/);if(!m)return;
+    const to=+m[2].replace(/,/g,"");if(!to)return;const t0=performance.now(),D=700;
+    const step=t=>{const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3);el.textContent=m[1]+"¥"+Math.round(to*e).toLocaleString("ja-JP");if(k<1)requestAnimationFrame(step)};
+    requestAnimationFrame(step);});
 }
 document.getElementById("hs").onsubmit=e=>{e.preventDefault();LIST.q=document.getElementById("hq").value.trim();LIST.n=60;LIST.pack=LIST.rar=LIST.par="";if(location.hash==="#cards")render();else location.hash="cards";};
 window.addEventListener("hashchange",()=>{render();window.scrollTo(0,0)});
