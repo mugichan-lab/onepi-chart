@@ -241,6 +241,74 @@ nav.bottom a.on .ic{animation:popIn .35s ease}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 nav.top a{white-space:nowrap}
 @media(max-width:1000px){nav.top a{padding:7px 7px;font-size:12px}.logo small{display:none}.hsearch{flex-basis:180px}}
+
+/* ===== ダークグラス テーマ（深い宇宙色＋発光グラデーション＋ガラス風パネル） ===== */
+:root{color-scheme:dark;
+  --bg:#0b0a1d; --panel:rgba(255,255,255,.055); --ink:#f3f1ff; --sub:#a7a2c8; --line:rgba(255,255,255,.11);
+  --navy:#8fb6ff; --navy2:#b9a8ff; --gold:#f5c451; --red:#ff5c8a;
+  --up:#ff6b8f; --down:#5cc8ff; --upbg:rgba(255,92,138,.16); --downbg:rgba(92,200,255,.14);
+  --glass:rgba(255,255,255,.055); --glass2:rgba(255,255,255,.09);
+  --cta:linear-gradient(135deg,#ff4fa3 0%,#a35cff 55%,#5b7cff 100%);
+}
+body{background:var(--bg)}
+body::before{content:"";position:fixed;inset:-20%;z-index:-2;pointer-events:none;
+  background:radial-gradient(40% 35% at 15% 10%,rgba(163,92,255,.35),transparent 70%),radial-gradient(35% 30% at 85% 15%,rgba(255,79,163,.25),transparent 70%),radial-gradient(45% 40% at 60% 95%,rgba(91,124,255,.28),transparent 70%);
+  animation:skyDrift 24s ease-in-out infinite alternate}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.35;
+  background-image:radial-gradient(1px 1px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 20%,#fff,transparent),radial-gradient(1px 1px at 40% 80%,#fff,transparent),radial-gradient(1px 1px at 90% 60%,#fff,transparent),radial-gradient(1px 1px at 10% 70%,#fff,transparent);background-size:400px 400px}
+@keyframes skyDrift{from{transform:translate(0,0) rotate(0)}to{transform:translate(-4%,3%) rotate(6deg)}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 rgba(163,92,255,0),0 8px 30px rgba(163,92,255,.35)}50%{box-shadow:0 0 0 rgba(163,92,255,0),0 8px 40px rgba(255,79,163,.5)}}
+input,select,textarea{background:var(--glass);color:var(--ink)}
+header{background:rgba(11,10,29,.62);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line)}
+header::after{height:1px;bottom:0;background:linear-gradient(90deg,transparent,#a35cff,#ff4fa3,#f5c451,transparent);background-size:100% 1px;animation:none;opacity:.8}
+.logo .mk{background:var(--cta);color:#fff;border-radius:10px;box-shadow:0 0 18px rgba(255,79,163,.55)}
+nav.top{background:rgba(255,255,255,.06);border:1px solid var(--line)}
+nav.top a{color:var(--ink)}
+nav.top a.on{color:#fff}
+nav.top .pill{background:var(--cta);box-shadow:0 4px 18px rgba(163,92,255,.55)}
+nav.top.hov a:hover{color:#fff}
+.hsearch input{background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--ink)}
+.hsearch input::placeholder{color:var(--sub)}
+nav.bottom{background:rgba(11,10,29,.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+nav.bottom a.on{color:#fff}nav.bottom a.on .ic{color:#ff7ab8}
+.banner{background:rgba(245,196,81,.1);border-color:rgba(245,196,81,.35)}
+.banner.loading{background:linear-gradient(90deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,.12) 50%,rgba(255,255,255,.04) 100%);background-size:400px 100%}
+.block,.panel,.stat,.lrow,.gcard,.rel a,.slot,.sugg,.filters,.mqc,.hchips a,.live{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.block,.panel{border-radius:20px}
+.block:hover,.mqc:hover,.gcard:hover{box-shadow:0 14px 40px rgba(0,0,0,.35),0 0 0 1px rgba(185,168,255,.25) inset}
+.bh{background:linear-gradient(90deg,rgba(163,92,255,.14),rgba(255,79,163,.06));border-bottom:1px solid var(--line)}
+.bh .src,.badge.flat,.chip{background:rgba(255,255,255,.08);color:var(--sub);border-color:var(--line)}
+.mini{border-bottom:1px solid rgba(255,255,255,.06)}
+.mini:hover,.sugg div:hover,.bxt tr.clk:hover{background:rgba(255,255,255,.06)}
+.sugg div{border-bottom:1px solid rgba(255,255,255,.06)}
+.kv div{background:rgba(255,255,255,.05);border:1px solid var(--line)}
+th{background:rgba(255,255,255,.05);color:var(--sub)}
+td,th{border-color:var(--line)!important}
+.cond{background:rgba(143,182,255,.15);color:#bcd3ff}
+select,.btn,.toolbar input[type=search]{background:rgba(255,255,255,.07);border-color:var(--line);color:var(--ink)}
+.btn:hover{background:rgba(255,255,255,.12)}
+.btn.on,.btn.pri,.offlink,.gcard .rkb{background:var(--cta);border-color:transparent;color:#fff}
+.btn.pri,.offlink{animation:glow 3s ease-in-out infinite}
+.btn.gold{background:linear-gradient(135deg,#f5c451,#ff9d4f);color:#1a1230;border-color:transparent}
+.modal .box{background:#17142e;border:1px solid var(--line)}
+.toast{background:#fff;color:#17142e}
+.hero{padding:44px 16px 30px}
+.hero .bl1{background:#a35cff;opacity:.55}.hero .bl2{background:#ff4fa3;opacity:.45}.hero .bl3{background:#5b7cff;opacity:.5}
+.hero h1{font-size:clamp(26px,5vw,44px);letter-spacing:-.01em;text-shadow:0 0 30px rgba(163,92,255,.35)}
+.grad{background:linear-gradient(90deg,#ff7ab8,#b9a8ff,#f5c451,#ff7ab8);background-size:300% 100%;-webkit-background-clip:text;background-clip:text}
+.live{color:var(--ink)}
+.hchips a{color:var(--ink)}
+.hchips a:first-child{background:var(--cta);border-color:transparent;color:#fff;box-shadow:0 6px 20px rgba(163,92,255,.45)}
+.hchips a:hover{border-color:rgba(185,168,255,.6)}
+.hstats b{background:linear-gradient(180deg,#fff,#cfc8ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bigprice{background:linear-gradient(90deg,#fff,#ff9ccc,#b9a8ff,#f5c451,#fff);background-size:300% 100%;-webkit-background-clip:text;background-clip:text}
+.th{box-shadow:inset 0 0 0 1px rgba(255,255,255,.25),0 4px 14px rgba(0,0,0,.35)}
+.rk{color:var(--sub)}
+a{color:inherit}
+.foot a,p.lead a,.crumb a{color:#c8b9ff}
+.bh .more{color:#c8b9ff}
+.up{color:var(--up)}.down{color:var(--down)}
+.empty{color:var(--sub)}
 </style>
 </head>
 <body>
@@ -629,10 +697,10 @@ function renderDetail(uid){
   app.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{DET.range=+b.dataset.r;renderDetail(uid)});
   if(c.ki>=0&&nd>=2){
     const n=Math.min(DET.range,nd),lab=DATES.slice(-n).map(d=>d.slice(5).replace("-","/"));
-    const col={cm:"#b3261e",ua:"#8a8278",ub:"#7a5c3e",uc:"#555",cp:"#d4a237",mb:"#17324f"}[DET.f]||"#b3261e";
+    const col={cm:"#ff5c8a",ua:"#c9b8ff",ub:"#ffb36b",uc:"#9aa4b5",cp:"#f5c451",mb:"#5cc8ff"}[DET.f]||"#ff5c8a";
     charts.push(new Chart(document.getElementById("pc"),{type:"line",data:{labels:lab,datasets:[{data:series(c,DET.f).slice(-n),borderColor:col,backgroundColor:col+"22",fill:true,borderWidth:2,pointRadius:n<=31?2:0,tension:.25,spanGaps:true}]},
       options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>yen(x.raw)}}},
-      scales:{y:{ticks:{callback:v=>v>=10000?(v/10000)+"万":v.toLocaleString()},grid:{color:"#eee"}},x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}}));
+      scales:{y:{ticks:{callback:v=>v>=10000?(v/10000)+"万":v.toLocaleString()},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}}));
   }
 }
 
@@ -661,15 +729,15 @@ function renderIndex(){
   <div class="rel">${IDX.members.map(c=>`<a href="#card-${c.uid}">${thumb(c,"sm")}<span>${esc(c.name)}<b>${yen(cur(c,"cm"))}</b></span></a>`).join("")}</div>`
   :`<div class="panel empty">価格データの読み込み後に表示されます</div>`}`;
   app.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{IXR=+b.dataset.r;renderIndex()});
-  if(n>=2){const k=Math.min(IXR,n);charts.push(new Chart(document.getElementById("ic"),{type:"line",data:{labels:DATES.slice(-k).map(d=>d.slice(5).replace("-","/")),datasets:[{data:v.slice(-k),borderColor:"#17324f",backgroundColor:"#17324f22",fill:true,borderWidth:2,pointRadius:k<=31?2:0,tension:.25}]},
-    options:{maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>yen(x.raw)}}},scales:{y:{ticks:{callback:v=>yen(v)},grid:{color:"#eee"}},x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}}));}
+  if(n>=2){const k=Math.min(IXR,n);charts.push(new Chart(document.getElementById("ic"),{type:"line",data:{labels:DATES.slice(-k).map(d=>d.slice(5).replace("-","/")),datasets:[{data:v.slice(-k),borderColor:"#b9a8ff",backgroundColor:"#b9a8ff22",fill:true,borderWidth:2,pointRadius:k<=31?2:0,tension:.25}]},
+    options:{maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>yen(x.raw)}}},scales:{y:{ticks:{callback:v=>yen(v)},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}}));}
 }
 
 // ================= 比較 =================
 let CMP={mode:"pct",idx:true,base:null,q:""};
 function renderCompare(){
   let sel=LS.get("opc-cmp",[]).filter(u=>BYUID[u]);const cs=sel.map(u=>BYUID[u]);
-  const COLS=["#b3261e","#1f62b8","#2e8b57"];
+  const COLS=["#ff5c8a","#5cc8ff","#6be3a8"];
   app.innerHTML=`${statusNote()}<h1 class="pt">カード価格比較</h1><p class="lead">最大3枚のカードの価格推移を並べて比較できます</p>
   <div class="slots">${[0,1,2].map(i=>cs[i]?`<div class="slot f" style="border-color:${COLS[i]}"><button class="x" data-x="${i}" title="外す">×</button><b>${esc(cs[i].name)}</b><div class="foot">${esc(cs[i].id)} ・ ${yen(price(cs[i]))}</div></div>`:`<div class="slot"><span class="foot">カード${i+1}：下の検索から追加</span></div>`).join("")}</div>
   ${sel.length<3?`<input type="search" id="cq" placeholder="追加するカードを検索（カード名・型番）" value="${esc(CMP.q)}" style="width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 12px;font:inherit"><div id="cs"></div>`:""}
@@ -693,7 +761,7 @@ function renderCompare(){
     if(CMP.idx)ds.push({label:"ワンピカ指数",data:tr(IDX.vals),borderColor:"#999",borderDash:[5,4],borderWidth:2,pointRadius:0,tension:.25});
     charts.push(new Chart(document.getElementById("cc"),{type:"line",data:{labels:DATES.map(d=>d.slice(5).replace("-","/")),datasets:ds},
       options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom",labels:{boxWidth:12}},tooltip:{callbacks:{label:x=>`${x.dataset.label}: ${CMP.mode==="pct"?(x.raw==null?"—":x.raw.toFixed(1)+"%"):yen(x.raw)}`}}},
-      scales:{y:{ticks:{callback:v=>CMP.mode==="pct"?v+"%":yen(v)},grid:{color:"#eee"}},x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}}));
+      scales:{y:{ticks:{callback:v=>CMP.mode==="pct"?v+"%":yen(v)},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}}));
   }
 }
 
@@ -844,13 +912,14 @@ function renderBoxDetail(key){
   ${rel.length?`<h3 class="sh">同じ種類のBOX</h3><div class="rel">${rel.map(x=>`<a href="#bx-${x.key}">${bxThumb(x,"sm")}<span>${esc(x.name)}<b>${yen(bxPrice(x))}</b></span></a>`).join("")}</div>`:""}`;
   app.querySelectorAll("[data-f]").forEach(e=>e.onclick=()=>{BXD.f=+e.dataset.f;renderBoxDetail(key)});
   app.querySelectorAll("[data-r]").forEach(e=>e.onclick=()=>{BXD.range=+e.dataset.r;renderBoxDetail(key)});
-  if(nd>=2){const n=Math.min(BXD.range,nd),col={0:"#b3261e",3:"#8a8278",6:"#17324f",1:"#2e7d5b"}[BXD.f],isS=BXD.f===1;
+  if(nd>=2){const n=Math.min(BXD.range,nd),col={0:"#ff5c8a",3:"#c9b8ff",6:"#5cc8ff",1:"#6be3a8"}[BXD.f],isS=BXD.f===1;
     charts.push(new Chart(document.getElementById("bc"),{type:"line",data:{labels:DATES.slice(-n).map(d=>d.slice(5).replace("-","/")),datasets:[{data:bxSer(b,BXD.f).slice(-n),borderColor:col,backgroundColor:col+"22",fill:true,borderWidth:2,pointRadius:n<=31?2:0,tension:.25,spanGaps:true}]},
       options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>isS?x.raw+"個":yen(x.raw)}}},
-      scales:{y:{ticks:{callback:v=>isS?v:v>=10000?(v/10000)+"万":v.toLocaleString()},grid:{color:"#eee"}},x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}}));}
+      scales:{y:{ticks:{callback:v=>isS?v:v>=10000?(v/10000)+"万":v.toLocaleString()},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}}));}
 }
 
 // ================= ルーティング =================
+if(window.Chart){Chart.defaults.color="#a7a2c8";Chart.defaults.borderColor="rgba(255,255,255,.08)";}
 let animT;
 function render(){
   kill();app.classList.add("anim");clearTimeout(animT);animT=setTimeout(()=>app.classList.remove("anim"),1200);const h=location.hash.slice(1)||"home";
