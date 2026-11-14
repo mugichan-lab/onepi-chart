@@ -149,5 +149,9 @@
     })().catch(function (e) { st.state = "error"; st.lastError = String(e); save("__snkres", st); });
     return "started snk daily";
   };
+  // 結果を取り出す（大きな出力として保存させるため末尾を空白で埋める）
+  window.__snkDump = function () { var r = JSON.parse(localStorage.getItem("__snkres") || "{}"); var o = { date: r.date, state: r.state, sa: r.sa, sn: r.sn, sp: r.sp, si: r.si, snItems: r.snItems }; var s = JSON.stringify(o); return "SNKDUMP" + s + "ENDDUMP" + " ".repeat(Math.max(0, 130000 - s.length)); };
+  // 過去の取引相場（日次）をファイルとしてダウンロード
+  window.__snkBackDownload = function () { var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(window.__snkBack || {})], { type: "application/json" })); a.download = "snk_hist.json"; document.body.appendChild(a); a.click(); return Object.keys(window.__snkBack || {}).length; };
   window.__snkParse = parse; window.__snkAssign = assign;
 })();

@@ -10,7 +10,7 @@
 import json, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FIELDS = "cm,cs,ci,ua,ka,ia,ub,kb,ib,uc,kc,ic,cp,kp,ip,cu,mb".split(",")
+FIELDS = "cm,cs,ci,ua,ka,ia,ub,kb,ib,uc,kc,ic,cp,kp,ip,cu,mb,sa,sn,sp,si".split(",")
 
 
 def load(path):
@@ -36,8 +36,38 @@ def load(path):
         return json.loads(json.loads('"' + body + '"'))  # 二重にエスケープされている場合
 
 
+def load_snk(path):
+    text = open(path, encoding="utf-8").read()
+    try:
+        arr = json.loads(text)
+        if isinstance(arr, list):
+            text = "".join(x.get("text", "") for x in arr if isinstance(x, dict))
+        elif isinstance(arr, dict):
+            return arr
+    except Exception:
+        pass
+    m = re.search(r"SNKDUMP(.*?)ENDDUMP", text, re.S)
+    if not m:
+        sys.exit("SNKDUMP ... ENDDUMP が見つかりません")
+    body = m.group(1)
+    try:
+        return json.loads(body)
+    except Exception:
+        return json.loads(json.loads('"' + body + '"'))
+
+
 def main():
     day = load(sys.argv[1])
+    # 2つ目の引数：スニダンの結果（任意）
+    if len(sys.argv) > 2:
+        snk = load_snk(sys.argv[2])
+        if snk.get("state") == "done" and snk.get("date") == day.get("date"):
+            for f in ("sa", "sn", "sp", "si"):
+                if snk.get(f):
+                    day[f] = snk[f]
+            day["snItems"] = snk.get("snItems")
+        else:
+            print("スニダンの結果は日付不一致または未完了のため使いません", file=sys.stderr)
     day["v"] = "m1"
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day.get("date", "")):
         sys.exit("データ形式が不正です")
