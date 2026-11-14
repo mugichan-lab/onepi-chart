@@ -38,7 +38,8 @@ def load(path):
 
 def main():
     day = load(sys.argv[1])
-    if day.get("v") != "m1" or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day.get("date", "")):
+    day["v"] = "m1"
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day.get("date", "")):
         sys.exit("データ形式が不正です")
     n = json.load(open(os.path.join(ROOT, "tools", "nkeys.json")))
     for f in FIELDS:

@@ -10,7 +10,8 @@
  if(/ Line\//i.test(ua)&&!/[?&]openExternalBrowser=1/.test(location.search)){location.replace(location.pathname+(location.search?location.search+"&":"?")+"openExternalBrowser=1"+location.hash);return;}
  // 短時間に読み込みが繰り返された（ブラウザが落ちて再読み込みしている）場合は軽量モード
  var n=0,t=Date.now();try{var o=JSON.parse(sessionStorage.getItem("opc-boot")||"null");if(o&&t-o.t<8000)n=o.n+1;sessionStorage.setItem("opc-boot",JSON.stringify({n:n,t:t}));}catch(e){}
- if(n>=2||/ Line\/|FBAN|FBAV|Instagram|; wv\)/i.test(ua)||/[?&]lite=1/.test(location.search))d.classList.add("lite");
+ var ios=/iP(hone|od|ad)/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
+ if(n>=2||ios||/ Line\/|FBAN|FBAV|Instagram|Brave|; wv\)/i.test(ua)||/[?&]lite=1/.test(location.search))d.classList.add("lite");
  window.addEventListener("load",function(){setTimeout(function(){try{sessionStorage.removeItem("opc-boot")}catch(e){}},8000)});
 })();
 </script>
@@ -517,7 +518,7 @@ async function loadDb(){
   try{
     const idx=await fetch("data/index.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw 0;return r.json()});
     const dates=idx.slice().sort().slice(-400);
-    const docs=(await Promise.all(dates.map(d=>fetch("data/"+d+".json").then(r=>r.ok?r.json():null).catch(()=>null)))).filter(d=>d&&d.v==="m1");
+    const docs=(await Promise.all(dates.map(d=>fetch("data/"+d+".json").then(r=>r.ok?r.json():null).catch(()=>null)))).filter(d=>d&&d.date&&(d.cm||d.mb||d.bx));
     DATES=docs.map(d=>d.date);
     for(const f of FIELDS) SER[f]=docs.map(d=>d[f]!=null?parseCsv(d[f]):null);
     BXS=docs.map(d=>{try{return d.bx?JSON.parse(d.bx):null}catch(e){return null}});
