@@ -122,36 +122,42 @@
   }
   window.__snkDaily = function (opts) {
     opts = opts || {};
-    var st = { state: "running", date: jst(), at: new Date().toISOString(), done: 0 };
+    var st = { state: "running", date: jst(), at: new Date().toISOString(), done: 0, part: { sa: {}, sn: {}, sp: {}, si: {} } };
+    // 途中で止まった同じ日の取得があれば続きから
+    try { var old = JSON.parse(localStorage.getItem("__snkres") || "null"); if (old && old.state === "running" && old.date === st.date && old.part && !!old.backfill === !!opts.backfill) { st = old; st.resumed = (st.resumed || 0) + 1; } } catch (e) {}
+    st.backfill = !!opts.backfill;
+    var back = null;
+    if (opts.backfill) { try { back = JSON.parse(localStorage.getItem("__snkback") || "{}"); } catch (e) { back = {}; } }
     save("__snkres", st);
     window.__snkP = (async function () {
       var KL = await fetch(RAW + "tools/masterkeys.json", { cache: "no-store" }).then(function (r) { return r.json(); });
       var MAP = await fetch(RAW + "tools/snkmap.json", { cache: "no-store" }).then(function (r) { return r.json(); });
-      var sa = [], sn = [], sp = [], si = [], back = opts.backfill ? {} : null, keys = KL.filter(function (k) { return MAP[k] && MAP[k][1]; });
+      var keys = KL.filter(function (k) { return MAP[k] && MAP[k][1]; }), P = st.part;
       st.total = keys.length;
-      for (var i = 0; i < keys.length; i++) {
+      function persist() { save("__snkres", st); if (back) { try { localStorage.setItem("__snkback", JSON.stringify(back)); } catch (e) { st.backErr = "storage full"; } } }
+      for (var i = st.done; i < keys.length; i++) {
         var k = keys[i], ix = KL.indexOf(k), pc = MAP[k][1];
-        si[ix] = MAP[k][0];
+        P.si[ix] = MAP[k][0];
         try {
-          var a = await hist(pc, "nearly_unused"); sa[ix] = a.p; sn[ix] = a.n;
+          var a = await hist(pc, "nearly_unused"); if (a.p != null) P.sa[ix] = a.p; P.sn[ix] = a.n;
           if (back) back[k] = a.chart.filter(function (p) { return Date.now() - p.timestamp < 400 * 864e5; }).map(function (p) { return [new Date(p.timestamp + 9 * 3600e3).toISOString().slice(0, 10), p.price]; });
-          if ((a.p || 0) >= 2000 || opts.allPsa) { await sleep(GAP); var b = await hist(pc, "psa10"); sp[ix] = b.p; }
+          if ((a.p || 0) >= 2000 || opts.allPsa) { await sleep(GAP); var b = await hist(pc, "psa10"); if (b.p != null) P.sp[ix] = b.p; }
         } catch (e) { st.lastError = k + ": " + e.message; if (/HTTP 4(03|29)/.test(e.message)) { st.state = "error"; break; } }
-        st.done = i + 1; if (i % 20 === 0) save("__snkres", st);
+        st.done = i + 1; if (i % 15 === 0) persist();
         await sleep(GAP);
       }
-      function csv(a) { var o = []; for (var i = 0; i < KL.length; i++) o.push(a[i] == null ? "" : a[i]); return o.join(","); }
-      st.sa = csv(sa); st.sn = csv(sn); st.sp = csv(sp); st.si = csv(si);
-      st.snItems = sa.filter(function (x) { return x != null; }).length;
+      function csv(o) { var a = []; for (var i = 0; i < KL.length; i++) a.push(o[i] == null ? "" : o[i]); return a.join(","); }
+      st.sa = csv(P.sa); st.sn = csv(P.sn); st.sp = csv(P.sp); st.si = csv(P.si);
+      st.snItems = Object.keys(P.sa).length;
       if (st.state !== "error") st.state = "done";
-      st.at = new Date().toISOString(); save("__snkres", st);
+      st.at = new Date().toISOString(); persist();
       if (back) window.__snkBack = back;
     })().catch(function (e) { st.state = "error"; st.lastError = String(e); save("__snkres", st); });
-    return "started snk daily";
+    return st.resumed ? "resumed snk daily at " + st.done : "started snk daily";
   };
   // 結果を取り出す（大きな出力として保存させるため末尾を空白で埋める）
   window.__snkDump = function () { var r = JSON.parse(localStorage.getItem("__snkres") || "{}"); var o = { date: r.date, state: r.state, sa: r.sa, sn: r.sn, sp: r.sp, si: r.si, snItems: r.snItems }; var s = JSON.stringify(o); return "SNKDUMP" + s + "ENDDUMP" + " ".repeat(Math.max(0, 130000 - s.length)); };
   // 過去の取引相場（日次）をファイルとしてダウンロード
-  window.__snkBackDownload = function () { var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(window.__snkBack || {})], { type: "application/json" })); a.download = "snk_hist.json"; document.body.appendChild(a); a.click(); return Object.keys(window.__snkBack || {}).length; };
+  window.__snkBackDownload = function () { if (!window.__snkBack) { try { window.__snkBack = JSON.parse(localStorage.getItem("__snkback") || "{}"); } catch (e) {} } var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(window.__snkBack || {})], { type: "application/json" })); a.download = "snk_hist.json"; document.body.appendChild(a); a.click(); return Object.keys(window.__snkBack || {}).length; };
   window.__snkParse = parse; window.__snkAssign = assign;
 })();
