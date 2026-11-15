@@ -1,3 +1,70 @@
+// BOX master: [key, 表示名, 種別, 発売順(大きいほど新しい), 含む正規表現, 除外正規表現]
+// 種別: bp=ブースター, eb=エクストラ, prb=プレミアムブースター, pcc=プレミアムカードコレクション, etc=その他
+var OPBOX = (function () {
+  var L = [
+    ["eb05", "エクストラブースター Heroines Edition vol.2【EB-05】", "eb", 240, /heroinesedition.*vol\.?2|ヒロインズエディションvol\.?2|eb-?05/, /プレシャス|precious|special/],
+    ["op17", "ブースターパック 世界最強の戦士【OP-17】", "bp", 236, /世界最強の戦士/, null],
+    ["op16", "ブースターパック 決戦の刻【OP-16】", "bp", 232, /決戦の刻/, null],
+    ["op15", "ブースターパック 神の島の冒険【OP-15】", "bp", 228, /神の島の冒険/, null],
+    ["eb04", "エクストラブースター EGGHEAD CRISIS【EB-04】", "eb", 226, /eggheadcrisis|エッグヘッドクライシス/, null],
+    ["op14", "ブースターパック 蒼海の七傑【OP-14】", "bp", 224, /蒼海の七傑/, null],
+    ["op13", "ブースターパック 受け継がれる意志【OP-13】", "bp", 220, /受け継がれる意志/, /英語版|carryingon/],
+    ["prb02", "プレミアムブースター THE BEST vol.2【PRB-02】", "prb", 218, /thebestvol\.?2|prb-?02/, null],
+    ["eb03", "エクストラブースター Heroines Edition【EB-03】", "eb", 216, /heroinesedition|ヒロインズエディション|eb-?03/, /vol\.?2|eb-?05|プレシャス|precious|special/],
+    ["op12", "ブースターパック 師弟の絆【OP-12】", "bp", 212, /師弟の絆/, null],
+    ["op11", "ブースターパック 神速の拳【OP-11】", "bp", 208, /神速の拳/, null],
+    ["eb02", "エクストラブースター Anime 25th collection【EB-02】", "eb", 206, /anime25thcollection/, null],
+    ["op10", "ブースターパック 王族の血統【OP-10】", "bp", 204, /王族の血統/, null],
+    ["op09", "ブースターパック 新たなる皇帝【OP-09】", "bp", 200, /新たなる皇帝/, null],
+    ["prb01", "プレミアムブースター THE BEST【PRB-01】", "prb", 198, /onepiececardthebest/, /vol\.?2|ストレージ|prb-?02/],
+    ["eb01", "エクストラブースター メモリアルコレクション【EB-01】", "eb", 196, /メモリアルコレクション/, null],
+    ["op08", "ブースターパック 二つの伝説【OP-08】", "bp", 192, /二つの伝説/, null],
+    ["op07", "ブースターパック 500年後の未来【OP-07】", "bp", 188, /500年後の未来/, null],
+    ["op06", "ブースターパック 双璧の覇者【OP-06】", "bp", 184, /双璧の覇者/, null],
+    ["op05", "ブースターパック 新時代の主役【OP-05】", "bp", 180, /新時代の主役/, null],
+    ["op04", "ブースターパック 謀略の王国【OP-04】", "bp", 176, /謀略の王国/, null],
+    ["op03", "ブースターパック 強大な敵【OP-03】", "bp", 172, /強大な敵/, null],
+    ["op02", "ブースターパック 頂上決戦【OP-02】", "bp", 168, /頂上決戦/, null],
+    ["op01", "ブースターパック ROMANCE DAWN【OP-01】", "bp", 164, /romancedawn/, /英語版/],
+    ["pcc-mera", "プレミアムカードコレクション -メラメラの実争奪戦 Edition-", "pcc", 150, /メラメラの実争奪戦/, /プレイマット|ストレージ/],
+    ["pcc-bs7", "プレミアムカードコレクション -ベストセレクションvol.7-", "pcc", 149, /ベストセレクションvol\.?7/, null],
+    ["pcc-day25", "プレミアムカードコレクション -ONE PIECE DAY'25-", "pcc", 148, /day'?25/, /ドン|来場者/],
+    ["pcc-live2s", "プレミアムカードコレクション -Live Action Edition vol.2 麦わらの一味-", "pcc", 147, /liveactioneditionvol\.?2.*麦わらの一味|麦わらの一味.*liveactioneditionvol\.?2/, null],
+    ["pcc-live2b", "プレミアムカードコレクション -Live Action Edition vol.2 バロックワークス-", "pcc", 146, /liveactioneditionvol\.?2.*バロックワークス|バロックワークス.*liveactioneditionvol\.?2/, null],
+    ["pcc-bs6", "プレミアムカードコレクション -ベストセレクションvol.6-", "pcc", 145, /ベストセレクションvol\.?6/, null],
+    ["pcc-kumamoto", "プレミアムカードコレクション -熊本県スペシャル-", "pcc", 144, /熊本/, null],
+    ["pcc-6assort", "プレミアムカードコレクション -6 assort vol.1-", "pcc", 143, /6assortvol\.?1/, null],
+    ["base1", "BASE SHOPリミテッドカードコレクション vol.1", "pcc", 142, /baseshopリミテッドカードコレクションvol\.?1/, null],
+    ["pcc-bs5", "プレミアムカードコレクション -ベストセレクションvol.5-", "pcc", 141, /ベストセレクションvol\.?5/, null],
+    ["pcc-bs4", "プレミアムカードコレクション -ベストセレクションvol.4-", "pcc", 140, /ベストセレクションvol\.?4/, null],
+    ["pcc-day24", "プレミアムカードコレクション -ONE PIECE DAY'24-", "pcc", 139, /day'?24/, /ドン|live|ライブ/],
+    ["pcc-leader", "プレミアムカードコレクション -Leader Collection-", "pcc", 138, /leadercollection|リーダーコレクション/, null],
+    ["pcc-fest2324", "プレミアムカードコレクション -BANDAI CARD GAMES Fest 23-24 Edition-", "pcc", 137, /fest23-?24/, null],
+    ["pcc-live1", "プレミアムカードコレクション -Live Action Edition-", "pcc", 136, /liveactionedition/, /vol\.?2/],
+    ["pcc-bs3", "プレミアムカードコレクション -ベストセレクションvol.3-", "pcc", 135, /ベストセレクションvol\.?3/, null],
+    ["pcc-bs2", "プレミアムカードコレクション -ベストセレクションvol.2-", "pcc", 134, /ベストセレクションvol\.?2/, null],
+    ["pcc-girls", "プレミアムカードコレクション -ガールズエディション-", "pcc", 133, /ガールズエディション/, /asia版/],
+    ["pcc-bs1", "プレミアムカードコレクション -ベストセレクションvol.1-", "pcc", 132, /ベストセレクションvol\.?1/, null],
+    ["pcc-uta", "プレミアムカードコレクション -ウタ-", "pcc", 131, /プレミアムカードコレクション.?ウタ/, null],
+    ["pcc-red", "プレミアムカードコレクション -ONE PIECE FILM RED-", "pcc", 130, /プレミアムカードコレクション.*filmred|プレミアムカードコレクションred/, null],
+    ["pcc-25th", "プレミアムカードコレクション -25周年エディション-", "pcc", 129, /25周年エディション/, null],
+    ["family", "ファミリーデッキセット", "etc", 120, /ファミリーデッキセット/, null]
+  ];
+  function norm(s) {
+    return String(s || "").normalize("NFKC").toLowerCase()
+      .replace(/[\s　]/g, "").replace(/[’‘`]/g, "'").replace(/[‐‑–—ー−](?=[a-z0-9])/g, "-")
+      .replace(/[－]/g, "-");
+  }
+  function match(name) {
+    var n = norm(name);
+    for (var i = 0; i < L.length; i++) {
+      var b = L[i];
+      if (b[4].test(n) && !(b[5] && b[5].test(n))) return b[0];
+    }
+    return null;
+  }
+  return { L: L, norm: norm, match: match };
+})();
 // 高額カード（相場5,000円以上）のフリマ売却相場（Yahoo!フリマ・メルカリの「売り切れ」）を集計するスクリプト
 // 対象カードを3グループに分け、1日1グループずつ（各カード3日に1回）取得する。
 // 使い方（各サイトのページ上で）: (0,eval)(localStorage.getItem('__opfleac')); window.__fleaCardRun()
@@ -27,8 +94,11 @@
   }
   function idRe(id) { var m = id.match(/^([A-Z]+)(\d*)-(\d{3})$/); return new RegExp(m[1] + "\\s*" + m[2] + "\\s*[-ー－‐]?\\s*" + m[3], "i"); }
   function pick(key, list, ref) {
-    var id = key.split("|")[0], tag = key.split("|")[1], re = idRe(id);
-    var ok = list.filter(function (x) { var t = nz(x.t); return x.p && re.test(t) && !BAD.test(t) && tagOf(t) === tag; });
+    var id = key.split("|")[0], tag = key.split("|")[1], pack = key.split("|")[2], re = idRe(id);
+    // 再録（別の弾に収録された同じ型番）は、タイトルにその弾の名前か型番が入っているものだけ
+    var own = id.slice(0, id.indexOf("-")).toLowerCase();
+    var packOk = function (t) { if (!pack) { var mm = typeof OPBOX !== "undefined" ? OPBOX.match(t) : null; return !mm || mm === own || !/^(op|eb|prb|st)\d/.test(mm); } var m = pack.match(/^([a-z]+)(\d+)$/); var codeRe = m ? new RegExp(m[1] + "\\s*-?\\s*0*" + (+m[2]) + "(?!\\d)", "i") : null; return (codeRe && codeRe.test(t)) || (typeof OPBOX !== "undefined" && OPBOX.match(t) === pack); };
+    var ok = list.filter(function (x) { var t = nz(x.t); return x.p && re.test(t) && !BAD.test(t) && tagOf(t) === tag && packOk(t); });
     if (ref) ok = ok.filter(function (x) { return x.p >= ref * 0.4 && x.p <= ref * 2; });
     else { var m0 = median(ok.map(function (x) { return x.p; })); ok = ok.filter(function (x) { return x.p >= m0 * 0.5 && x.p <= m0 * 1.6; }); }
     ok = ok.slice(0, 8);
