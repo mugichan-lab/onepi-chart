@@ -509,7 +509,7 @@ const BYUID={}; DATA.forEach(c=>BYUID[c.uid]=c);
 
 const FIELDS=["cm","cs","ci","ua","ka","ia","ub","kb","ib","uc","kc","ic","cp","kp","ip","cu","mb","sa","sn","sp","si"];
 let SNKH=null,SNKHP=null;const loadSnkHist=()=>SNKHP||(SNKHP=fetch("data/snk_hist.json").then(r=>r.ok?r.json():{}).catch(()=>({})).then(j=>SNKH=j));
-let DATES=[], SER={}, BXS=[], loadState="loading"; FIELDS.forEach(f=>SER[f]=[]);
+let DATES=[], SER={}, BXS=[], BXF=[], loadState="loading"; FIELDS.forEach(f=>SER[f]=[]);
 const parseCsv=s=>(s||"").split(",").map(v=>v===""?null:+v);
 const series=(c,f)=>c.ki<0?DATES.map(()=>null):SER[f].map((a,i)=>{if(!a&&f==="ua"&&SER.cu[i])return SER.cu[i][c.ki]??null;return a?a[c.ki]??null:null});
 const lastVal=a=>{for(let i=a.length-1;i>=0;i--) if(a[i]!=null) return a[i]; return null;};
@@ -525,10 +525,11 @@ async function loadDb(){
   try{
     const idx=await fetch("data/index.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw 0;return r.json()});
     const dates=idx.slice().sort().slice(-400);
-    const docs=(await Promise.all(dates.map(d=>fetch("data/"+d+".json").then(r=>r.ok?r.json():null).catch(()=>null)))).filter(d=>d&&d.date&&(d.cm||d.mb||d.bx));
+    const docs=(await Promise.all(dates.map(d=>fetch("data/"+d+".json").then(r=>r.ok?r.json():null).catch(()=>null)))).filter(d=>d&&d.date&&(d.cm||d.mb||d.bx||d.bxf));
     DATES=docs.map(d=>d.date);
     for(const f of FIELDS) SER[f]=docs.map(d=>d[f]!=null?parseCsv(d[f]):null);
     BXS=docs.map(d=>{try{return d.bx?JSON.parse(d.bx):null}catch(e){return null}});
+    BXF=docs.map(d=>{try{return d.bxf?JSON.parse(d.bxf):null}catch(e){return null}});
     loadState=docs.length?"ok":"empty";
   }catch(e){loadState="offline";}
   buildIndex();render();
@@ -938,7 +939,11 @@ const BOX_KIND={bp:"ブースターパック",eb:"エクストラブースター
 // bx配列: [A価格,A在庫,A商品ID, A-価格,A-在庫,A-商品ID, メルカード買取]
 const BOXES=OPBOX.L.map(([key,name,kind,order])=>({key,name,kind,order,code:(name.match(/【([A-Z]+-?\d*)】/)||[])[1]||""}));
 const BYBOX={};BOXES.forEach(b=>BYBOX[b.key]=b);
-const bxSer=(b,i)=>BXS.map(d=>d&&d[b.key]?d[b.key][i]??null:null);
+// i: 0-6 = カードラッシュ/メルカード（bx）、10-13 = フリマ（bxf：Y中央値,Y件数,M中央値,M件数）、20 = フリマ総合
+const fleaMix=a=>{if(!a)return null;const y=a[0],yn=a[1]||0,m=a[2],mn=a[3]||0;if(y==null&&m==null)return null;if(y==null)return m;if(m==null)return y;return Math.round((y*yn+m*mn)/((yn+mn)||1))};
+const bxSer=(b,i)=>i>=20?BXF.map(d=>d&&d[b.key]?fleaMix(d[b.key]):null):i>=10?BXF.map(d=>d&&d[b.key]?d[b.key][i-10]??null:null):BXS.map(d=>d&&d[b.key]?d[b.key][i]??null:null);
+const fleaUrl=(site,b)=>{const kw=(b.name.replace(/^(ブースターパック|エクストラブースター|プレミアムブースター)\s*/,"").replace(/【.*?】/g,"").replace(/^プレミアムカードコレクション\s*-?/,"プレミアムカードコレクション ").replace(/-$/,"")+(b.kind==="pcc"||b.kind==="etc"?"":" BOX")).trim();
+  return site==="y"?"https://paypayfleamarket.yahoo.co.jp/search/"+encodeURIComponent(kw)+"?sold=1":"https://jp.mercari.com/search?keyword="+encodeURIComponent(kw)+"&status=sold_out&sort=created_time&order=desc"};
 const bxCur=(b,i)=>lastVal(bxSer(b,i));
 function bxChg(b,i,d){const a=bxSer(b,i),n=lastVal(a);if(n==null||DATES.length<2)return null;const o=valAgo(a,Math.min(d,DATES.length-1));if(o==null||o===0)return null;return {now:n,old:o,diff:n-o,pct:(n-o)/o*100};}
 const bxPrice=b=>bxCur(b,0);
@@ -947,7 +952,7 @@ const BOXIMG=new Set(["base1", "eb01", "eb02", "eb03", "eb04", "eb05", "family",
 function bxThumb(b,size){if(BOXIMG.has(b.key))return `<div class="th ${size} box pic boxpic"><img src="img/box/${b.key}.webp" alt="${esc(b.name)}" loading="lazy" decoding="async"></div>`;const col={bp:"#17324f",eb:"#7a1f3d",prb:"#8a6417",pcc:"#2e5d4b",etc:"#4a5568"}[b.kind];
   return `<div class="th ${size} box" style="background:linear-gradient(155deg,${col},#0c1726)"><span class="r">BOX</span><span class="n">${esc(b.code||{pcc:"PCC",etc:"SET"}[b.kind]||"")}</span></div>`;}
 let BXV={kind:"",sort:"newest"};
-const BX_SORTS={newest:["新しい順",b=>-b.order],priceHigh:["販売価格が高い順",b=>-(bxPrice(b)??-1)],priceLow:["販売価格が安い順",b=>bxPrice(b)??1e12],buyHigh:["買取価格が高い順",b=>-(bxCur(b,6)??-1)],rise7:["高騰順（7日）",b=>-(bxChg(b,0,7)?.pct??-1e9)],fall7:["下落順（7日）",b=>bxChg(b,0,7)?.pct??1e9],rate:["買取率が高い順",b=>{const p=bxPrice(b),m=bxCur(b,6);return p&&m?-m/p:1}]};
+const BX_SORTS={newest:["新しい順",b=>-b.order],fleaHigh:["フリマ相場が高い順",b=>-(bxCur(b,20)??-1)],priceHigh:["販売価格が高い順",b=>-(bxPrice(b)??-1)],priceLow:["販売価格が安い順",b=>bxPrice(b)??1e12],buyHigh:["買取価格が高い順",b=>-(bxCur(b,6)??-1)],rise7:["高騰順（7日）",b=>-(bxChg(b,0,7)?.pct??-1e9)],fall7:["下落順（7日）",b=>bxChg(b,0,7)?.pct??1e9],rate:["買取率が高い順",b=>{const p=bxPrice(b),m=bxCur(b,6);return p&&m?-m/p:1}]};
 function renderBox(){
   const live=BXS.some(d=>d);
   const mk=(title,i,dir,src)=>{const r=BOXES.map(b=>({b,x:bxChg(b,i,7)})).filter(o=>o.x&&o.x.diff!==0&&(dir>0?o.x.diff>0:o.x.diff<0)).sort((a,c)=>(c.x.pct-a.x.pct)*dir).slice(0,5);
@@ -960,8 +965,8 @@ function renderBox(){
   <h3 class="sh">BOX一覧</h3>
   <div class="toolbar"><span class="seg">${kinds.map(([k,l])=>`<button class="btn ${BXV.kind===k?"on":""}" data-k="${k}">${l}</button>`).join("")}</span>
     <select id="bxs">${Object.entries(BX_SORTS).map(([k,[l]])=>`<option value="${k}" ${BXV.sort===k?"selected":""}>${l}</option>`).join("")}</select></div>
-  <div class="panel" style="padding:0;overflow:auto"><table class="bxt"><thead><tr><th>商品</th><th>販売 状態A</th><th>在庫</th><th>7日</th><th>販売 A-</th><th>買取</th><th>買取率</th></tr></thead><tbody>
-  ${list.map(b=>{const p=bxPrice(b),s=bxCur(b,1),am=bxCur(b,3),m=bxCur(b,6);return `<tr data-box="${b.key}" class="clk"><td><div class="bxn">${bxThumb(b,"sm")}<div><b>${esc(b.name)}</b><div class="foot">${BOX_KIND[b.kind]}</div></div></div></td><td class="num">${yen(p)}</td><td class="num">${p==null?"—":s>0?s+"個":"なし"}</td><td>${pctBadge(bxChg(b,0,7))}</td><td class="num">${yen(am)}</td><td class="num">${yen(m)}</td><td class="num">${p&&m?Math.round(m/p*100)+"%":"—"}</td></tr>`}).join("")}
+  <div class="panel" style="padding:0;overflow:auto"><table class="bxt"><thead><tr><th>商品</th><th>販売 状態A</th><th>在庫</th><th>7日</th><th>販売 A-</th><th>フリマ相場</th><th>買取</th><th>買取率</th></tr></thead><tbody>
+  ${list.map(b=>{const p=bxPrice(b),s=bxCur(b,1),am=bxCur(b,3),m=bxCur(b,6);return `<tr data-box="${b.key}" class="clk"><td><div class="bxn">${bxThumb(b,"sm")}<div><b>${esc(b.name)}</b><div class="foot">${BOX_KIND[b.kind]}</div></div></div></td><td class="num">${yen(p)}</td><td class="num">${p==null?"—":s>0?s+"個":"なし"}</td><td>${pctBadge(bxChg(b,0,7))}</td><td class="num">${yen(am)}</td><td class="num">${yen(bxCur(b,20))}</td><td class="num">${yen(m)}</td><td class="num">${p&&m?Math.round(m/p*100)+"%":"—"}</td></tr>`}).join("")}
   </tbody></table></div>
   <p class="foot">販売価格は在庫ありの商品を優先した最安値です（全て在庫なしの場合は掲載価格）。買取率＝メルカード買取価格÷カードラッシュ販売価格（状態A）。カートン販売・英語版・海外版は含みません。</p>`;
   app.querySelectorAll("[data-k]").forEach(e=>e.onclick=()=>{BXV.kind=e.dataset.k;renderBox()});
@@ -980,25 +985,26 @@ function renderBoxDetail(key){
     <h1 class="dname">${esc(b.name)}</h1><div><span class="chip">未開封BOX</span><span class="chip">${BOX_KIND[b.kind]}</span></div>
     <div class="foot" style="margin-top:10px">販売価格（カードラッシュ・状態A）</div><div class="bigprice">${yen(p)}</div>
     <div class="kv"><div><div class="k">7日間変動</div>${dv(c7)}</div><div><div class="k">30日間変動</div>${dv(c30)}</div>
-      <div><div class="k">買取価格（メルカード）</div><div class="v">${yen(m)}</div></div><div><div class="k">買取率</div><div class="v">${p&&m?Math.round(m/p*100)+"%":"—"}</div></div></div>
+      <div><div class="k">フリマ売却相場</div><div class="v">${yen(bxCur(b,20))}</div></div><div><div class="k">買取価格（メルカード）</div><div class="v">${yen(m)}</div></div><div><div class="k">買取率</div><div class="v">${p&&m?Math.round(m/p*100)+"%":"—"}</div></div></div>
   </div></div></div>
   <h3 class="sh">価格推移グラフ</h3>
-  <div class="panel"><div class="ctabs">${[[0,"販売 状態A"],[3,"販売 A-"],[6,"買取"],[1,"在庫数"]].map(([i,l])=>`<button class="btn ${BXD.f===i?"on":""}" data-f="${i}">${l}</button>`).join("")}
+  <div class="panel"><div class="ctabs">${[[0,"販売 状態A"],[3,"販売 A-"],[20,"フリマ相場"],[6,"買取"],[1,"在庫数"]].map(([i,l])=>`<button class="btn ${BXD.f===i?"on":""}" data-f="${i}">${l}</button>`).join("")}
     <span style="margin-left:auto" class="seg">${[[7,"7日"],[30,"1ヶ月"],[90,"3ヶ月"],[365,"1年"],[9999,"全期間"]].map(([d,l])=>`<button class="btn ${BXD.range===d?"on":""}" data-r="${d}">${l}</button>`).join("")}</span></div>
     ${nd>=2?`<div class="chartwrap"><canvas id="bc"></canvas></div>`:`<div class="empty">推移グラフは2日分以上のデータがたまると表示されます</div>`}</div>
   <h3 class="sh">購入・買取情報</h3>
   <div class="panel" style="padding:0;overflow:auto"><table><thead><tr><th>ショップ</th><th>種別</th><th>状態</th><th>在庫</th><th>価格</th></tr></thead><tbody>
   ${rows.map(([pi,si,ii,l])=>{const pv=bxCur(b,pi),sv=bxCur(b,si);return `<tr><td><a href="${bxLink(b,ii)}" target="_blank" rel="noopener">カードラッシュ ↗</a></td><td>販売</td><td><span class="cond">${l}</span></td><td>${pv==null?"—":sv>0?sv+"個":"なし"}</td><td>${yen(pv)}</td></tr>`}).join("")}
-  <tr><td><a href="https://akihabara-cardshop.com/onepice-kaitori/" target="_blank" rel="noopener">メルカード秋葉原 ↗</a></td><td>買取</td><td>未開封</td><td>—</td><td>${yen(m)}</td></tr></tbody></table></div>
-  <p class="foot">状態A-はカードラッシュで外箱・シュリンクに傷などがある未開封品です。</p>
+  <tr><td><a href="https://akihabara-cardshop.com/onepice-kaitori/" target="_blank" rel="noopener">メルカード秋葉原 ↗</a></td><td>買取</td><td>未開封</td><td>—</td><td>${yen(m)}</td></tr>
+  ${[["y","Yahoo!フリマ",10],["m","メルカリ",12]].map(([s,l,i])=>{const v=bxCur(b,i),n=bxCur(b,i+1);return `<tr><td><a href="${fleaUrl(s,b)}" target="_blank" rel="noopener">${l} ↗</a></td><td>売却相場</td><td>未開封</td><td>${n?"直近"+n+"件":"—"}</td><td>${yen(v)}</td></tr>`}).join("")}</tbody></table></div>
+  <p class="foot">状態A-はカードラッシュで外箱・シュリンクに傷などがある未開封品です。売却相場は、Yahoo!フリマ・メルカリで「売り切れ」になった1BOXの出品（新しい順・最大10件）の中央値です。複数BOXのセット・開封済み・空箱・海外版などは除いています。</p>
   <h3 class="sh">直近の相場</h3>
-  <div class="panel" style="padding:0;overflow:auto"><table><thead><tr><th>日付</th><th>販売 A</th><th>在庫</th><th>販売 A-</th><th>買取</th></tr></thead><tbody>
-  ${DATES.map((d,i)=>i).reverse().filter(i=>BXS[i]&&BXS[i][key]).slice(0,14).map(i=>{const a=BXS[i][key];return `<tr><td>${DATES[i]}</td><td>${yen(a[0])}</td><td>${a[1]??"—"}</td><td>${yen(a[3])}</td><td>${yen(a[6])}</td></tr>`}).join("")||`<tr><td colspan="5">データなし</td></tr>`}
+  <div class="panel" style="padding:0;overflow:auto"><table><thead><tr><th>日付</th><th>販売 A</th><th>在庫</th><th>販売 A-</th><th>フリマ</th><th>買取</th></tr></thead><tbody>
+  ${DATES.map((d,i)=>i).reverse().filter(i=>BXS[i]&&BXS[i][key]).slice(0,14).map(i=>{const a=BXS[i][key];return `<tr><td>${DATES[i]}</td><td>${yen(a[0])}</td><td>${a[1]??"—"}</td><td>${yen(a[3])}</td><td>${yen(BXF[i]&&BXF[i][key]?fleaMix(BXF[i][key]):null)}</td><td>${yen(a[6])}</td></tr>`}).join("")||`<tr><td colspan="6">データなし</td></tr>`}
   </tbody></table></div>
   ${rel.length?`<h3 class="sh">同じ種類のBOX</h3><div class="rel">${rel.map(x=>`<a href="#bx-${x.key}">${bxThumb(x,"sm")}<span>${esc(x.name)}<b>${yen(bxPrice(x))}</b></span></a>`).join("")}</div>`:""}`;
   app.querySelectorAll("[data-f]").forEach(e=>e.onclick=()=>{BXD.f=+e.dataset.f;renderBoxDetail(key)});
   app.querySelectorAll("[data-r]").forEach(e=>e.onclick=()=>{BXD.range=+e.dataset.r;renderBoxDetail(key)});
-  if(nd>=2){const n=Math.min(BXD.range,nd),col={0:"#ff5c8a",3:"#c9b8ff",6:"#5cc8ff",1:"#6be3a8"}[BXD.f],isS=BXD.f===1;
+  if(nd>=2){const n=Math.min(BXD.range,nd),col={0:"#ff5c8a",3:"#c9b8ff",6:"#5cc8ff",1:"#6be3a8",20:"#ffd27a"}[BXD.f],isS=BXD.f===1;
     charts.push(new Chart(document.getElementById("bc"),{type:"line",data:{labels:DATES.slice(-n).map(d=>d.slice(5).replace("-","/")),datasets:[{data:bxSer(b,BXD.f).slice(-n),borderColor:col,backgroundColor:col+"22",fill:true,borderWidth:2,pointRadius:n<=31?2:0,tension:.25,spanGaps:true}]},
       options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>isS?x.raw+"個":yen(x.raw)}}},
       scales:{y:{ticks:{callback:v=>isS?v:v>=10000?(v/10000)+"万":v.toLocaleString()},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}}));}
