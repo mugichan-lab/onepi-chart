@@ -84,9 +84,10 @@ def main():
     if flea:
         bxf = {}
         for k in set(list(flea.get("y", {})) + list(flea.get("m", {}))):
-            y = flea.get("y", {}).get(k) or [None, 0]
-            m = flea.get("m", {}).get(k) or [None, 0]
-            bxf[k] = [y[0], y[1], m[0], m[1]]
+            # [Yテープ付き, 件数, Mテープ付き, 件数, Yテープカット, 件数, Mテープカット, 件数]
+            y = (flea.get("y", {}).get(k) or []) + [None, 0, None, 0]
+            m = (flea.get("m", {}).get(k) or []) + [None, 0, None, 0]
+            bxf[k] = [y[0], y[1], m[0], m[1], y[2], y[3], m[2], m[3]]
         day["bxf"] = json.dumps(bxf, ensure_ascii=False, separators=(",", ":"))
     if snk is not None:
         if snk.get("state") == "done" and snk.get("date") == day.get("date"):

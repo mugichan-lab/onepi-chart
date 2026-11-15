@@ -95,19 +95,23 @@ var OPBOX = (function () {
   // 1BOX（1個）の未開封品だけを残すための除外条件
   var BAD = /([2-9２-９]|[1-9]\d)\s*(box|ボックス|個|点)|box\s*[×x*]\s*[2-9]|カートン|まとめ|空箱|空き箱|外箱のみ|開封済|開封品|バラ|シングル|1枚|カードのみ|パック\s*[1-9](?!\d)|(?<!\d)([1-9]|1[0-9])\s*パック|スリーブ|プレイマット|ストレージ|中国|簡体|繁体|英語|english|韓国|アジア|asia|海外版|鑑定|psa|オリパ|プロモ|未開封パック|ジャンク|抜き|サーチ済/i;
   function median(a) { if (!a.length) return null; a = a.slice().sort(function (x, y) { return x - y; }); var m = a.length >> 1; return a.length % 2 ? a[m] : Math.round((a[m - 1] + a[m]) / 2); }
+  // テープカット（シュリンク代わりの公式テープを切ったもの）かどうか
+  var CUT = /テープ\s*(カット|cut|なし|無し|無|切|剥が|はが|外)|カット済|テープレス|ノーテープ/i;
   function pick(key, list, ref, M) {
-    // list: [{t:タイトル, p:価格}]（新しい順）
+    // list: [{t:タイトル, p:価格}]（新しい順）→ [テープ付き中央値, 件数, テープカット中央値, 件数]
     var ok = list.filter(function (x) {
       if (!x.p || BAD.test(x.t)) return false;
       if (M.match(x.t) !== key) return false;
       if (!/^pcc|base1|family/.test(key) && !/box|ボックス|1箱|24パック|10パック入り/i.test(x.t)) return false;
       if (key === "eb03" && /エディション\s*((2|２)(?![0-9０-９])|vol)|edition\s*(2(?!\d)|vol)/i.test(x.t)) return false;
       return true;
-    }).map(function (x) { return x.p; });
-    if (ref) ok = ok.filter(function (p) { return p >= ref * 0.45 && p <= ref * 2; });
-    else { var m0 = median(ok); ok = ok.filter(function (p) { return p >= m0 * 0.6 && p <= m0 * 1.6; }); }
-    ok = ok.slice(0, 10);
-    return [median(ok), ok.length];
+    });
+    if (ref) ok = ok.filter(function (x) { return x.p >= ref * 0.4 && x.p <= ref * 2; });
+    else { var m0 = median(ok.map(function (x) { return x.p; })); ok = ok.filter(function (x) { return x.p >= m0 * 0.5 && x.p <= m0 * 1.6; }); }
+    var boxy = !/^pcc|base1|family/.test(key);
+    var tape = ok.filter(function (x) { return !boxy || !CUT.test(x.t); }).slice(0, 10).map(function (x) { return x.p; });
+    var cut = boxy ? ok.filter(function (x) { return CUT.test(x.t); }).slice(0, 10).map(function (x) { return x.p; }) : [];
+    return [median(tape), tape.length, median(cut), cut.length];
   }
   async function loadBox() { return OPBOX; }
   async function refs() {
