@@ -10,7 +10,7 @@
 import json, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FIELDS = "cm,cs,ci,ua,ka,ia,ub,kb,ib,uc,kc,ic,cp,kp,ip,cu,mb,sa,sn,sp,si".split(",")
+FIELDS = "cm,cs,ci,ua,ka,ia,ub,kb,ib,uc,kc,ic,cp,kp,ip,cu,mb,sa,sn,sp,si,fc".split(",")
 
 
 def load(path):
@@ -61,8 +61,26 @@ def main():
     # 2つ目以降の引数：スニダン（SNKDUMP）・フリマBOX相場（FLEADUMP）の結果（任意）
     snk = None
     flea = {}
+    fcard = {}
     for path in sys.argv[2:]:
         txt = open(path, encoding="utf-8").read()
+        if "FCARDDUMP" in txt:
+            try:
+                arr = json.loads(txt)
+                if isinstance(arr, list):
+                    txt = "".join(x.get("text", "") for x in arr if isinstance(x, dict))
+            except Exception:
+                pass
+            body = re.search(r"FCARDDUMP(.*?)ENDDUMP", txt, re.S).group(1)
+            try:
+                f = json.loads(body)
+            except Exception:
+                f = json.loads(json.loads('"' + body + '"'))
+            if f.get("state") == "done" and f.get("date") == day.get("date"):
+                fcard[f.get("site")] = f.get("res", {})
+            else:
+                print("カードのフリマ(" + str(f.get("site")) + ")の結果は日付不一致または未完了のため使いません", file=sys.stderr)
+            continue
         if "FLEADUMP" in txt:
             try:
                 arr = json.loads(txt)
@@ -97,6 +115,24 @@ def main():
                     items[site][k] = v[4]
         ip_ = os.path.join(ROOT, "data", "flea_items.json")
         json.dump(items, open(ip_, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    if fcard:
+        # 高額カードのフリマ相場：その日の合算中央値をCSV(fc)に、詳細は data/flea_cards.json に上書き保存
+        n = len(json.load(open(os.path.join(ROOT, "tools", "masterkeys.json"))))
+        KL = json.load(open(os.path.join(ROOT, "tools", "masterkeys.json")))
+        pos = {k: i for i, k in enumerate(KL)}
+        fp = os.path.join(ROOT, "data", "flea_cards.json")
+        store = json.load(open(fp)) if os.path.exists(fp) else {}
+        fc = [""] * n
+        for k in set(list(fcard.get("y", {})) + list(fcard.get("m", {}))):
+            y = fcard.get("y", {}).get(k) or [None, 0, []]
+            m = fcard.get("m", {}).get(k) or [None, 0, []]
+            store[k] = {"d": day.get("date"), "y": y, "m": m}
+            tot = (y[1] or 0) + (m[1] or 0)
+            if tot and k in pos:
+                v = ((y[0] or 0) * (y[1] or 0) + (m[0] or 0) * (m[1] or 0)) / tot
+                fc[pos[k]] = str(int(round(v)))
+        day["fc"] = ",".join(fc)
+        json.dump(store, open(fp, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
     if snk is not None:
         if snk.get("state") == "done" and snk.get("date") == day.get("date"):
             for f in ("sa", "sn", "sp", "si"):

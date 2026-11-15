@@ -510,7 +510,8 @@ const DATA = RAW.map(([pack,id,rar,name0,ysell,ybuy])=>{
 });
 const BYUID={}; DATA.forEach(c=>BYUID[c.uid]=c);
 
-const FIELDS=["cm","cs","ci","ua","ka","ia","ub","kb","ib","uc","kc","ic","cp","kp","ip","cu","mb","sa","sn","sp","si"];
+const FIELDS=["cm","cs","ci","ua","ka","ia","ub","kb","ib","uc","kc","ic","cp","kp","ip","cu","mb","sa","sn","sp","si","fc"];
+let FCARD=null,FCARDP=null;const loadFleaCards=()=>FCARDP||(FCARDP=fetch("data/flea_cards.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{}).catch(()=>({})).then(j=>FCARD=j));
 let SNKH=null,SNKHP=null;const loadSnkHist=()=>SNKHP||(SNKHP=fetch("data/snk_hist.json").then(r=>r.ok?r.json():{}).catch(()=>({})).then(j=>SNKH=j));
 let DATES=[], SER={}, BXS=[], BXF=[], loadState="loading"; FIELDS.forEach(f=>SER[f]=[]);
 const parseCsv=s=>(s||"").split(",").map(v=>v===""?null:+v);
@@ -753,7 +754,7 @@ function renderDetail(uid){
   ${c.ki>=0?`
   <h3 class="sh">価格推移グラフ</h3>
   <div class="panel">
-    <div class="ctabs">${[["cm","状態A（美品）"],["ua","A-"],["ub","B"],["uc","C"],["cp","PSA10"],["mb","買取"],["sa","スニダン"],["sp","スニダンPSA10"]].map(([f,l])=>`<button class="btn ${DET.f===f?"on":""}" data-f="${f}">${l}</button>`).join("")}
+    <div class="ctabs">${[["cm","状態A（美品）"],["ua","A-"],["ub","B"],["uc","C"],["cp","PSA10"],["mb","買取"],["sa","スニダン"],["sp","スニダンPSA10"],["fc","フリマ"]].map(([f,l])=>`<button class="btn ${DET.f===f?"on":""}" data-f="${f}">${l}</button>`).join("")}
       <span style="margin-left:auto" class="seg">${[[7,"7日"],[30,"1ヶ月"],[90,"3ヶ月"],[365,"1年"],[9999,"全期間"]].map(([d,l])=>`<button class="btn ${DET.range===d?"on":""}" data-r="${d}">${l}</button>`).join("")}</span></div>
     ${nd>=2||DET.f==="sa"?`<div class="chartwrap"><canvas id="pc"></canvas></div>`:`<div class="empty">推移グラフは2日分以上のデータがたまると表示されます</div>`}
   </div>
@@ -764,9 +765,13 @@ function renderDetail(uid){
       :`<tr><td><a href="${crSearch(c)}" target="_blank" rel="noopener">カードラッシュ ↗</a></td><td>販売</td><td>—</td><td colspan="2">販売の記録なし</td></tr>`})()}
     <tr><td><a href="https://akihabara-cardshop.com/onepice-kaitori/" target="_blank" rel="noopener">メルカード秋葉原 ↗</a>${/^(OP|ST|EB|PRB|P)\d*-\d{3}$/.test(c.id)?`<button class="btn cpy" data-copy="${esc(c.id)}">型番 ${esc(c.id)} をコピー</button>`:""}</td><td>買取</td><td>—</td><td>—</td><td>${yen(cur(c,"mb"))}</td></tr>
     ${cur(c,"si")?`<tr><td><a href="https://snkrdunk.com/apparels/${cur(c,"si")}" target="_blank" rel="noopener">スニダン ↗</a></td><td>取引相場</td><td><span class="cond">状態A</span></td><td>${cur(c,"sn")!=null?"30日で"+cur(c,"sn")+"件":"—"}</td><td>${yen(cur(c,"sa"))}</td></tr>${cur(c,"sp")!=null?`<tr><td><a href="https://snkrdunk.com/apparels/${cur(c,"si")}" target="_blank" rel="noopener">スニダン ↗</a></td><td>取引相場</td><td><span class="cond">PSA10</span></td><td>—</td><td>${yen(cur(c,"sp"))}</td></tr>`:""}`:""}
+    ${(()=>{const e=FCARD&&c.ki>=0?FCARD[KEYS[c.ki]]:null;if(!e)return "";return [["y","Yahoo!フリマ"],["m","メルカリ"]].map(([s,l])=>{const v=e[s]||[null,0];return `<tr><td>${l}</td><td>売却相場</td><td>—</td><td>${v[1]?"直近"+v[1]+"件":"—"}</td><td>${yen(v[0])}</td></tr>`}).join("")})()}
     <tr><td>遊々亭（参考・${YUYU_DATE}）</td><td>販売／買取</td><td>—</td><td>—</td><td>${yen(c.ysell)} ／ ${yen(c.ybuy)}</td></tr>
   </tbody></table></div>
   <p class="foot">状態はカードラッシュの基準です。状態A＝状態表記なし（小さな白カケ・擦れ程度）、A-＝小さな傷・光沢痕など、B＝目立つ白カケ・凹み・軽い折れなど、C＝折れ跡が残る・全体に傷が多い。リンクは価格の取得に使った商品ページに直接移動します（その日に商品が特定できない場合は型番の検索結果）。</p>
+  ${(()=>{const e=FCARD&&c.ki>=0?FCARD[KEYS[c.ki]]:null;if(!e||!((e.y&&e.y[2]&&e.y[2].length)||(e.m&&e.m[2]&&e.m[2].length)))return "";
+    const col=(s,l)=>{const it=(e[s]&&e[s][2])||[];return `<div class="fl"><h4>${l}</h4>${it.length?it.map(([id,p,t,d])=>`<a class="fli" href="${fleaItemUrl(s,id)}" target="_blank" rel="noopener nofollow"><span class="flt">${esc(t||id)}</span><span class="flm">${d?`<span class="foot">${esc(d)}</span>`:""}<b>${yen(p)}</b></span></a>`).join(""):`<div class="empty">該当なし</div>`}</div>`};
+    return `<h3 class="sh">フリマ相場の参考にした出品<span class="foot">（${esc(e.d)} 時点・売り切れ）</span></h3><div class="panel flp">${col("y","Yahoo!フリマ")}${col("m","メルカリ")}</div><p class="foot">フリマ相場は相場5,000円以上のカードだけを対象に、3日に1回集計しています。タイトルに型番が入った1枚の売り切れ出品（鑑定品・まとめ売り・傷あり・海外版を除く）のうち、同じ仕様（パラレル・コミパラなど）と判定できたものの中央値です。</p>`})()}
   <h3 class="sh">直近の相場</h3>
   <div class="panel" style="padding:0;overflow:auto"><table><thead><tr><th>日付</th><th>A（美品）</th><th>A-</th><th>B</th><th>C</th><th>PSA10</th><th>買取</th><th>スニダン</th><th>在庫(A)</th></tr></thead><tbody>
   ${DATES.map((d,i)=>i).reverse().slice(0,14).map(i=>{const g=f=>SER[f][i]?SER[f][i][c.ki]??null:null;const am=SER.ua[i]?g("ua"):g("cu");return `<tr><td>${DATES[i]}</td><td>${yen(g("cm"))}</td><td>${yen(am)}</td><td>${yen(g("ub"))}</td><td>${yen(g("uc"))}</td><td>${yen(g("cp"))}</td><td>${yen(g("mb"))}</td><td>${yen(g("sa"))}</td><td>${g("cs")??"—"}</td></tr>`}).join("")||`<tr><td colspan="9">データなし</td></tr>`}
@@ -779,6 +784,7 @@ function renderDetail(uid){
   document.getElementById("dc").onclick=()=>{let s=LS.get("opc-cmp",[]);if(!s.includes(uid)){s=[...s,uid].slice(-3);LS.set("opc-cmp",s)}location.hash="compare"};
   app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{DET.f=b.dataset.f;renderDetail(uid)});
   app.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{DET.range=+b.dataset.r;renderDetail(uid)});
+  if(c.ki>=0&&!FCARD)loadFleaCards().then(()=>{if(location.hash==="#card-"+uid)renderDetail(uid)});
   if(c.ki>=0&&DET.f==="sa"&&!SNKH){loadSnkHist().then(()=>{if(location.hash==="#card-"+uid)renderDetail(uid)});}
   // スニダン(状態A)は過去の取引相場（日次）とこのサイトの記録をつなげて表示
   let snkSer=null;
@@ -786,7 +792,7 @@ function renderDetail(uid){
     const ds=[...m.keys()].sort();if(ds.length){const cut=new Date(Date.now()-DET.range*864e5).toISOString().slice(0,10);const use=ds.filter(d=>DET.range>=9999||d>=cut);snkSer={lab:use.map(d=>d.slice(2).replace(/-/g,"/")),val:use.map(d=>m.get(d))}}}
   if(c.ki>=0&&(nd>=2||snkSer)&&document.getElementById("pc")){
     const n=Math.min(DET.range,nd),lab=snkSer?snkSer.lab:DATES.slice(-n).map(d=>d.slice(5).replace("-","/"));
-    const col={cm:"#ff5c8a",ua:"#c9b8ff",ub:"#ffb36b",uc:"#9aa4b5",cp:"#f5c451",mb:"#5cc8ff",sa:"#6be3a8",sp:"#ffd27a"}[DET.f]||"#ff5c8a";
+    const col={cm:"#ff5c8a",ua:"#c9b8ff",ub:"#ffb36b",uc:"#9aa4b5",cp:"#f5c451",mb:"#5cc8ff",sa:"#6be3a8",sp:"#ffd27a",fc:"#ffa36b"}[DET.f]||"#ff5c8a";
     charts.push(new Chart(document.getElementById("pc"),{type:"line",data:{labels:lab,datasets:[{data:snkSer?snkSer.val:series(c,DET.f).slice(-n),borderColor:col,backgroundColor:col+"22",fill:true,borderWidth:2,pointRadius:(snkSer?snkSer.val.length:n)<=31?2:0,tension:.25,spanGaps:true}]},
       options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>yen(x.raw)}}},
       scales:{y:{ticks:{callback:v=>v>=10000?(v/10000)+"万":v.toLocaleString()},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}}));
