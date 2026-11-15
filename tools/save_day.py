@@ -58,9 +58,37 @@ def load_snk(path):
 
 def main():
     day = load(sys.argv[1])
-    # 2つ目の引数：スニダンの結果（任意）
-    if len(sys.argv) > 2:
-        snk = load_snk(sys.argv[2])
+    # 2つ目以降の引数：スニダン（SNKDUMP）・フリマBOX相場（FLEADUMP）の結果（任意）
+    snk = None
+    flea = {}
+    for path in sys.argv[2:]:
+        txt = open(path, encoding="utf-8").read()
+        if "FLEADUMP" in txt:
+            try:
+                arr = json.loads(txt)
+                if isinstance(arr, list):
+                    txt = "".join(x.get("text", "") for x in arr if isinstance(x, dict))
+            except Exception:
+                pass
+            body = re.search(r"FLEADUMP(.*?)ENDDUMP", txt, re.S).group(1)
+            try:
+                f = json.loads(body)
+            except Exception:
+                f = json.loads(json.loads('"' + body + '"'))
+            if f.get("state") == "done" and f.get("date") == day.get("date"):
+                flea[f.get("site")] = f.get("res", {})
+            else:
+                print("フリマ(" + str(f.get("site")) + ")の結果は日付不一致または未完了のため使いません", file=sys.stderr)
+        else:
+            snk = load_snk(path)
+    if flea:
+        bxf = {}
+        for k in set(list(flea.get("y", {})) + list(flea.get("m", {}))):
+            y = flea.get("y", {}).get(k) or [None, 0]
+            m = flea.get("m", {}).get(k) or [None, 0]
+            bxf[k] = [y[0], y[1], m[0], m[1]]
+        day["bxf"] = json.dumps(bxf, ensure_ascii=False, separators=(",", ":"))
+    if snk is not None:
         if snk.get("state") == "done" and snk.get("date") == day.get("date"):
             for f in ("sa", "sn", "sp", "si"):
                 if snk.get(f):

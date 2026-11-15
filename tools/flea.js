@@ -127,16 +127,16 @@ var OPBOX = (function () {
   }
   async function mercari(key, kw) {
     var f = document.createElement("iframe");
-    f.style.cssText = "width:1200px;height:2400px;position:fixed;left:-4000px;top:0;border:0";
+    f.style.cssText = "width:1200px;height:2400px;position:fixed;left:0;top:0;border:0;opacity:0.01;pointer-events:none;z-index:-1";
     f.src = "/search?keyword=" + encodeURIComponent(kw) + "&status=sold_out&sort=created_time&order=desc";
     document.body.appendChild(f);
     var rows = [];
     try {
-      for (var i = 0; i < 40; i++) {
+      for (var i = 0; i < 50; i++) {
         await sleep(500);
         var d = f.contentDocument; if (!d) continue;
-        var cells = d.querySelectorAll('[data-testid="item-cell"]');
-        if (cells.length >= 20 || (i > 16 && cells.length)) { rows = cells; break; }
+        var cells = d.querySelectorAll('[data-testid="item-cell"]'), named = Array.prototype.filter.call(cells, function (x) { var im = x.querySelector("img[alt]"); return im && im.alt; });
+        if (named.length >= 20 || (i > 16 && named.length)) { rows = named; break; }
         if (i > 24 && d.body && /見つかりません|該当する商品/.test(d.body.textContent)) break;
       }
       return Array.prototype.map.call(rows, function (x) {
