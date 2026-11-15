@@ -89,6 +89,14 @@ def main():
             m = (flea.get("m", {}).get(k) or []) + [None, 0, None, 0]
             bxf[k] = [y[0], y[1], m[0], m[1], y[2], y[3], m[2], m[3]]
         day["bxf"] = json.dumps(bxf, ensure_ascii=False, separators=(",", ":"))
+        # 相場に使ったフリマの出品（最新日分だけを別ファイルに保存）
+        items = {"date": day.get("date"), "y": {}, "m": {}}
+        for site in ("y", "m"):
+            for k, v in flea.get(site, {}).items():
+                if isinstance(v, list) and len(v) > 4 and v[4]:
+                    items[site][k] = v[4]
+        ip_ = os.path.join(ROOT, "data", "flea_items.json")
+        json.dump(items, open(ip_, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
     if snk is not None:
         if snk.get("state") == "done" and snk.get("date") == day.get("date"):
             for f in ("sa", "sn", "sp", "si"):

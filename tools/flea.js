@@ -109,9 +109,12 @@ var OPBOX = (function () {
     if (ref) ok = ok.filter(function (x) { return x.p >= ref * 0.4 && x.p <= ref * 2; });
     else { var m0 = median(ok.map(function (x) { return x.p; })); ok = ok.filter(function (x) { return x.p >= m0 * 0.5 && x.p <= m0 * 1.6; }); }
     var boxy = !/^pcc|base1|family/.test(key);
-    var tape = ok.filter(function (x) { return !boxy || !CUT.test(x.t); }).slice(0, 10).map(function (x) { return x.p; });
-    var cut = boxy ? ok.filter(function (x) { return CUT.test(x.t); }).slice(0, 10).map(function (x) { return x.p; }) : [];
-    return [median(tape), tape.length, median(cut), cut.length];
+    var tapeI = ok.filter(function (x) { return !boxy || !CUT.test(x.t); }).slice(0, 10);
+    var cutI = boxy ? ok.filter(function (x) { return CUT.test(x.t); }).slice(0, 10) : [];
+    var tape = tapeI.map(function (x) { return x.p; }), cut = cutI.map(function (x) { return x.p; });
+    // 5番目：相場に使った出品（ID, 価格, テープカットなら1, タイトル, 日付）
+    var used = tapeI.map(function (x) { return [x.u, x.p, 0, x.t.slice(0, 60), x.d || ""]; }).concat(cutI.map(function (x) { return [x.u, x.p, 1, x.t.slice(0, 60), x.d || ""]; }));
+    return [median(tape), tape.length, median(cut), cut.length, used];
   }
   async function loadBox() { return OPBOX; }
   async function refs() {
@@ -128,7 +131,7 @@ var OPBOX = (function () {
     var m = h.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/); if (!m) throw new Error("no data");
     var j = JSON.parse(m[1]), it = (((j.props || {}).initialState || {}).searchState || {}).search;
     it = (it && it.result && it.result.items) || [];
-    return it.map(function (x) { return { t: x.title || "", p: x.price || 0 }; });
+    return it.map(function (x) { return { t: x.title || "", p: x.price || 0, u: x.id || "", d: (x.endTime || x.updateTime || "").slice(0, 10) }; });
   }
   async function mercari(key, kw) {
     var f = document.createElement("iframe");
@@ -146,7 +149,8 @@ var OPBOX = (function () {
       }
       return Array.prototype.map.call(rows, function (x) {
         var img = x.querySelector("img[alt]"), pr = x.querySelector('[data-testid="item-tile-price"]');
-        return { t: ((img && img.alt) || "").replace(/のサムネイル.*$/, ""), p: +(((pr && pr.textContent) || "").replace(/[^\d]/g, "")) };
+        var a = x.querySelector('a[href*="/item/"],a[href*="/shops/product/"]'), h = (a && a.getAttribute("href")) || "";
+        return { t: ((img && img.alt) || "").replace(/のサムネイル.*$/, ""), p: +(((pr && pr.textContent) || "").replace(/[^\d]/g, "")), u: h.replace(/^https?:\/\/jp\.mercari\.com/, "").replace(/^\//, "") };
       });
     } finally { f.remove(); }
   }

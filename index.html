@@ -367,6 +367,9 @@ body::before{animation:none!important;inset:0;transform:none}
 .lite .mq{-webkit-mask-image:none;mask-image:none;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .lite header{background:#0e0c22}
 .th.boxpic{background:#fff!important;aspect-ratio:1/1;height:auto}.th.boxpic img{object-fit:contain}.th.sm.boxpic{width:44px;height:44px}.th.lg.boxpic{width:100%;max-width:180px;height:auto;aspect-ratio:1/1!important}.th.sm.boxpic,.th.md.boxpic{aspect-ratio:1/1!important}
+.flp{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:760px){.flp{grid-template-columns:1fr}}
+.fl h4{margin:0 0 6px;font-size:13px}.fli{display:flex;justify-content:space-between;gap:8px;padding:7px 6px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:12px}
+.fli:hover{background:rgba(255,255,255,.05)}.flt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.flm{display:flex;gap:6px;align-items:center;white-space:nowrap}.flm b{min-width:64px;text-align:right}
 </style>
 </head>
 <body>
@@ -974,6 +977,8 @@ function renderBox(){
   app.querySelectorAll("[data-box]").forEach(e=>e.onclick=ev=>{if(ev.target.closest("a[href]"))return;location.hash="bx-"+e.dataset.box});
 }
 let BXD={f:0,range:9999};
+let FLEAI=null,FLEAIP=null;const loadFleaItems=()=>FLEAIP||(FLEAIP=fetch("data/flea_items.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{}).catch(()=>({})).then(j=>FLEAI=j));
+const fleaItemUrl=(site,id)=>site==="y"?"https://paypayfleamarket.yahoo.co.jp/item/"+id:"https://jp.mercari.com/"+id;
 function renderBoxDetail(key){
   const b=BYBOX[key];if(!b){location.hash="box";return}
   const p=bxPrice(b),c7=bxChg(b,0,7),c30=bxChg(b,0,30),m=bxCur(b,6),nd=DATES.length;
@@ -996,12 +1001,17 @@ function renderBoxDetail(key){
   ${rows.map(([pi,si,ii,l])=>{const pv=bxCur(b,pi),sv=bxCur(b,si);return `<tr><td><a href="${bxLink(b,ii)}" target="_blank" rel="noopener">カードラッシュ ↗</a></td><td>販売</td><td><span class="cond">${l}</span></td><td>${pv==null?"—":sv>0?sv+"個":"なし"}</td><td>${yen(pv)}</td></tr>`}).join("")}
   <tr><td><a href="https://akihabara-cardshop.com/onepice-kaitori/" target="_blank" rel="noopener">メルカード秋葉原 ↗</a></td><td>買取</td><td>未開封</td><td>—</td><td>${yen(m)}</td></tr>
   ${[["y","Yahoo!フリマ",10,"テープ付き"],["m","メルカリ",12,"テープ付き"],["y","Yahoo!フリマ",14,"テープカット"],["m","メルカリ",16,"テープカット"]].filter(r=>r[2]<14||!(b.kind==="pcc"||b.kind==="etc")).map(([s,l,i,c])=>{const v=bxCur(b,i),n=bxCur(b,i+1);return `<tr><td><a href="${fleaUrl(s,b)}" target="_blank" rel="noopener">${l} ↗</a></td><td>売却相場</td><td><span class="cond">${b.kind==="pcc"||b.kind==="etc"?"未開封":c}</span></td><td>${n?"直近"+n+"件":"—"}</td><td>${yen(v)}</td></tr>`}).join("")}</tbody></table></div>
+  ${(()=>{if(!FLEAI)return `<h3 class="sh">フリマ相場の参考にした出品</h3><div class="panel"><div class="empty">読み込み中…</div></div>`;
+    const tape=!(b.kind==="pcc"||b.kind==="etc");
+    const col=(site,l)=>{const it=((FLEAI[site]||{})[key])||[];return `<div class="fl"><h4>${l}</h4>${it.length?it.map(([id,p,c,t,d])=>`<a class="fli" href="${fleaItemUrl(site,id)}" target="_blank" rel="noopener nofollow"><span class="flt">${esc(t||id)}</span><span class="flm">${tape?`<span class="cond">${c?"テープカット":"テープ付き"}</span>`:""}${d?`<span class="foot">${esc(d)}</span>`:""}<b>${yen(p)}</b></span></a>`).join(""):`<div class="empty">該当なし</div>`}</div>`};
+    return `<h3 class="sh">フリマ相場の参考にした出品${FLEAI.date?`<span class="foot">（${esc(FLEAI.date)} 時点・売り切れ）</span>`:""}</h3><div class="panel flp">${col("y","Yahoo!フリマ")}${col("m","メルカリ")}</div>`})()}
   <p class="foot">状態A-はカードラッシュで外箱・シュリンクに傷などがある未開封品です。売却相場は、Yahoo!フリマ・メルカリで「売り切れ」になった1BOXの出品（新しい順・最大10件）の中央値です。タイトルに「テープカット」「テープなし」などとあるものをテープカット、それ以外（「テープ付き」や記載なし）をテープ付きとして分けています。複数BOXのセット・開封済み・空箱・海外版などは除いています。</p>
   <h3 class="sh">直近の相場</h3>
   <div class="panel" style="padding:0;overflow:auto"><table><thead><tr><th>日付</th><th>販売 A</th><th>在庫</th><th>販売 A-</th><th>フリマ テープ付</th><th>フリマ カット</th><th>買取</th></tr></thead><tbody>
   ${DATES.map((d,i)=>i).reverse().filter(i=>(BXS[i]&&BXS[i][key])||(BXF[i]&&BXF[i][key])).slice(0,14).map(i=>{const a=(BXS[i]&&BXS[i][key])||[];return `<tr><td>${DATES[i]}</td><td>${yen(a[0])}</td><td>${a[1]??"—"}</td><td>${yen(a[3])}</td><td>${yen(BXF[i]&&BXF[i][key]?fleaMix(BXF[i][key]):null)}</td><td>${yen(BXF[i]&&BXF[i][key]?fleaMix(BXF[i][key],4):null)}</td><td>${yen(a[6])}</td></tr>`}).join("")||`<tr><td colspan="7">データなし</td></tr>`}
   </tbody></table></div>
   ${rel.length?`<h3 class="sh">同じ種類のBOX</h3><div class="rel">${rel.map(x=>`<a href="#bx-${x.key}">${bxThumb(x,"sm")}<span>${esc(x.name)}<b>${yen(bxPrice(x))}</b></span></a>`).join("")}</div>`:""}`;
+  if(!FLEAI)loadFleaItems().then(()=>{if(location.hash==="#bx-"+key)renderBoxDetail(key)});
   app.querySelectorAll("[data-f]").forEach(e=>e.onclick=()=>{BXD.f=+e.dataset.f;renderBoxDetail(key)});
   app.querySelectorAll("[data-r]").forEach(e=>e.onclick=()=>{BXD.range=+e.dataset.r;renderBoxDetail(key)});
   if(nd>=2){const n=Math.min(BXD.range,nd),col={0:"#ff5c8a",3:"#c9b8ff",6:"#5cc8ff",1:"#6be3a8",20:"#ffd27a",21:"#ffa36b"}[BXD.f],isS=BXD.f===1;
