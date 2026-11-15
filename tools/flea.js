@@ -101,7 +101,7 @@ var OPBOX = (function () {
       if (!x.p || BAD.test(x.t)) return false;
       if (M.match(x.t) !== key) return false;
       if (!/^pcc|base1|family/.test(key) && !/box|ボックス|1箱|24パック|10パック入り/i.test(x.t)) return false;
-      if (key === "eb03" && /エディション\s*(2|２|vol)|edition\s*(2|vol)/i.test(x.t)) return false;
+      if (key === "eb03" && /エディション\s*((2|２)(?![0-9０-９])|vol)|edition\s*(2(?!\d)|vol)/i.test(x.t)) return false;
       return true;
     }).map(function (x) { return x.p; });
     if (ref) ok = ok.filter(function (p) { return p >= ref * 0.45 && p <= ref * 2; });
