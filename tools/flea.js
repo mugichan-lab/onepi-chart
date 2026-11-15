@@ -100,10 +100,11 @@ var OPBOX = (function () {
     var ok = list.filter(function (x) {
       if (!x.p || BAD.test(x.t)) return false;
       if (M.match(x.t) !== key) return false;
-      if (!/^pcc|base1|family/.test(key) && !/box|ボックス/i.test(x.t)) return false;
+      if (!/^pcc|base1|family/.test(key) && !/box|ボックス|1箱|24パック|10パック入り/i.test(x.t)) return false;
+      if (key === "eb03" && /エディション\s*(2|２|vol)|edition\s*(2|vol)/i.test(x.t)) return false;
       return true;
     }).map(function (x) { return x.p; });
-    if (ref) ok = ok.filter(function (p) { return p >= ref * 0.5 && p <= ref * 1.8; });
+    if (ref) ok = ok.filter(function (p) { return p >= ref * 0.45 && p <= ref * 2; });
     else { var m0 = median(ok); ok = ok.filter(function (p) { return p >= m0 * 0.6 && p <= m0 * 1.6; }); }
     ok = ok.slice(0, 10);
     return [median(ok), ok.length];
@@ -114,7 +115,7 @@ var OPBOX = (function () {
       var idx = await fetch(RAW + "data/index.json", { cache: "no-store" }).then(function (r) { return r.json(); });
       var d = await fetch(RAW + "data/" + idx[idx.length - 1] + ".json", { cache: "no-store" }).then(function (r) { return r.json(); });
       var bx = JSON.parse(d.bx || "{}"), o = {};
-      Object.keys(bx).forEach(function (k) { var a = bx[k]; o[k] = a[0] || (a[6] ? Math.round(a[6] * 1.3) : null); });
+      Object.keys(bx).forEach(function (k) { var a = bx[k]; o[k] = a[6] ? Math.round(a[6] * 1.25) : (a[0] || null); });
       return o;
     } catch (e) { return {}; }
   }
