@@ -368,7 +368,7 @@ body::before{animation:none!important;inset:0;transform:none}
 .lite .mq{-webkit-mask-image:none;mask-image:none;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .lite header{background:#0e0c22}
 .th.boxpic{background:#fff!important;aspect-ratio:1/1;height:auto}.th.boxpic img{object-fit:contain}.th.sm.boxpic{width:44px;height:44px}.th.lg.boxpic{width:100%;max-width:180px;height:auto;aspect-ratio:1/1!important}.th.sm.boxpic,.th.md.boxpic{aspect-ratio:1/1!important}
-.flp{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:760px){.flp{grid-template-columns:1fr}}
+.flp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}.fl{min-width:0}@media(max-width:760px){.flp{grid-template-columns:minmax(0,1fr)}}
 .fl h4{margin:0 0 6px;font-size:13px}.fli{display:flex;justify-content:space-between;gap:8px;padding:7px 6px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:12px}
 .fli:hover{background:rgba(255,255,255,.05)}.flt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.flm{display:flex;gap:6px;align-items:center;white-space:nowrap}.flm b{min-width:64px;text-align:right}
 /* 画像の拡大表示 */
@@ -382,6 +382,36 @@ body::before{animation:none!important;inset:0;transform:none}
 .zoombox .zx{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:40px;cursor:pointer}
 html.zlock,html.zlock body{overflow:hidden}
 .lite .zoombox{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(6,8,18,.92)}
+/* ===== スマホ表示の調整 ===== */
+.kv .k,.kv .v{background:none!important;border:0!important;padding:0!important;border-radius:0!important;box-shadow:none!important}
+.mqh .bh{background:none!important;border:0!important;padding:0!important;box-shadow:none!important;margin:0!important}
+@media(max-width:760px){
+  html,body{overflow-x:clip}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}.gcard{min-width:0}
+  .dtop{grid-template-columns:118px minmax(0,1fr)!important;gap:6px 14px!important;align-items:start}
+  .dtop>div:not(.th){display:contents}
+  .dtop>.th.lg,.dtop>.th.lg.boxpic{width:118px!important;grid-row:1/span 4;align-self:start}
+  .dtop .dname{font-size:18px;line-height:1.3;margin:0}
+  .dtop .bigprice{font-size:28px;margin:0}
+  .dtop .kv,.dtop .actions,.dtop .actions~.foot,.dtop .actions~div{grid-column:1/-1}
+  .dtop .kv{grid-template-columns:1fr 1fr!important;margin:8px 0 4px}
+  .dtop .actions{display:flex;flex-wrap:wrap;gap:8px}
+  .dtop .actions .btn{flex:1 1 auto;justify-content:center}
+  #app table{font-size:12px}#app th{white-space:nowrap;padding:8px 7px}#app td{padding:9px 7px}
+  #app table:has(th:nth-child(7)) td{white-space:nowrap}
+  #app .panel:has(>table){overflow-x:auto;-webkit-overflow-scrolling:touch}
+  #app .btn.cpy{white-space:nowrap;font-size:11px;padding:4px 8px}
+  .seg{display:flex!important;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;max-width:100%;flex-wrap:nowrap}.seg::-webkit-scrollbar{display:none}.seg .btn{white-space:nowrap;flex:0 0 auto}
+  .panel:has(>.bxt){overflow:visible!important;padding:0!important;background:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important}
+  .bxt,.bxt tbody{display:block;width:100%}.bxt thead{display:none}
+  .bxt tbody tr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px 8px;padding:12px;margin-bottom:10px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.04)}
+  .bxt tbody td{display:block;padding:0!important;border:0!important;text-align:left!important;white-space:nowrap;font-size:13px;font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .bxt tbody td:first-child{grid-column:1/-1;white-space:normal;font-weight:400;margin-bottom:4px}
+  .bxt tbody td[data-l]::before{content:attr(data-l);display:block;font-size:10px;font-weight:600;color:var(--sub);margin-bottom:1px}
+  .bxt .bxn{min-width:0!important}
+  .bxt tbody td[data-l="販売 A"],.bxt tbody td[data-l="買取"]{font-size:15px}
+  .fli .flm .foot{display:none}
+}
 </style>
 </head>
 <body>
@@ -993,7 +1023,7 @@ function renderBox(){
   <div class="toolbar"><span class="seg">${kinds.map(([k,l])=>`<button class="btn ${BXV.kind===k?"on":""}" data-k="${k}">${l}</button>`).join("")}</span>
     <select id="bxs">${Object.entries(BX_SORTS).map(([k,[l]])=>`<option value="${k}" ${BXV.sort===k?"selected":""}>${l}</option>`).join("")}</select></div>
   <div class="panel" style="padding:0;overflow:auto"><table class="bxt"><thead><tr><th>商品</th><th>販売 状態A</th><th>在庫</th><th>7日</th><th>販売 A-</th><th>フリマ<br>テープ付</th><th>フリマ<br>テープカット</th><th>買取</th><th>買取率</th></tr></thead><tbody>
-  ${list.map(b=>{const p=bxPrice(b),s=bxCur(b,1),am=bxCur(b,3),m=bxCur(b,6);return `<tr data-box="${b.key}" class="clk"><td><div class="bxn">${bxThumb(b,"sm")}<div><b>${esc(b.name)}</b><div class="foot">${BOX_KIND[b.kind]}</div></div></div></td><td class="num">${yen(p)}</td><td class="num">${p==null?"—":s>0?s+"個":"なし"}</td><td>${pctBadge(bxChg(b,0,7))}</td><td class="num">${yen(am)}</td><td class="num">${yen(bxCur(b,20))}</td><td class="num">${b.kind==="pcc"||b.kind==="etc"?"—":yen(bxCur(b,21))}</td><td class="num">${yen(m)}</td><td class="num">${p&&m?Math.round(m/p*100)+"%":"—"}</td></tr>`}).join("")}
+  ${list.map(b=>{const p=bxPrice(b),s=bxCur(b,1),am=bxCur(b,3),m=bxCur(b,6);return `<tr data-box="${b.key}" class="clk"><td><div class="bxn">${bxThumb(b,"sm")}<div><b>${esc(b.name)}</b><div class="foot">${BOX_KIND[b.kind]}</div></div></div></td><td class="num" data-l="販売 A">${yen(p)}</td><td class="num" data-l="在庫">${p==null?"—":s>0?s+"個":"なし"}</td><td data-l="7日">${pctBadge(bxChg(b,0,7))}</td><td class="num" data-l="販売 A-">${yen(am)}</td><td class="num" data-l="フリマ テープ付">${yen(bxCur(b,20))}</td><td class="num" data-l="フリマ カット">${b.kind==="pcc"||b.kind==="etc"?"—":yen(bxCur(b,21))}</td><td class="num" data-l="買取">${yen(m)}</td><td class="num" data-l="買取率">${p&&m?Math.round(m/p*100)+"%":"—"}</td></tr>`}).join("")}
   </tbody></table></div>
   <p class="foot">販売価格は在庫ありの商品を優先した最安値です（全て在庫なしの場合は掲載価格）。買取率＝メルカード買取価格÷カードラッシュ販売価格（状態A）。カートン販売・英語版・海外版は含みません。</p>`;
   app.querySelectorAll("[data-k]").forEach(e=>e.onclick=()=>{BXV.kind=e.dataset.k;renderBox()});
