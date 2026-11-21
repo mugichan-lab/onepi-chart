@@ -771,7 +771,7 @@ function renderDetail(uid){
     <tr><td><a href="https://akihabara-cardshop.com/onepice-kaitori/" target="_blank" rel="noopener">メルカード秋葉原 ↗</a>${/^(OP|ST|EB|PRB|P)\d*-\d{3}$/.test(c.id)?`<button class="btn cpy" data-copy="${esc(c.id)}">型番 ${esc(c.id)} をコピー</button>`:""}</td><td>買取</td><td>—</td><td>—</td><td>${yen(cur(c,"mb"))}</td></tr>
     ${cur(c,"si")?`<tr><td><a href="https://snkrdunk.com/apparels/${cur(c,"si")}" target="_blank" rel="noopener">スニダン ↗</a></td><td>取引相場</td><td><span class="cond">状態A</span></td><td>${cur(c,"sn")!=null?"30日で"+cur(c,"sn")+"件":"—"}</td><td>${yen(cur(c,"sa"))}</td></tr>${cur(c,"sp")!=null?`<tr><td><a href="https://snkrdunk.com/apparels/${cur(c,"si")}" target="_blank" rel="noopener">スニダン ↗</a></td><td>取引相場</td><td><span class="cond">PSA10</span></td><td>—</td><td>${yen(cur(c,"sp"))}</td></tr>`:""}`:""}
     ${(()=>{const e=FCARD&&c.ki>=0?FCARD[KEYS[c.ki]]:null;if(!e)return "";return [["y","Yahoo!フリマ"],["m","メルカリ"]].map(([s,l])=>{const v=e[s]||[null,0];return `<tr><td>${l}</td><td>売却相場</td><td>—</td><td>${v[1]?"直近"+v[1]+"件":"—"}</td><td>${yen(v[0])}</td></tr>`}).join("")})()}
-    <tr><td>遊々亭（参考・${YUYU_DATE}）</td><td>販売／買取</td><td>—</td><td>—</td><td>${yen(c.ysell)} ／ ${yen(c.ybuy)}</td></tr>
+    <tr><td>遊々亭（参考・${c.pack==="op18"?"2026/11/22":YUYU_DATE}）</td><td>販売／買取</td><td>—</td><td>—</td><td>${yen(c.ysell)} ／ ${yen(c.ybuy)}</td></tr>
   </tbody></table></div>
   <p class="foot">状態はカードラッシュの基準です。状態A＝状態表記なし（小さな白カケ・擦れ程度）、A-＝小さな傷・光沢痕など、B＝目立つ白カケ・凹み・軽い折れなど、C＝折れ跡が残る・全体に傷が多い。リンクは価格の取得に使った商品ページに直接移動します（その日に商品が特定できない場合は型番の検索結果）。</p>
   ${(()=>{const e=FCARD&&c.ki>=0?FCARD[KEYS[c.ki]]:null;if(!e||!((e.y&&e.y[2]&&e.y[2].length)||(e.m&&e.m[2]&&e.m[2].length)))return "";
