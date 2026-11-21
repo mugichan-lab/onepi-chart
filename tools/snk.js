@@ -14,7 +14,7 @@
     ["prb02", /thebestvol\.?2|ザ・ベストvol\.?2/], ["prb01", /thebest|ザ・ベスト/],
     ["eb05", /ヒロインズエディションvol\.?2|heroinesedition.*vol\.?2/], ["eb03", /ヒロインズエディション|heroinesedition/],
     ["eb04", /エッグヘッドクライシス|eggheadcrisis/], ["eb02", /アニメ25周年|anime25th/], ["eb01", /メモリアルコレクション/],
-    ["op17", /世界最強の戦士/], ["op16", /決戦の刻/], ["op15", /神の島の冒険/], ["op14", /蒼海の七傑/], ["op13", /受け継がれる意志/],
+    ["op18", /神の支配/], ["op17", /世界最強の戦士/], ["op16", /決戦の刻/], ["op15", /神の島の冒険/], ["op14", /蒼海の七傑/], ["op13", /受け継がれる意志/],
     ["op12", /師弟の絆/], ["op11", /神速の拳/], ["op10", /王族の血統/], ["op09", /新たなる皇帝/], ["op08", /二つの伝説/],
     ["op07", /500年後の未来/], ["op06", /双璧の覇者/], ["op05", /新時代の主役/], ["op04", /謀略の王国/], ["op03", /強大な敵/],
     ["op02", /頂上決戦/], ["op01", /ロマンスドーン|romancedawn/]
@@ -71,14 +71,16 @@
   function save(k, o) { localStorage.setItem(k, JSON.stringify(o)); return o; }
 
   // ---- 対応表づくり ----
-  window.__snkMap = function () {
+  window.__snkMap = function (opts) {
+    opts = opts || {};
     var st = { state: "running", at: new Date().toISOString(), done: 0, map: {} };
-    try { var old = JSON.parse(localStorage.getItem("__snkmapres") || "null"); if (old && old.state !== "done" && old.map) { st.map = old.map; st.done = old.done || 0; st.resumed = true; } } catch (e) {}
+    if (!opts.ids) { try { var old = JSON.parse(localStorage.getItem("__snkmapres") || "null"); if (old && old.state !== "done" && old.map) { st.map = old.map; st.done = old.done || 0; st.resumed = true; } } catch (e) {} }
     save("__snkmapres", st);
     window.__snkP = (async function () {
       var KL = await fetch(RAW + "tools/masterkeys.json", { cache: "no-store" }).then(function (r) { return r.json(); });
       var KEYS = {}; KL.forEach(function (k) { KEYS[k] = 1; });
       var ids = []; KL.forEach(function (k) { var id = k.split("|")[0]; if (!/^P-/.test(id) && ids.indexOf(id) < 0) ids.push(id); });
+      if (opts.ids) ids = opts.ids;
       st.total = ids.length;
       for (var i = st.done; i < ids.length; i++) {
         var id = ids[i];

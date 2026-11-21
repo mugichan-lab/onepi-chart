@@ -2,6 +2,7 @@
 // 種別: bp=ブースター, eb=エクストラ, prb=プレミアムブースター, pcc=プレミアムカードコレクション, etc=その他
 var OPBOX = (function () {
   var L = [
+    ["op18", "ブースターパック 神の支配【OP-18】", "bp", 244, /神の支配/, null],
     ["eb05", "エクストラブースター Heroines Edition vol.2【EB-05】", "eb", 240, /heroinesedition.*vol\.?2|ヒロインズエディションvol\.?2|eb-?05/, /プレシャス|precious|special/],
     ["op17", "ブースターパック 世界最強の戦士【OP-17】", "bp", 236, /世界最強の戦士/, null],
     ["op16", "ブースターパック 決戦の刻【OP-16】", "bp", 232, /決戦の刻/, null],

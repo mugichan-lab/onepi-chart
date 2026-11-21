@@ -2,6 +2,7 @@
 // 種別: bp=ブースター, eb=エクストラ, prb=プレミアムブースター, pcc=プレミアムカードコレクション, etc=その他
 var OPBOX = (function () {
   var L = [
+    ["op18", "ブースターパック 神の支配【OP-18】", "bp", 244, /神の支配/, null],
     ["eb05", "エクストラブースター Heroines Edition vol.2【EB-05】", "eb", 240, /heroinesedition.*vol\.?2|ヒロインズエディションvol\.?2|eb-?05/, /プレシャス|precious|special/],
     ["op17", "ブースターパック 世界最強の戦士【OP-17】", "bp", 236, /世界最強の戦士/, null],
     ["op16", "ブースターパック 決戦の刻【OP-16】", "bp", 232, /決戦の刻/, null],
@@ -77,7 +78,7 @@ var OPBOX = (function () {
   function save(o) { localStorage.setItem("__flearess", JSON.stringify(o)); return o; }
   // 検索キーワード（BOXの種類ごと）
   var KW = {
-    eb05: "ヒロインズエディション vol.2 BOX", op17: "世界最強の戦士 BOX", op16: "決戦の刻 BOX", op15: "神の島の冒険 BOX",
+    op18: "神の支配 BOX", eb05: "ヒロインズエディション vol.2 BOX", op17: "世界最強の戦士 BOX", op16: "決戦の刻 BOX", op15: "神の島の冒険 BOX",
     eb04: "エッグヘッドクライシス BOX", op14: "蒼海の七傑 BOX", op13: "受け継がれる意志 BOX", prb02: "ワンピースカード THE BEST vol.2 BOX",
     eb03: "ヒロインズエディション BOX", op12: "師弟の絆 BOX", op11: "神速の拳 BOX", eb02: "Anime 25th collection BOX",
     op10: "王族の血統 BOX", op09: "新たなる皇帝 BOX", prb01: "ONE PIECE CARD THE BEST BOX", eb01: "メモリアルコレクション BOX",
