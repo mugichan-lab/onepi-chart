@@ -371,6 +371,17 @@ body::before{animation:none!important;inset:0;transform:none}
 .flp{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:760px){.flp{grid-template-columns:1fr}}
 .fl h4{margin:0 0 6px;font-size:13px}.fli{display:flex;justify-content:space-between;gap:8px;padding:7px 6px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:12px}
 .fli:hover{background:rgba(255,255,255,.05)}.flt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.flm{display:flex;gap:6px;align-items:center;white-space:nowrap}.flm b{min-width:64px;text-align:right}
+/* 画像の拡大表示 */
+.dtop .th.pic,.dtop .th.boxpic{cursor:zoom-in;position:relative}
+.dtop .th.pic::after,.dtop .th.boxpic::after{content:"";position:absolute;right:6px;bottom:6px;width:24px;height:24px;border-radius:50%;background:rgba(10,12,24,.62) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6'/%3E%3Cpath d='M15 15l5 5M10.5 8v5M8 10.5h5'/%3E%3C/svg%3E") center/14px no-repeat;pointer-events:none;opacity:.85}
+.zoombox{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;background:rgba(6,8,18,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transition:opacity .2s ease;cursor:zoom-out;padding:16px}
+.zoombox.on{opacity:1}
+.zoombox img{max-width:min(92vw,480px);max-height:82vh;width:auto;height:auto;border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.6);transform:scale(.92);transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.zoombox.on img{transform:scale(1)}
+.zoombox .zcap{color:#e8e9f3;font-size:13px;font-weight:700;text-align:center;max-width:90vw}
+.zoombox .zx{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:40px;cursor:pointer}
+html.zlock,html.zlock body{overflow:hidden}
+.lite .zoombox{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(6,8,18,.92)}
 </style>
 </head>
 <body>
@@ -1069,6 +1080,25 @@ document.getElementById("hs").onsubmit=e=>{e.preventDefault();LIST.q=document.ge
 window.addEventListener("hashchange",()=>{render();window.scrollTo(0,0)});
 render();
 loadDb();
+
+// 画像の拡大表示（詳細ページのカード・BOX画像をクリック）
+(function(){
+  let box=null;
+  function close(){if(!box)return;const b=box;box=null;b.classList.remove("on");setTimeout(()=>b.remove(),220);document.documentElement.classList.remove("zlock")}
+  function open(src,alt){
+    close();
+    const lg=src.replace(/^img\/(?!box\/)/,"img/lg/");
+    box=document.createElement("div");box.className="zoombox";
+    box.innerHTML=`<img alt="${esc(alt||"")}"><button class="zx" aria-label="閉じる">×</button><div class="zcap">${esc(alt||"")}</div>`;
+    const im=box.querySelector("img");im.src=src;
+    if(lg!==src){const hi=new Image();hi.onload=()=>{if(box&&box.contains(im))im.src=lg};hi.src=lg}
+    box.onclick=close;document.body.appendChild(box);document.documentElement.classList.add("zlock");
+    requestAnimationFrame(()=>box&&box.classList.add("on"));
+  }
+  document.addEventListener("click",e=>{const im=e.target.closest(".dtop .th.pic img, .dtop .th.boxpic img");if(!im)return;e.preventDefault();open(im.getAttribute("src"),im.alt)});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+  window.addEventListener("hashchange",close);
+})();
 
 </script>
 </body>
