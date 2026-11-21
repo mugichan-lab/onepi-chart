@@ -60,6 +60,7 @@ p.lead{color:var(--sub);margin:0 0 14px;font-size:13px}
 .bh .more{margin-left:auto;font-size:12px;color:var(--navy2);text-decoration:none;font-weight:700}
 .mini{display:grid;grid-template-columns:22px 34px 1fr auto;gap:9px;align-items:center;padding:8px 14px;border-bottom:1px solid #f2ede4;text-decoration:none;cursor:pointer}
 .mini:last-child{border-bottom:0}
+.panel.bxcards{padding:4px 0}
 .mini:hover{background:#faf7f1}
 .rk{font-weight:900;color:var(--sub);text-align:center;font-size:13px}
 .rk.r1{color:#c99a2e}.rk.r2{color:#8f99a3}.rk.r3{color:#a86b3c}
@@ -1018,12 +1019,16 @@ function renderBoxDetail(key){
     const col=(site,l)=>{const it=((FLEAI[site]||{})[key])||[];return `<div class="fl"><h4>${l}</h4>${it.length?it.map(([id,p,c,t,d])=>`<a class="fli" href="${fleaItemUrl(site,id)}" target="_blank" rel="noopener nofollow"><span class="flt">${esc(t||id)}</span><span class="flm">${tape?`<span class="cond">${c?"テープカット":"テープ付き"}</span>`:""}${d?`<span class="foot">${esc(d)}</span>`:""}<b>${yen(p)}</b></span></a>`).join(""):`<div class="empty">該当なし</div>`}</div>`};
     return `<h3 class="sh">フリマ相場の参考にした出品${FLEAI.date?`<span class="foot">（${esc(FLEAI.date)} 時点・売り切れ）</span>`:""}</h3><div class="panel flp">${col("y","Yahoo!フリマ")}${col("m","メルカリ")}</div>`})()}
   <p class="foot">状態A-はカードラッシュで外箱・シュリンクに傷などがある未開封品です。売却相場は、Yahoo!フリマ・メルカリで「売り切れ」になった1BOXの出品（新しい順・最大10件）の中央値です。タイトルに「テープカット」「テープなし」などとあるものをテープカット、それ以外（「テープ付き」や記載なし）をテープ付きとして分けています。複数BOXのセット・開封済み・空箱・海外版などは除いています。</p>
+  ${(()=>{const bv=c=>{const m=cur(c,"mb");return m!=null?[m,0]:c.ybuy!=null?[c.ybuy,1]:null};
+    const L=DATA.filter(c=>c.pack===key).map(c=>({c,b:bv(c)})).filter(o=>o.b&&o.b[0]>=1000).sort((x,y)=>y.b[0]-x.b[0]);
+    if(!L.length)return "";const ref=L.some(o=>o.b[1]);
+    return `<h3 class="sh">このBOXの買取1,000円以上のカード<span class="foot">（${L.length}種・メルカード買取価格の高い順）</span></h3><div class="panel bxcards">${L.map((o,i)=>`<div class="mini" data-uid="${o.c.uid}"><div class="rk ${i<3?"r"+(i+1):""}">${i+1}</div>${thumb(o.c,"sm")}<div><div class="nm">${esc(o.c.name)}</div><div class="sub">${esc(o.c.id)} ・ ${esc(o.c.rar)}</div></div><div class="pr">${yen(o.b[0])}${o.b[1]?"<small>*</small>":""}<br><span class="badge flat">販売 ${yen(price(o.c))}</span></div></div>`).join("")}</div>${ref?`<p class="foot">* メルカードの買取価格がまだ無いカードは遊々亭の買取価格（参考）を表示しています。</p>`:""}`})()}
   <h3 class="sh">直近の相場</h3>
   <div class="panel" style="padding:0;overflow:auto"><table><thead><tr><th>日付</th><th>販売 A</th><th>在庫</th><th>販売 A-</th><th>フリマ テープ付</th><th>フリマ カット</th><th>買取</th></tr></thead><tbody>
   ${DATES.map((d,i)=>i).reverse().filter(i=>(BXS[i]&&BXS[i][key])||(BXF[i]&&BXF[i][key])).slice(0,14).map(i=>{const a=(BXS[i]&&BXS[i][key])||[];return `<tr><td>${DATES[i]}</td><td>${yen(a[0])}</td><td>${a[1]??"—"}</td><td>${yen(a[3])}</td><td>${yen(BXF[i]&&BXF[i][key]?fleaMix(BXF[i][key]):null)}</td><td>${yen(BXF[i]&&BXF[i][key]?fleaMix(BXF[i][key],4):null)}</td><td>${yen(a[6])}</td></tr>`}).join("")||`<tr><td colspan="7">データなし</td></tr>`}
   </tbody></table></div>
   ${rel.length?`<h3 class="sh">同じ種類のBOX</h3><div class="rel">${rel.map(x=>`<a href="#bx-${x.key}">${bxThumb(x,"sm")}<span>${esc(x.name)}<b>${yen(bxPrice(x))}</b></span></a>`).join("")}</div>`:""}`;
-  if(!FLEAI)loadFleaItems().then(()=>{if(location.hash==="#bx-"+key)renderBoxDetail(key)});
+  bindCards(app);if(!FLEAI)loadFleaItems().then(()=>{if(location.hash==="#bx-"+key)renderBoxDetail(key)});
   app.querySelectorAll("[data-f]").forEach(e=>e.onclick=()=>{BXD.f=+e.dataset.f;renderBoxDetail(key)});
   app.querySelectorAll("[data-r]").forEach(e=>e.onclick=()=>{BXD.range=+e.dataset.r;renderBoxDetail(key)});
   if(nd>=2){const n=Math.min(BXD.range,nd),col={0:"#ff5c8a",3:"#c9b8ff",6:"#5cc8ff",1:"#6be3a8",20:"#ffd27a",21:"#ffa36b"}[BXD.f],isS=BXD.f===1;
