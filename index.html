@@ -434,6 +434,8 @@ var OPNORM = (function () {
     if (/サイン/.test(body)) tag = "sign";
     else if (/海賊団/.test(body)) tag = "ksp";
     else if (/\/SP$/.test(rar) && /赤|レッド/.test(body)) tag = "rsp";
+    else if (/Yoshitaka Amano/.test(body) && pack) tag = /金枠/.test(body) ? "drawnfoil" : "drawn";
+    else if (/Yoshitaka Amano/.test(body) && /金枠/.test(body)) tag = "foil";
     else if (/Kentaro Yabuki/.test(body)) tag = /枠無し|【SP】/.test(body) ? "drawnfoil" : "drawn";
     else if (/描き下ろし|書き下ろし/.test(body)) tag = /箔押し/.test(body) ? "drawnfoil" : "drawn";
     else if (/赤文字|特別/.test(body)) tag = "drawn";
@@ -462,6 +464,8 @@ var OPNORM = (function () {
     else if (/金箔|箔押し/.test(pre + n)) tag = "foil";
     else if (/^(和柄)?SP$/.test(pre) || /SPパラレル/.test(n)) tag = /『金』/.test(n) ? "gold" : /『銀』/.test(n) ? "silver" : "spc";
     else if (/コミック/.test(pre)) tag = "sp";
+    else if (/スーパーパラレル/.test(pre)) tag = "sp";
+    else if (/^原作コマパラレル版$/.test(pre)) tag = "p";
     else if (/^パラレル(加工)?版$/.test(pre) || /^パラレル版/.test(pre)) tag = "p";
     else if (pre === "" || pre === "–" || pre === "-") tag = /パラレル/.test(n) ? "p" : "n";
     else return null; // 大会・付録などのプロモ版は対象外
@@ -474,6 +478,7 @@ var OPNORM = (function () {
     return function (k) {
       if (set[k]) return k;
       if (/\|drawn\|/.test(k)) { var alt = k.replace("|drawn|", "|p|"); if (set[alt]) return alt; }
+      if (/\|drawnfoil\|$/.test(k)) { var alt2 = k.replace("|drawnfoil|", "|foil|"); if (set[alt2]) return alt2; }
       var parts = k.split("|"), b = parts[0] + "|" + parts[1], c = loose[b];
       if (parts[2] === "" && c && c.length === 1) return c[0];
       if (parts[2] && c) { var own = b + "|"; if (c.length === 1 && c[0] === own) return own; }
