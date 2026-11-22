@@ -864,7 +864,10 @@ let IXH=null,IXHP=null;const loadIxHist=()=>IXHP||(IXHP=fetch("data/index_hist.j
 function ixSeries(){
   // 過去分（スニダン取引相場から算出・カードラッシュ基準に換算）＋毎日の記録
   const d=[],v=[],h=IXH||{dates:[],vals:[]},first=DATES[0]||"9999";
-  h.dates.forEach((x,i)=>{if(x<first){d.push(x);v.push(h.vals[i])}});
+  const hm={};h.dates.forEach((x,i)=>hm[x]=h.vals[i]);
+  const rs=DATES.map((x,i)=>hm[x]&&IDX.vals[i]?IDX.vals[i]/hm[x]:null).filter(x=>x).sort((a,b)=>a-b);
+  const ratio=rs.length?rs[Math.floor(rs.length/2)]:(h.ratio||1);
+  h.dates.forEach((x,i)=>{if(x<first){d.push(x);v.push(h.vals[i]*ratio)}});
   const nh=d.length;DATES.forEach((x,i)=>{d.push(x);v.push(IDX.vals[i])});
   return {d,v,nh};
 }

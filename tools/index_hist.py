@@ -75,16 +75,14 @@ if ds:
         real[d] = sum(vals) / len(members)
 
 sv = snk_index(ds or [end])
-ov = [real[d] / sv[d][0] for d in ds if sv.get(d)]
-ratio = sorted(ov)[len(ov) // 2] if ov else 1.0
 first_real = ds[0] if ds else end
 dates, raw = [], []
 for d in sorted(sv):
-    if d >= first_real or not sv[d]: continue
-    dates.append(d); raw.append(sv[d][0] * ratio)
+    if not sv[d]: continue
+    dates.append(d); raw.append(sv[d][0])
 # 取引のばらつきをならすため7日移動平均
 vals = [round(sum(raw[max(0, i - 6):i + 1]) / len(raw[max(0, i - 6):i + 1])) for i in range(len(raw))]
-json.dump({"dates": dates, "vals": vals, "ratio": round(ratio, 4), "src": "snkrdunk_A", "built": end},
+# 換算はページ側で行う（毎日の記録と重なる日の比率の中央値）。overlap には重なる日の値も含める
+json.dump({"dates": dates, "vals": vals, "first_real": first_real, "src": "snkrdunk_A", "built": end},
           open(os.path.join(ROOT, "data", "index_hist.json"), "w"), separators=(",", ":"))
-print("days", len(dates), dates[:1], dates[-1:], "ratio", round(ratio, 3), "overlap", len(ov),
-      "cards", len(cards), "first20+", next((d for d in sorted(sv) if sv[d]), None))
+print("days", len(dates), dates[:1], dates[-1:], "cards", len(cards))
