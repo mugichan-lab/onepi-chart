@@ -860,19 +860,34 @@ function buildIndex(){
   IDX={members,vals,weights:members.map(c=>cur(c,"cm")/ (base))};
 }
 let IXR=9999;
+let IXH=null,IXHP=null;const loadIxHist=()=>IXHP||(IXHP=fetch("data/index_hist.json").then(r=>r.ok?r.json():null).catch(()=>null).then(j=>IXH=j||{dates:[],vals:[]}));
+function ixSeries(){
+  // 過去分（スニダン取引相場から算出・カードラッシュ基準に換算）＋毎日の記録
+  const d=[],v=[],h=IXH||{dates:[],vals:[]},first=DATES[0]||"9999";
+  h.dates.forEach((x,i)=>{if(x<first){d.push(x);v.push(h.vals[i])}});
+  const nh=d.length;DATES.forEach((x,i)=>{d.push(x);v.push(IDX.vals[i])});
+  return {d,v,nh};
+}
 function renderIndex(){
-  const v=IDX.vals,n=v.length,last=v[n-1],ago=d=>v[Math.max(0,n-1-d)];
-  const st=(k,d)=>{if(n<2)return `<div class="stat"><div class="k">${k}</div><div class="v flat">—</div></div>`;const o=ago(d),df=last-o,p=df/o*100;return `<div class="stat"><div class="k">${k}</div><div class="v ${df>=0?"up":"down"}">${df>=0?"+":""}${yen(df)}</div><div class="foot">${p>=0?"+":""}${p.toFixed(1)}%</div></div>`};
-  app.innerHTML=`${statusNote()}<h1 class="pt">ワンピカ指数チャート</h1><p class="lead">販売価格が高い上位100枚の平均価格を、市場全体の動きを表す指数として毎日記録しています</p>
-  ${n?`<div class="stats"><div class="stat"><div class="k">最新値（${DATES[n-1]}）</div><div class="v">${yen(last)}</div></div>${st("前日比",1)}${st("月間変動",30)}${st("年間変動",365)}</div>
-  <div class="panel"><div class="ctabs"><span class="seg">${[[7,"7日"],[30,"1ヶ月"],[90,"3ヶ月"],[180,"6ヶ月"],[365,"1年"],[9999,"全期間"]].map(([d,l])=>`<button class="btn ${IXR===d?"on":""}" data-r="${d}">${l}</button>`).join("")}</span></div>
-  ${n>=2?`<div class="chartwrap"><canvas id="ic"></canvas></div>`:`<div class="empty">指数チャートは2日分以上のデータがたまると表示されます</div>`}</div>
+  if(!IXH){loadIxHist().then(()=>{if(location.hash==="#index")renderIndex()});}
+  const S=ixSeries(),v=S.v,dd=S.d,n=v.length,last=v[n-1];
+  const agoD=days=>{if(!n)return null;const t=new Date(dd[n-1]);t.setDate(t.getDate()-days);const ts=t.toISOString().slice(0,10);let r=null;for(let i=0;i<n;i++){if(dd[i]<=ts)r=v[i];else break}return r};
+  const st=(k,d)=>{const o=agoD(d);if(n<2||o==null)return `<div class="stat"><div class="k">${k}</div><div class="v flat">—</div></div>`;const df=last-o,p=df/o*100;return `<div class="stat"><div class="k">${k}</div><div class="v ${df>=0?"up":"down"}">${df>=0?"+":""}${yen(Math.round(df))}</div><div class="foot">${p>=0?"+":""}${p.toFixed(1)}%</div></div>`};
+  const since=S.nh?dd[0].slice(0,7).replace("-","年")+"月":"";
+  app.innerHTML=`${statusNote()}<h1 class="pt">ワンピカ指数チャート</h1><p class="lead">販売価格が高い上位100枚の平均価格を、市場全体の動きを表す指数として毎日記録しています${since?`（${since}から掲載）`:""}</p>
+  ${n?`<div class="stats"><div class="stat"><div class="k">最新値（${dd[n-1]}）</div><div class="v">${yen(Math.round(last))}</div></div>${st("前日比",1)}${st("月間変動",30)}${st("年間変動",365)}</div>
+  <div class="panel"><div class="ctabs"><span class="seg">${[[7,"7日"],[30,"1ヶ月"],[90,"3ヶ月"],[180,"6ヶ月"],[365,"1年"],[1095,"3年"],[9999,"全期間"]].map(([d,l])=>`<button class="btn ${IXR===d?"on":""}" data-r="${d}">${l}</button>`).join("")}</span></div>
+  ${n>=2?`<div class="chartwrap"><canvas id="ic"></canvas></div>`:`<div class="empty">指数チャートは2日分以上のデータがたまると表示されます</div>`}
+  ${S.nh?`<p class="foot" style="margin:10px 4px 0">${esc(DATES[0]||"")}より前は、スニーカーダンクの取引相場（状態A）から同じ方法（その時点の高額上位100枚の平均）で算出し、カードラッシュの販売価格の水準に換算した参考値です。</p>`:""}</div>
   <h3 class="sh">指数の算出対象カード（${IDX.members.length}枚）</h3>
   <div class="rel">${IDX.members.map(c=>`<a href="#card-${c.uid}">${thumb(c,"sm")}<span>${esc(c.name)}<b>${yen(cur(c,"cm"))}</b></span></a>`).join("")}</div>`
   :`<div class="panel empty">価格データの読み込み後に表示されます</div>`}`;
   app.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{IXR=+b.dataset.r;renderIndex()});
-  if(n>=2){const k=Math.min(IXR,n);charts.push(new Chart(document.getElementById("ic"),{type:"line",data:{labels:DATES.slice(-k).map(d=>d.slice(5).replace("-","/")),datasets:[{data:v.slice(-k),borderColor:"#b9a8ff",backgroundColor:"#b9a8ff22",fill:true,borderWidth:2,pointRadius:k<=31?2:0,tension:.25}]},
-    options:{maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>yen(x.raw)}}},scales:{y:{ticks:{callback:v=>yen(v)},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}}));}
+  bindCards(app);
+  if(n>=2){const t=new Date(dd[n-1]);t.setDate(t.getDate()-IXR);const ts=IXR>=9999?"0":t.toISOString().slice(0,10);let k0=dd.findIndex(x=>x>=ts);if(k0<0)k0=0;
+    const L=dd.slice(k0),V=v.slice(k0),long=(dd[n-1]>"")&&IXR>180;
+    charts.push(new Chart(document.getElementById("ic"),{type:"line",data:{labels:L.map(d=>long?d.slice(2,7).replace("-","/"):d.slice(5).replace("-","/")),datasets:[{data:V,borderColor:"#b9a8ff",backgroundColor:"#b9a8ff22",fill:true,borderWidth:2,pointRadius:L.length<=31?2:0,tension:.25}]},
+    options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{title:x=>L[x[0].dataIndex],label:x=>yen(Math.round(x.raw))}}},scales:{y:{ticks:{callback:v=>v>=10000?(v/10000).toFixed(v>=100000?0:1)+"万":yen(v)},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false},ticks:{maxTicksLimit:8,autoSkip:true}}}}}));}
 }
 
 // ================= 比較 =================
