@@ -860,7 +860,7 @@ function buildIndex(){
   IDX={members,vals,weights:members.map(c=>cur(c,"cm")/ (base))};
 }
 let IXR=9999;
-let IXH=null,IXHP=null;const loadIxHist=()=>IXHP||(IXHP=fetch("data/index_hist.json").then(r=>r.ok?r.json():null).catch(()=>null).then(j=>IXH=j||{dates:[],vals:[]}));
+let IXH=null,IXHP=null;const loadIxHist=()=>IXHP||(IXHP=fetch("data/index_hist.json",{cache:"no-cache"}).then(r=>r.ok?r.json():null).catch(()=>null).then(j=>IXH=j||{dates:[],vals:[]}));
 function ixSeries(){
   // 過去分（スニダン取引相場から算出・カードラッシュ基準に換算）＋毎日の記録
   const d=[],v=[],h=IXH||{dates:[],vals:[]},first=DATES[0]||"9999";
