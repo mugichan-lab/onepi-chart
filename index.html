@@ -890,7 +890,7 @@ function renderIndex(){
   if(n>=2){const t=new Date(dd[n-1]);t.setDate(t.getDate()-IXR);const ts=IXR>=9999?"0":t.toISOString().slice(0,10);let k0=dd.findIndex(x=>x>=ts);if(k0<0)k0=0;
     const L=dd.slice(k0),V=v.slice(k0),long=(dd[n-1]>"")&&IXR>180;
     charts.push(new Chart(document.getElementById("ic"),{type:"line",data:{labels:L.map(d=>long?d.slice(2,7).replace("-","/"):d.slice(5).replace("-","/")),datasets:[{data:V,borderColor:"#b9a8ff",backgroundColor:"#b9a8ff22",fill:true,borderWidth:2,pointRadius:L.length<=31?2:0,tension:.25}]},
-    options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{title:x=>L[x[0].dataIndex],label:x=>yen(Math.round(x.raw))}}},scales:{y:{ticks:{callback:v=>v>=10000?(v/10000).toFixed(v>=100000?0:1)+"万":yen(v)},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false},ticks:{maxTicksLimit:8,autoSkip:true}}}}}));}
+    options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{title:x=>L[x[0].dataIndex],label:x=>yen(Math.round(x.raw))}}},scales:{y:{ticks:{callback:v=>v>=10000?(v/10000).toFixed(1).replace(/\.0$/,"")+"万":yen(v)},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false},ticks:{maxTicksLimit:8,autoSkip:true}}}}}));}
 }
 
 // ================= 比較 =================
