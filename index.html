@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ワンピカ相場チャート</title>
 <script>
 (function(){var ua=navigator.userAgent||"",d=document.documentElement;
@@ -411,6 +411,13 @@ html.zlock,html.zlock body{overflow:hidden}
   .bxt .bxn{min-width:0!important}
   .bxt tbody td[data-l="販売 A"],.bxt tbody td[data-l="買取"]{font-size:15px}
   .fli .flm .foot{display:none}
+}
+/* iPhoneの画面下（ホームバー）にメニューが隠れないように */
+@media(max-width:760px){
+  nav.bottom{padding-bottom:max(env(safe-area-inset-bottom),8px)!important}
+  nav.bottom a{padding:8px 0 4px!important}
+  body{padding-bottom:calc(72px + env(safe-area-inset-bottom))!important}
+  header,.top-bar{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
 }
 </style>
 </head>
