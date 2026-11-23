@@ -14,6 +14,16 @@
  var ios=/iP(hone|od|ad)/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
  if(n>=2||ios||/ Line\/|FBAN|FBAV|Instagram|Brave|; wv\)/i.test(ua)||/[?&]lite=1/.test(location.search))d.classList.add("lite");
  window.addEventListener("load",function(){setTimeout(function(){try{sessionStorage.removeItem("opc-boot")}catch(e){}},8000)});
+ // iPhoneのホームバー対策: 画面下の安全領域が取れない環境（アプリ内表示など）でも余白を確保
+ (function(){try{
+  var ios=/iPhone|iPod/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1);
+  if(!ios)return;
+  var tall=Math.max(screen.width,screen.height)>=812;
+  var full=navigator.standalone||window.matchMedia("(display-mode: standalone)").matches||Math.abs(window.innerHeight-screen.height)<4;
+  var chk=function(){var d=document.createElement("div");d.style.cssText="position:fixed;bottom:0;height:env(safe-area-inset-bottom);visibility:hidden";document.body.appendChild(d);var h=d.offsetHeight;d.remove();
+    if(tall&&h<10&&(full||true))document.documentElement.classList.add("iosbar");};
+  if(document.body)chk();else document.addEventListener("DOMContentLoaded",chk);
+ }catch(e){}})();
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -422,6 +432,8 @@ html.zlock,html.zlock body{overflow:hidden}
 }
 /* ホーム画面に追加したアプリ表示のとき */
 @media(display-mode:standalone){nav.bottom{padding-bottom:max(env(safe-area-inset-bottom),14px)!important}}
+html.iosbar nav.bottom{padding-bottom:26px!important}
+html.iosbar body{padding-bottom:100px!important}
 </style>
 </head>
 <body>
