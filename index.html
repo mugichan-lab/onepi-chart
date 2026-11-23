@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="apple-mobile-web-app-title" content="ワンピカ相場"><meta name="theme-color" content="#0b0a1d">
 <title>ワンピカ相場チャート</title>
 <script>
 (function(){var ua=navigator.userAgent||"",d=document.documentElement;
@@ -419,6 +420,8 @@ html.zlock,html.zlock body{overflow:hidden}
   body{padding-bottom:calc(72px + env(safe-area-inset-bottom))!important}
   header,.top-bar{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
 }
+/* ホーム画面に追加したアプリ表示のとき */
+@media(display-mode:standalone){nav.bottom{padding-bottom:max(env(safe-area-inset-bottom),14px)!important}}
 </style>
 </head>
 <body>
