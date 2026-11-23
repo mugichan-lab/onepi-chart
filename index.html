@@ -426,17 +426,14 @@ html.zlock,html.zlock body{overflow:hidden}
 /* iPhoneの画面下（ホームバー）にメニューが隠れないように */
 @media(max-width:760px){
   nav.bottom{padding-bottom:max(env(safe-area-inset-bottom),8px)!important}
+  nav.bottom a{padding:8px 0 4px!important}
+  body{padding-bottom:calc(72px + env(safe-area-inset-bottom))!important}
 }
 @media(max-width:760px) and (pointer:coarse){
   nav.bottom{padding-bottom:max(env(safe-area-inset-bottom),22px)!important}
-  body{padding-bottom:calc(84px + env(safe-area-inset-bottom))!important}
-  nav.bottom a{padding:8px 0 4px!important}
-  body{padding-bottom:calc(72px + env(safe-area-inset-bottom))!important}
-  header,.top-bar{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+  body{padding-bottom:calc(86px + env(safe-area-inset-bottom))!important}
 }
-/* ホーム画面に追加したアプリ表示のとき */
-@media(display-mode:standalone){nav.bottom{padding-bottom:max(env(safe-area-inset-bottom),14px)!important}}
-html.iosbar nav.bottom{padding-bottom:26px!important}
+html.iosbar nav.bottom{padding-bottom:max(env(safe-area-inset-bottom),26px)!important}
 html.iosbar body{padding-bottom:100px!important}
 </style>
 </head>
