@@ -4,7 +4,7 @@
 //   毎日の取得:                      (0,eval)(localStorage.getItem('__opsnk')); window.__snkDaily()
 // 進捗・結果は localStorage の __snkmapres / __snkres に保存される。
 (function () {
-  var RAW = "https://raw.githubusercontent.com/mugichan-lab/onepi-chart/main/";
+  var RAW = "https://raw.githubusercontent.com/mugichan-lab/mugi-chart/main/";
   var GAP = 900; // 1リクエストごとの間隔(ms)
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   function jst() { return new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10); }

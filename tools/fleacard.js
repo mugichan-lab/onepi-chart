@@ -71,7 +71,7 @@ var OPBOX = (function () {
 // 使い方（各サイトのページ上で）: (0,eval)(localStorage.getItem('__opfleac')); window.__fleaCardRun()
 // 結果は localStorage.__fleacres。window.__fleaCardDump() で取り出す。
 (function () {
-  var RAW = "https://raw.githubusercontent.com/mugichan-lab/onepi-chart/main/";
+  var RAW = "https://raw.githubusercontent.com/mugichan-lab/mugi-chart/main/";
   var MIN_PRICE = 5000, GROUPS = 3;
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   function jst() { return new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10); }

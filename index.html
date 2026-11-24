@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="apple-mobile-web-app-title" content="ワンピカ相場"><meta name="theme-color" content="#0b0a1d">
-<title>ワンピカ相場チャート</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="apple-mobile-web-app-title" content="むぎチャート"><meta name="theme-color" content="#0b0a1d">
+<title>むぎチャート｜ワンピースカード相場チャート</title>
+<meta name="description" content="むぎチャートは、ONE PIECEカードゲーム（ワンピカ）のカード・未開封BOXの相場を毎日記録する価格チャートサイトです。販売価格・買取価格・スニダン・フリマ相場をまとめてチェック。">
+<link rel="icon" href="img/mugi.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="img/mugi-180.png"><link rel="manifest" href="manifest.json">
+<meta property="og:title" content="むぎチャート｜ワンピースカード相場チャート"><meta property="og:description" content="ONE PIECEカードゲームのカード・BOX相場を毎日記録"><meta property="og:image" content="https://mugichan-lab.github.io/mugi-chart/img/mugi-512.png"><meta property="og:type" content="website"><meta name="twitter:card" content="summary">
 <script>
 (function(){var ua=navigator.userAgent||"",d=document.documentElement;
  // LINEのアプリ内ブラウザは標準ブラウザで開き直す（LINE公式の仕組み）
@@ -435,11 +438,13 @@ html.zlock,html.zlock body{overflow:hidden}
 }
 html.iosbar nav.bottom{padding-bottom:max(env(safe-area-inset-bottom),26px)!important}
 html.iosbar body{padding-bottom:100px!important}
+.logo .mk{width:34px!important;height:34px!important;padding:0!important;background:none!important;box-shadow:0 0 16px rgba(255,79,163,.45)!important;border-radius:10px!important;overflow:hidden}
+.logo .mk img{width:100%;height:100%;display:block}
 </style>
 </head>
 <body>
 <header><div class="hwrap">
-  <a class="logo" href="#home"><span class="mk">⚓</span><span>ワンピカ相場チャート<small>ONE PIECEカードゲーム 相場・価格推移</small></span></a>
+  <a class="logo" href="#home"><span class="mk"><img src="img/mugi.svg" alt="" width="34" height="34"></span><span>むぎチャート<small>ワンピースカード相場チャート</small></span></a>
   <nav class="top" id="ntop"></nav>
   <form class="hsearch" id="hs"><input id="hq" type="search" placeholder="カード名・型番で検索"></form>
 </div></header>
