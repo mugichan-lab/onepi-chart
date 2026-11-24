@@ -72,7 +72,7 @@ var OPBOX = (function () {
 //   メルカリ（https://jp.mercari.com/）                  : (0,eval)(localStorage.getItem('__opflea')); window.__fleaRun()
 // 結果は localStorage.__flearess に保存。window.__fleaDump() で取り出す。
 (function () {
-  var RAW = "https://raw.githubusercontent.com/mugichan-lab/mugi-chart/main/";
+  var RAW = "https://raw.githubusercontent.com/mugichan-lab/onepi-chart/main/";
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   function jst() { return new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10); }
   function save(o) { localStorage.setItem("__flearess", JSON.stringify(o)); return o; }
