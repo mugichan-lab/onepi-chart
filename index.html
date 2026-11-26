@@ -30,6 +30,7 @@
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 <style>
 :root{color-scheme:light;
   --bg:#f4f1ea; --panel:#fff; --ink:#1b1915; --sub:#6b6458; --line:#e5ded2;
@@ -440,6 +441,25 @@ html.iosbar nav.bottom{padding-bottom:max(env(safe-area-inset-bottom),26px)!impo
 html.iosbar body{padding-bottom:100px!important}
 .logo .mk{width:34px!important;height:34px!important;padding:0!important;background:none!important;box-shadow:0 0 16px rgba(255,79,163,.45)!important;border-radius:10px!important;overflow:hidden}
 .logo .mk img{width:100%;height:100%;display:block}
+/* 会員 */
+.acct{flex:none;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:inherit;font:inherit;font-size:13px;font-weight:700;border-radius:999px;padding:8px 14px;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.acct:hover{background:rgba(255,255,255,.12)}
+.acct .pl{font-size:10px;font-weight:800;border-radius:999px;padding:2px 7px;background:rgba(255,255,255,.14)}
+.acct .pl.paid{background:linear-gradient(135deg,#ff5fa8,#7b5cff);color:#fff}
+.free .src{display:none!important}
+.upsell{text-align:center;padding:26px 20px!important;margin:16px 0;border:1px solid rgba(255,95,168,.35)!important;background:linear-gradient(160deg,rgba(255,95,168,.10),rgba(123,92,255,.10))!important}
+.upsell .lk{font-size:26px}.upsell h3{margin:6px 0 6px;font-size:18px}
+.upsell ul{text-align:left;max-width:520px;margin:12px auto;padding-left:1.2em;font-size:14px;line-height:1.8}
+.upsell .ub{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0 6px}
+.upsell .btn.pri,.acctin .btn.pri{background:linear-gradient(135deg,#ff5fa8,#7b5cff);color:#fff;border:0;text-decoration:none}
+.acctbox{position:fixed;inset:0;z-index:9998;background:rgba(6,8,18,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px}
+.acctin{position:relative;width:min(440px,100%);max-height:90vh;overflow:auto;background:#17142f;border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px 20px}
+.acctin h3{margin:0 0 12px}.acctin label{display:block;font-size:13px;margin:10px 0;color:#c9c5e6}
+.acctin input{display:block;width:100%;margin-top:6px;font:inherit;font-size:16px;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff}
+.acctin .btn{width:100%;justify-content:center;margin-top:10px;min-height:44px}
+.acctin .msg{min-height:1.2em;color:#ffb3c8;font-size:13px}.acctin .zx{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:20px;cursor:pointer}
+.acctin .upsell{margin:12px 0}
+@media(max-width:760px){.acct{padding:7px 10px;font-size:12px}.hsearch{min-width:0}}
 </style>
 </head>
 <body>
@@ -447,6 +467,7 @@ html.iosbar body{padding-bottom:100px!important}
   <a class="logo" href="#home"><span class="mk"><img src="img/mugi.svg" alt="" width="34" height="34"></span><span>むぎチャート<small>ワンピースカード相場チャート</small></span></a>
   <nav class="top" id="ntop"></nav>
   <form class="hsearch" id="hs"><input id="hq" type="search" placeholder="カード名・型番で検索"></form>
+  <button class="acct" id="acct" type="button">ログイン</button>
 </div></header>
 <main id="app"></main>
 <p class="copyright">カード画像 ©尾田栄一郎／集英社・フジテレビ・東映アニメーション ／ ONE PIECEカードゲーム公式サイトより（バンダイの許諾を得て掲載）</p>
@@ -772,7 +793,7 @@ function updateCards(){
 
 // ================= マイリスト（この端末に保存） =================
 let WATCH=LS.get("opc-watch",[]), PORT=LS.get("opc-port",{});
-const saveMy=()=>{LS.set("opc-watch",WATCH);LS.set("opc-port",PORT)};
+let saveMy=()=>{LS.set("opc-watch",WATCH);LS.set("opc-port",PORT)};
 const isWatch=uid=>WATCH.includes(uid);
 function toggleWatch(uid){WATCH=isWatch(uid)?WATCH.filter(x=>x!==uid):[uid,...WATCH];saveMy();toast(isWatch(uid)?"ウォッチリストに追加しました":"ウォッチリストから外しました")}
 function modal(html,onok){const m=document.getElementById("modal");document.getElementById("mbox").innerHTML=html+`<div class="actions" style="justify-content:flex-end;margin-top:14px"><button class="btn" id="mc">閉じる</button>${onok?`<button class="btn pri" id="mo">保存</button>`:""}</div>`;m.classList.add("on");
@@ -1155,7 +1176,206 @@ function countUp(){
 document.getElementById("hs").onsubmit=e=>{e.preventDefault();LIST.q=document.getElementById("hq").value.trim();LIST.n=60;LIST.pack=LIST.rar=LIST.par="";if(location.hash==="#cards")render();else location.hash="cards";};
 window.addEventListener("hashchange",()=>{render();window.scrollTo(0,0)});
 render();
-loadDb();
+// ================= 会員（ゲスト／無料／有料） =================
+// 無料：全ショップの相場の中央値だけ（公開データ data/pub）。マイリスト・PSA10・ショップ別の価格や履歴は見えない
+// 有料：これまでどおりの詳細データ（暗号化データをサーバー関数 premium が復号して返す）＋マイリスト
+const SB_URL="https://rzqqhovhzenbgrkwcary.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6cXFob3ZoemVuYmdya3djYXJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU2NjA1MDAsImV4cCI6MjExMTIzNjUwMH0.7Gj0KAiBxz7uZDazPKOM8MKZzmPhhyYIUPa-63jehqo";
+const STRIPE_LINK="";   // Stripe の支払いリンク（月額500円）。設定されるまでは「準備中」表示
+const STRIPE_PORTAL=""; // Stripe のカスタマーポータル（解約・カード変更）
+const PRICE_LABEL="月額500円";
+let SB=null,USER=null,PLAN="guest",PROFILE=null;
+const PAID=()=>PLAN==="paid";
+const NAV_ALL=NAV.slice();
+
+async function initAuth(){
+  try{
+    if(!window.supabase)throw 0;
+    SB=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    const {data}=await SB.auth.getSession();USER=data.session?data.session.user:null;
+    await loadPlan();
+    SB.auth.onAuthStateChange(async(ev,s)=>{const nu=s?s.user:null;if((nu&&nu.id)!==(USER&&USER.id)){USER=nu;await loadPlan();applyPlanUi();loadDb();}});
+  }catch(e){PLAN="guest"}
+  applyPlanUi();
+}
+async function loadPlan(){
+  PROFILE=null;
+  if(!USER){PLAN="guest";return}
+  try{const {data}=await SB.from("profiles").select("plan,current_period_end").eq("id",USER.id).maybeSingle();PROFILE=data;
+    PLAN=data&&data.plan==="paid"&&(!data.current_period_end||new Date(data.current_period_end).getTime()>Date.now()-3*864e5)?"paid":"free";
+  }catch(e){PLAN="free"}
+  if(PAID())await pullMylist();
+}
+function applyPlanUi(){
+  document.documentElement.classList.toggle("free",!PAID());
+  NAV.length=0;NAV_ALL.filter(n=>PAID()||(n[0]!=="mylist"&&n[0]!=="psa")).forEach(n=>NAV.push(n));
+  const nt=document.getElementById("ntop");if(nt)nt.innerHTML="";
+  const b=document.getElementById("acct");
+  if(b){b.innerHTML=PLAN==="paid"?`<span class="pl paid">有料</span>マイページ`:PLAN==="free"?`<span class="pl">無料</span>マイページ`:`ログイン`;b.onclick=acctDialog;}
+}
+
+// --- マイリストをアカウントに保存（有料会員） ---
+async function pullMylist(){
+  try{const {data}=await SB.from("mylist").select("uid,kind,qty,cost");if(!data)return;
+    WATCH=data.filter(r=>r.kind==="watch").map(r=>r.uid);PORT={};data.filter(r=>r.kind==="port").forEach(r=>PORT[r.uid]={qty:r.qty||1,cost:r.cost||0});
+    LS.set("opc-watch",WATCH);LS.set("opc-port",PORT);}catch(e){}
+}
+let pushT=0;
+function pushMylist(){
+  if(!PAID()||!SB||!USER)return;clearTimeout(pushT);
+  pushT=setTimeout(async()=>{try{
+    const rows=[...WATCH.map(uid=>({user_id:USER.id,uid,kind:"watch"})),...Object.entries(PORT).map(([uid,p])=>({user_id:USER.id,uid,kind:"port",qty:p.qty||1,cost:Math.round(p.cost||0)}))];
+    await SB.from("mylist").delete().eq("user_id",USER.id);
+    if(rows.length)await SB.from("mylist").insert(rows);
+  }catch(e){}},600);
+}
+
+// --- データの読み込み（プランで切り替え） ---
+loadDb=async function(){
+  loadState="loading";
+  try{
+    let docs=[];
+    if(PAID()){
+      const {data}=await SB.auth.getSession();
+      const r=await fetch(SB_URL+"/functions/v1/premium",{headers:{Authorization:"Bearer "+data.session.access_token,apikey:SB_KEY}});
+      if(!r.ok)throw new Error("premium "+r.status);
+      const j=await r.json();docs=(j.days||[]).filter(d=>d&&d.date&&(d.cm||d.mb||d.bx||d.bxf));
+      FCARD=j.flea_cards||{};FCARDP=Promise.resolve(FCARD);
+      SNKH=j.snk_hist||{};SNKHP=Promise.resolve(SNKH);
+      FLEAI=j.flea_items||{};FLEAIP=Promise.resolve(FLEAI);
+    }else{
+      const idx=await fetch("data/pub/index.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw 0;return r.json()});
+      const ds=idx.slice().sort().slice(-400);
+      const pub=(await Promise.all(ds.map(d=>fetch("data/pub/"+d+".json").then(r=>r.ok?r.json():null).catch(()=>null)))).filter(d=>d&&d.date);
+      docs=pub.map(d=>({date:d.date,cm:d.md,bx:JSON.stringify(Object.fromEntries(Object.entries(d.bmd||{}).map(([k,v])=>[k,[v]])))}));
+      FCARD={};FCARDP=Promise.resolve(FCARD);SNKH={};SNKHP=Promise.resolve(SNKH);FLEAI={};FLEAIP=Promise.resolve(FLEAI);
+    }
+    DATES=docs.map(d=>d.date);
+    for(const f of FIELDS) SER[f]=docs.map(d=>d[f]!=null?parseCsv(d[f]):null);
+    BXS=docs.map(d=>{try{return d.bx?JSON.parse(d.bx):null}catch(e){return null}});
+    BXF=docs.map(d=>{try{return d.bxf?JSON.parse(d.bxf):null}catch(e){return null}});
+    loadState=docs.length?"ok":"empty";
+  }catch(e){loadState="offline";}
+  buildIndex();render();
+};
+
+// --- 有料プランの案内 ---
+function upsell(title,lead){
+  const feats=["ショップ別の価格（カードラッシュの状態別・メルカード買取・スニダン・フリマ）","状態別・買取・スニダン・フリマの価格推移グラフ","毎日の相場の履歴表と、フリマ相場の参考にした出品","マイリスト（ウォッチ・ポートフォリオ）をアカウントに保存","PSA10相場、BOXの販売・買取・フリマ相場の内訳"];
+  const btn=PLAN==="guest"?`<button class="btn pri" data-acct="signup">無料で会員登録</button><button class="btn" data-acct="login">ログイン</button>`
+    :PLAN==="free"?(STRIPE_LINK?`<a class="btn pri" href="${STRIPE_LINK}?client_reference_id=${USER.id}&prefilled_email=${encodeURIComponent(USER.email||"")}" rel="noopener">有料プランに登録（${PRICE_LABEL}）</a>`:`<span class="btn" aria-disabled="true">有料プランは準備中です</span>`):"";
+  return `<div class="panel upsell"><div class="lk">🔒</div><h3>${esc(title||"有料プランで見られます")}</h3>${lead?`<p class="foot">${esc(lead)}</p>`:""}
+    <ul>${feats.map(f=>`<li>${esc(f)}</li>`).join("")}</ul><div class="ub">${btn}</div><p class="foot">${PRICE_LABEL}・いつでも解約できます</p></div>`;
+}
+function bindUpsell(root){(root||app).querySelectorAll("[data-acct]").forEach(b=>b.onclick=()=>acctDialog(b.dataset.acct))}
+
+// --- アカウント画面（ログイン・登録・マイページ） ---
+function acctDialog(mode){
+  if(typeof mode!=="string")mode=USER?"me":"login";
+  const old=document.getElementById("acctbox");if(old)old.remove();
+  const box=document.createElement("div");box.id="acctbox";box.className="acctbox";
+  const close=()=>box.remove();
+  const form=(signup)=>`<h3>${signup?"無料会員登録":"ログイン"}</h3>
+    <label>メールアドレス<input type="email" id="ae" autocomplete="email" required></label>
+    <label>パスワード（8文字以上）<input type="password" id="ap" autocomplete="${signup?"new-password":"current-password"}" minlength="8" required></label>
+    <div class="msg" id="am"></div>
+    <button class="btn pri" id="ago">${signup?"登録する":"ログイン"}</button>
+    <p class="foot">${signup?`すでに登録済みの方は<a href="#" data-m="login">ログイン</a>`:`はじめての方は<a href="#" data-m="signup">無料会員登録</a>・<a href="#" data-m="reset">パスワードを忘れた</a>`}</p>`;
+  const me=()=>`<h3>マイページ</h3><p>${esc(USER.email||"")}</p>
+    <p>プラン：<b>${PAID()?"有料プラン":"無料プラン"}</b>${PAID()&&PROFILE&&PROFILE.current_period_end?`（次回更新 ${esc(PROFILE.current_period_end.slice(0,10))}）`:""}</p>
+    ${PAID()?(STRIPE_PORTAL?`<a class="btn" href="${STRIPE_PORTAL}" target="_blank" rel="noopener">お支払い・解約の手続き</a>`:""):upsell("有料プランでできること")}
+    <button class="btn" id="aout">ログアウト</button>`;
+  const reset=()=>`<h3>パスワードの再設定</h3><label>メールアドレス<input type="email" id="ae" required></label><div class="msg" id="am"></div><button class="btn pri" id="ago">再設定メールを送る</button>`;
+  box.innerHTML=`<div class="acctin"><button class="zx" aria-label="閉じる">×</button>${mode==="me"&&USER?me():mode==="reset"?reset():form(mode==="signup")}</div>`;
+  document.body.appendChild(box);
+  box.onclick=e=>{if(e.target===box)close()};box.querySelector(".zx").onclick=close;
+  box.querySelectorAll("[data-m]").forEach(a=>a.onclick=e=>{e.preventDefault();acctDialog(a.dataset.m)});
+  bindUpsell(box);
+  const msg=t=>{const m=box.querySelector("#am");if(m)m.textContent=t};
+  const go=box.querySelector("#ago");
+  if(go)go.onclick=async()=>{
+    if(!SB){msg("ただいま会員機能を利用できません");return}
+    const em=box.querySelector("#ae").value.trim(),pw=(box.querySelector("#ap")||{}).value||"";
+    go.disabled=true;msg("");
+    try{
+      if(mode==="signup"){const {data,error}=await SB.auth.signUp({email:em,password:pw,options:{emailRedirectTo:location.origin+location.pathname}});if(error)throw error;
+        if(!data.session){msg("確認メールを送りました。メールのリンクを開くと登録が完了します。");go.disabled=false;return}}
+      else if(mode==="reset"){const {error}=await SB.auth.resetPasswordForEmail(em,{redirectTo:location.origin+location.pathname});if(error)throw error;msg("再設定メールを送りました");go.disabled=false;return}
+      else{const {error}=await SB.auth.signInWithPassword({email:em,password:pw});if(error)throw error;}
+      close();toast(mode==="signup"?"登録しました":"ログインしました");
+    }catch(e){msg(/Invalid login/.test(e.message)?"メールアドレスかパスワードが違います":/registered/.test(e.message)?"このメールアドレスは登録済みです":/Password/.test(e.message)?"パスワードは8文字以上にしてください":"エラー："+e.message);go.disabled=false}
+  };
+  const out=box.querySelector("#aout");if(out)out.onclick=async()=>{await SB.auth.signOut();close();toast("ログアウトしました")};
+}
+
+// --- 無料プラン用の画面 ---
+const _renderDetail=renderDetail,_renderBoxDetail=renderBoxDetail,_renderMylist=renderMylist,_renderPsa=renderPsa,_renderHome=renderHome,_renderCards=renderCards,_renderBox=renderBox;
+const _saveMy=saveMy;saveMy=function(){_saveMy();pushMylist()};
+renderMylist=function(){if(PAID())return _renderMylist();app.innerHTML=`<h1 class="pt">マイリスト</h1>${upsell("マイリストは有料プランの機能です","気になるカードのウォッチや、持っているカードの評価額（ポートフォリオ）をアカウントに保存できます。")}`;bindUpsell()};
+renderPsa=function(){if(PAID())return _renderPsa();app.innerHTML=`<h1 class="pt">PSA10相場</h1>${upsell("PSA10相場は有料プランの機能です")}`;bindUpsell()};
+renderHome=function(){_renderHome();if(PAID())return;
+  const p=app.querySelector(".hero p");if(p)p.textContent="複数のショップ・フリマの相場から中央値を出して毎日記録。高騰・下落もすぐわかります。";
+  app.querySelectorAll("[data-sort]").forEach(a=>{if(/^(buy|stock)/.test(a.dataset.sort)){const s=a.closest(".block");if(s)s.remove()}});
+  const f=app.querySelector("p.foot:last-of-type");if(f&&/カードラッシュ/.test(f.textContent))f.textContent="相場はカードラッシュ・メルカード秋葉原・スニーカーダンク・Yahoo!フリマ・メルカリの価格の中央値です。ショップ別の価格は有料プランで見られます。";
+  const hc=app.querySelector('.hchips a[href="#psa"]');if(hc)hc.remove();
+};
+renderCards=function(){_renderCards();if(PAID())return;const s=document.getElementById("ls");if(s)[...s.options].forEach(o=>{if(/^(buy|stock)/.test(o.value))o.remove()})};
+renderDetail=function(uid){
+  if(PAID())return _renderDetail(uid);
+  const c=BYUID[uid];if(!c){location.hash="cards";return}
+  const live=loadState==="ok"&&c.ki>=0,p=price(c),c7=chg(c,"cm",7),c30=chg(c,"cm",30),nd=DATES.length;
+  const rel=DATA.filter(x=>x!==c&&(x.base===c.base||(x.pack===c.pack&&price(x)!=null))).sort((a,b)=>(b.base===c.base)-(a.base===c.base)||(price(b)||0)-(price(a)||0)).slice(0,16);
+  const ch=x=>x?`<div class="v ${x.diff>=0?"up":"down"}">${(x.diff>=0?"+":"")+yen(x.diff)} (${(x.pct>=0?"+":"")+x.pct.toFixed(1)}%)</div>`:`<div class="v">—</div>`;
+  app.innerHTML=`${statusNote()}<div class="crumb"><a href="#home">ホーム</a> / <a href="#cards">カード一覧</a> / ${esc(c.name)}</div>
+  <div class="panel"><div class="dtop">${thumb(c,"lg")}<div>
+    <h1 class="dname">${esc(c.name)}</h1>
+    <div><span class="chip">${esc(c.id)}</span><span class="chip">${esc(c.rar)}</span><span class="foot">${esc(c.set)}</span></div>
+    <div class="foot" style="margin-top:10px">${live?"相場（全ショップの中央値）":"参考価格（遊々亭・"+YUYU_DATE+"）"}</div>
+    <div class="bigprice">${yen(p)}</div>
+    <div class="kv"><div><div class="k">7日間変動</div>${ch(c7)}</div><div><div class="k">30日間変動</div>${ch(c30)}</div></div>
+    <div class="actions"><button class="btn" id="dc">比較に追加</button>${offUrl(c)?`<a class="offlink" href="${offUrl(c)}" target="_blank" rel="noopener">公式カードリスト ↗</a>`:""}</div>
+  </div></div></div>
+  ${c.ki>=0?`<h3 class="sh">相場（中央値）の推移</h3><div class="panel"><div class="ctabs"><span class="seg">${[[7,"7日"],[30,"1ヶ月"],[90,"3ヶ月"],[365,"1年"],[9999,"全期間"]].map(([d,l])=>`<button class="btn ${DET.range===d?"on":""}" data-r="${d}">${l}</button>`).join("")}</span></div>
+    ${nd>=2?`<div class="chartwrap"><canvas id="pc"></canvas></div>`:`<div class="empty">推移グラフは2日分以上のデータがたまると表示されます</div>`}</div>`:""}
+  ${upsell("ショップ別の価格・販売履歴は有料プランで見られます","カードラッシュの状態別価格と在庫、メルカードの買取価格、スニダンの取引相場、フリマの売却相場と参考にした出品、毎日の履歴をすべて確認できます。")}
+  ${rel.length?`<h3 class="sh">関連カード</h3><div class="rel">${rel.map(x=>`<a href="#card-${x.uid}">${thumb(x,"sm")}<span>${esc(x.name)}<b>${yen(price(x))}</b></span></a>`).join("")}</div>`:""}`;
+  bindUpsell();
+  document.getElementById("dc").onclick=()=>{let s=LS.get("opc-cmp",[]);if(!s.includes(uid)){s=[...s,uid].slice(-3);LS.set("opc-cmp",s)}location.hash="compare"};
+  app.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{DET.range=+b.dataset.r;renderDetail(uid)});
+  if(c.ki>=0&&nd>=2&&document.getElementById("pc")){const n=Math.min(DET.range,nd);
+    charts.push(new Chart(document.getElementById("pc"),{type:"line",data:{labels:DATES.slice(-n).map(d=>d.slice(5).replace("-","/")),datasets:[{data:series(c,"cm").slice(-n),borderColor:"#ff5c8a",backgroundColor:"#ff5c8a22",fill:true,borderWidth:2,pointRadius:n<=31?2:0,tension:.25,spanGaps:true}]},
+      options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>yen(x.raw)}}},scales:{y:{ticks:{callback:v=>v>=10000?(v/10000)+"万":v.toLocaleString()},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}}));}
+};
+renderBox=function(){
+  if(PAID())return _renderBox();
+  let list=BOXES.filter(b=>!BXV.kind||b.kind===BXV.kind).slice().sort((a,b)=>a.order-b.order);
+  const kinds=[["","すべて"],["bp","ブースター"],["eb","エクストラ"],["prb","プレミアム"],["pcc","カードコレクション"]];
+  app.innerHTML=`${statusNote()}<h1 class="pt">未開封BOX 相場</h1><p class="lead">ショップ販売・買取・フリマの価格から中央値を出して毎日記録しています（${BOXES.length}種）</p>
+  <div class="toolbar"><span class="seg">${kinds.map(([k,l])=>`<button class="btn ${BXV.kind===k?"on":""}" data-k="${k}">${l}</button>`).join("")}</span></div>
+  <div class="panel" style="padding:0;overflow:auto"><table class="bxt"><thead><tr><th>商品</th><th>相場（中央値）</th><th>7日</th><th>30日</th></tr></thead><tbody>
+  ${list.map(b=>`<tr data-box="${b.key}" class="clk"><td><div class="bxn">${bxThumb(b,"sm")}<div><b>${esc(b.name)}</b><div class="foot">${BOX_KIND[b.kind]}</div></div></div></td><td class="num" data-l="相場（中央値）">${yen(bxPrice(b))}</td><td data-l="7日">${pctBadge(bxChg(b,0,7))}</td><td data-l="30日">${pctBadge(bxChg(b,0,30))}</td></tr>`).join("")}
+  </tbody></table></div>${upsell("BOXの販売・買取・フリマ相場の内訳は有料プランで見られます")}`;
+  bindUpsell();
+  app.querySelectorAll("[data-k]").forEach(e=>e.onclick=()=>{BXV.kind=e.dataset.k;renderBox()});
+  app.querySelectorAll("[data-box]").forEach(e=>e.onclick=ev=>{if(ev.target.closest("a[href]"))return;location.hash="bx-"+e.dataset.box});
+};
+renderBoxDetail=function(key){
+  if(PAID())return _renderBoxDetail(key);
+  const b=BYBOX[key];if(!b){location.hash="box";return}
+  const p=bxPrice(b),c7=bxChg(b,0,7),c30=bxChg(b,0,30),nd=DATES.length;
+  const ch=x=>x?`<div class="v ${x.diff>=0?"up":"down"}">${(x.diff>=0?"+":"")+yen(x.diff)} (${(x.pct>=0?"+":"")+x.pct.toFixed(1)}%)</div>`:`<div class="v">—</div>`;
+  app.innerHTML=`${statusNote()}<div class="crumb"><a href="#home">ホーム</a> / <a href="#box">BOX相場</a> / ${esc(b.name)}</div>
+  <div class="panel"><div class="dtop">${bxThumb(b,"lg")}<div><h1 class="dname">${esc(b.name)}</h1><div><span class="chip">未開封BOX</span><span class="chip">${BOX_KIND[b.kind]}</span></div>
+    <div class="foot" style="margin-top:10px">相場（販売・買取・フリマの中央値）</div><div class="bigprice">${yen(p)}</div>
+    <div class="kv"><div><div class="k">7日間変動</div>${ch(c7)}</div><div><div class="k">30日間変動</div>${ch(c30)}</div></div></div></div></div>
+  <h3 class="sh">相場（中央値）の推移</h3><div class="panel">${nd>=2?`<div class="chartwrap"><canvas id="bc"></canvas></div>`:`<div class="empty">推移グラフは2日分以上のデータがたまると表示されます</div>`}</div>
+  ${upsell("販売・買取・フリマの内訳と参考にした出品は有料プランで見られます")}`;
+  bindUpsell();
+  if(nd>=2){const a=bxSer(b,0);charts.push(new Chart(document.getElementById("bc"),{type:"line",data:{labels:DATES.map(d=>d.slice(5).replace("-","/")),datasets:[{data:a,borderColor:"#ffb36b",backgroundColor:"#ffb36b22",fill:true,borderWidth:2,pointRadius:2,tension:.25,spanGaps:true}]},
+    options:{maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>yen(x.raw)}}},scales:{y:{ticks:{callback:v=>v>=10000?(v/10000)+"万":v.toLocaleString()},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false}}}}}));}
+};
+
+initAuth().then(loadDb);
 
 // 画像の拡大表示（詳細ページのカード・BOX画像をクリック）
 (function(){

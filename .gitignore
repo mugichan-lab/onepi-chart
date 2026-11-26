@@ -1,0 +1,6 @@
+# 詳細データは暗号化して secure/ に置く（平文は公開しない）
+data/20*.json
+data/index.json
+data/flea_items.json
+data/flea_cards.json
+data/snk_hist.json
