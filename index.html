@@ -460,6 +460,38 @@ html.iosbar body{padding-bottom:100px!important}
 .acctin .msg{min-height:1.2em;color:#ffb3c8;font-size:13px}.acctin .zx{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:20px;cursor:pointer}
 .acctin .upsell{margin:12px 0}
 @media(max-width:760px){.acct{padding:7px 10px;font-size:12px}.hsearch{min-width:0}}
+/* BOX相場一覧（ポケカチャート風） */
+.bhero{position:relative;text-align:center;padding:30px 16px 24px;margin:-4px 0 18px;border-radius:24px;background:radial-gradient(120% 140% at 80% 0%,rgba(123,92,255,.28),transparent 55%),radial-gradient(120% 140% at 10% 100%,rgba(255,95,168,.22),transparent 55%),rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)}
+.bhero h1{font-size:clamp(26px,5vw,40px);margin:12px 0 6px;line-height:1.15}
+.bhero p{color:var(--sub,#a9a4cf);margin:0 0 16px;font-size:14px}
+.bhero .live{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
+.bsearch{max-width:520px;margin:0 auto}.bsearch input{width:100%;font:inherit;font-size:16px;padding:13px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(10,8,28,.55);color:inherit}
+.brks{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;margin-bottom:22px}
+.brh{display:flex;align-items:center;gap:8px;margin:0 0 10px}.brh h2{font-size:18px;margin:0;padding-left:10px;border-left:4px solid #ff5fa8}.brh .more{margin-left:auto;font-size:13px}
+.brl{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.brc,.bcard{position:relative;display:flex;flex-direction:column;gap:4px;text-decoration:none;color:inherit;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:10px;transition:transform .25s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .25s}
+.brc:hover,.bcard:hover{transform:translateY(-3px);border-color:rgba(255,95,168,.45);box-shadow:0 10px 28px rgba(0,0,0,.35)}
+.brc.top{border-color:rgba(243,201,105,.6);box-shadow:0 0 0 1px rgba(243,201,105,.25) inset}
+.brn{position:absolute;top:8px;left:8px;z-index:2;min-width:24px;height:24px;border-radius:999px;background:linear-gradient(135deg,#ff5fa8,#7b5cff);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 6px}
+.brc.top .brn{background:linear-gradient(135deg,#f3c969,#e09a2b)}
+.bimg{position:relative;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center}
+.bimg .th{width:100%!important;height:100%!important;max-width:none!important;border-radius:0!important;box-shadow:none!important;border:0!important;aspect-ratio:auto!important}
+.bimg .th img{width:100%;height:100%;object-fit:contain}
+.bk{position:absolute;top:8px;left:8px;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:rgba(10,8,28,.75);border:1px solid rgba(255,255,255,.2)}
+.bk.bp{color:#8fd0ff}.bk.eb{color:#ff9ec6}.bk.prb{color:#f3c969}.bk.pcc{color:#7ee0b8}
+.bnm{font-weight:800;font-size:14px;line-height:1.3;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bdt{font-size:11px;color:var(--sub,#9d98c4)}
+.bsp{height:28px;margin:2px 0}.bsp svg{width:100%;height:100%;display:block}
+.blab{font-size:11px;color:var(--sub,#9d98c4)}
+.bpr{display:flex;align-items:center;justify-content:space-between;gap:6px}.bpr b{font-size:17px;white-space:nowrap}
+.bchg{font-size:11px;font-weight:800;padding:2px 7px;border-radius:999px;white-space:nowrap}.bchg.up{background:rgba(63,214,163,.15);color:#3fd6a3}.bchg.down{background:rgba(255,92,138,.15);color:#ff7a9c}.bchg.flat{background:rgba(255,255,255,.08);color:#aaa}
+.bpct{font-size:12px;font-weight:800}.bpct.up{color:#3fd6a3}.bpct.down{color:#ff7a9c}
+.bsub{font-size:11px;color:var(--sub,#9d98c4)}
+.bah{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 10px}.bah h2{font-size:20px;margin:0}.bah select{margin-left:auto;font:inherit;font-size:14px;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.06);color:inherit;border:1px solid rgba(255,255,255,.14)}
+.byear h3{display:flex;align-items:baseline;gap:6px;margin:22px 0 10px;font-size:16px}.byear h3 span{font-size:18px}.byear h3 small{font-size:12px;color:var(--sub,#9d98c4);font-weight:600}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:12px}
+@media(max-width:760px){.brl{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:42%;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}.brl::-webkit-scrollbar{display:none}
+  .bgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.bpr b{font-size:15px}.bah select{margin-left:0;width:100%}}
 </style>
 </head>
 <body>
@@ -660,7 +692,7 @@ function statusNote(){
   if(DATES.length<2) return `<div class="banner">価格の記録は ${DATES[0]} から始まりました。変動率・ランキング・推移グラフは2日目以降に表示されます。</div>`;
   return "";
 }
-const NAV=[["home","ホーム","⌂"],["cards","カード一覧","☰"],["index","指数","📈"],["compare","比較","⚖"],["mylist","マイリスト","♡"],["box","BOX相場","▣"],["psa","PSA10","★"]];
+const NAV=[["home","ホーム","⌂"],["cards","カード一覧","☰"],["index","指数","📈"],["compare","比較","⚖"],["box","BOX相場","▣"],["psa","PSA10","★"]];
 function navs(active){
   const nt=document.getElementById("ntop");
   if(!nt.querySelector(".pill")){nt.innerHTML=`<span class="pill"></span>`+NAV.map(([k,l])=>`<a href="#${k}" data-k="${k}">${l}</a>`).join("");
@@ -840,8 +872,6 @@ function renderDetail(uid){
       <div><div class="k">データ数</div><div class="v">${live?series(c,"cm").filter(v=>v!=null).length+"日分":"—"}</div></div>
     </div>
     <div class="actions">
-      <button class="btn ${isWatch(uid)?"on":""}" id="dw"><span class="heart">${isWatch(uid)?"♥":"♡"}</span> ウォッチ</button>
-      <button class="btn gold" id="dp">${PORT[uid]?"ポートフォリオを編集":"ポートフォリオに追加"}</button>
       <button class="btn" id="dc">比較に追加</button>
       ${offUrl(c)?`<a class="offlink" href="${offUrl(c)}" target="_blank" rel="noopener">公式カードリスト ↗</a>`:""}
     </div>${imgOf(c)?`<div class="foot" style="margin-top:6px">画像：${/^fa-/.test(IMG[c.uid]||"")?`<a href="https://fullahead-onepiece-cardgame.com/shopdetail/${String(IMG[c.uid]).slice(3).padStart(12,"0")}/" target="_blank" rel="noopener">フルアヘッド</a>より`:"ONE PIECEカードゲーム公式カードリストより"}${IMGEST[c.uid]?"（同じ型番の別仕様の画像が表示されている可能性があります）":""}</div>`:""}<div>
@@ -874,9 +904,7 @@ function renderDetail(uid){
   </tbody></table></div>`
   :`<div class="panel" style="margin-top:14px"><p class="foot" style="margin:0">このカード（プロモ・ドン!!カードなど）は毎日の価格取得の対象外です。遊々亭の参考価格（${YUYU_DATE}）：販売 ${yen(c.ysell)} ／ 買取 ${yen(c.ybuy)}</p></div>`}
   ${rel.length?`<h3 class="sh">関連カード</h3><div class="rel">${rel.map(x=>`<a href="#card-${x.uid}">${thumb(x,"sm")}<span>${esc(x.name)}<b>${yen(price(x))}</b></span></a>`).join("")}</div>`:""}`;
-  document.getElementById("dw").onclick=()=>{toggleWatch(uid);renderDetail(uid)};
   app.querySelectorAll("[data-copy]").forEach(b=>b.onclick=async()=>{try{await navigator.clipboard.writeText(b.dataset.copy);toast("コピーしました。メルカードの買取表の検索欄に貼り付けてください")}catch(e){toast("コピーできませんでした")}});
-  document.getElementById("dp").onclick=()=>portDialog(c);
   document.getElementById("dc").onclick=()=>{let s=LS.get("opc-cmp",[]);if(!s.includes(uid)){s=[...s,uid].slice(-3);LS.set("opc-cmp",s)}location.hash="compare"};
   app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{DET.f=b.dataset.f;renderDetail(uid)});
   app.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{DET.range=+b.dataset.r;renderDetail(uid)});
@@ -1156,7 +1184,7 @@ function render(){
   else if(route==="cards") renderCards();
   else if(route==="index") renderIndex();
   else if(route==="compare") renderCompare();
-  else if(route==="mylist") renderMylist();
+  else if(route==="mylist"){location.replace("#home");return}
   else if(route==="psa") renderPsa();
   else if(route==="box") renderBox();
   else if(route==="bx") renderBoxDetail(h.slice(3));
@@ -1176,6 +1204,63 @@ function countUp(){
 document.getElementById("hs").onsubmit=e=>{e.preventDefault();LIST.q=document.getElementById("hq").value.trim();LIST.n=60;LIST.pack=LIST.rar=LIST.par="";if(location.hash==="#cards")render();else location.hash="cards";};
 window.addEventListener("hashchange",()=>{render();window.scrollTo(0,0)});
 render();
+// ================= BOX相場一覧（ポケカチャート風） =================
+const BOXDATE={op18:"2026-11-21",eb05:"2026-10-31",op17:"2026-08-22",op16:"2026-05-30",op15:"2026-02-28",eb04:"2026-01-31",op14:"2025-11-22",eb03:"2025-10-25",op13:"2025-08-23",prb02:"2025-07-26",op12:"2025-05-31",op11:"2025-03-01",eb02:"2025-01-25",op10:"2024-11-30",op09:"2024-08-31",prb01:"2024-07-27",op08:"2024-05-25",op07:"2024-02-24",eb01:"2024-01-27",op06:"2023-11-25",op05:"2023-08-26",op04:"2023-05-27",op03:"2023-02-11",op02:"2022-11-04",op01:"2022-07-22","pcc-mera":"2026-10-03","pcc-kumamoto":"2026-02-22",base1:"2025-12-05","pcc-uta":"2023-10-07",family:"2023-04-29"};
+const BXKIND_S={bp:"BP",eb:"EB",prb:"PRB",pcc:"PCC",etc:"SET"};
+const bxShort=b=>b.name.replace(/^(ブースターパック|エクストラブースター|プレミアムブースター|プレミアムカードコレクション)\s*/,"").replace(/【[^】]*】/g,"").replace(/^\s*-\s*|\s*-\s*$/g,"").trim()||b.name;
+const BXL=Object.assign({sort:"newest",q:"",kind:""},LS.get("mugi-bxl",{}));BXL.q="";
+const BXL_SORTS={newest:["新しい順",b=>-(BOXDATE[b.key]?Date.parse(BOXDATE[b.key]):b.order)],oldest:["古い順",b=>(BOXDATE[b.key]?Date.parse(BOXDATE[b.key]):b.order)],
+  rise7:["高騰順（7日）",b=>-(bxChg(b,0,7)?.pct??-1e9)],fall7:["下落順（7日）",b=>bxChg(b,0,7)?.pct??1e9],rise30:["高騰順（30日）",b=>-(bxChg(b,0,30)?.pct??-1e9)],fall30:["下落順（30日）",b=>bxChg(b,0,30)?.pct??1e9],
+  priceHigh:["価格が高い順",b=>-(bxPrice(b)??-1)],priceLow:["価格が安い順",b=>bxPrice(b)??1e12]};
+function bxSpark(b){const a=bxSer(b,0).slice(-30).filter(v=>v!=null);if(a.length<2)return `<div class="bsp"></div>`;
+  const mn=Math.min(...a),mx=Math.max(...a),r=mx-mn||1,W=100,H=28,up=a[a.length-1]>=a[0];
+  const pts=a.map((v,i)=>[(i/(a.length-1))*W,H-3-((v-mn)/r)*(H-6)]);const d=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join("");
+  return `<div class="bsp"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><path d="${d}" fill="none" stroke="${up?"#3fd6a3":"#ff5c8a"}" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg></div>`}
+function bxChgTag(x){if(!x)return `<span class="bchg flat">—</span>`;return `<span class="bchg ${x.diff>0?"up":x.diff<0?"down":"flat"}">${x.pct>=0?"+":""}${x.pct.toFixed(1)}%</span>`}
+function bxCard(b,free){const p=bxPrice(b)??(free?null:bxCur(b,20)),cut=free?null:bxCur(b,21),dt=BOXDATE[b.key];
+  return `<a class="bcard" href="#bx-${b.key}"><div class="bimg">${bxThumb(b,"md")}<span class="bk ${b.kind}">${BXKIND_S[b.kind]||""}</span></div>
+  <div class="bnm">${esc(bxShort(b))}</div><div class="bdt">${dt?dt:(b.code||BOX_KIND[b.kind])}</div>${bxSpark(b)}
+  <div class="blab">${free?"相場（中央値）":"テープ付き"}</div><div class="bpr"><b>${yen(p)}</b>${bxChgTag(bxChg(b,0,7))}</div>
+  ${!free&&cut!=null?`<div class="bsub">テープカット ${yen(cut)}</div>`:""}</a>`}
+function bxBody(free){const all=BOXES;
+  const q=BXL.q.trim().toLowerCase();
+  let list=all.filter(b=>(!BXL.kind||b.kind===BXL.kind)&&(!q||(b.name+" "+bxShort(b)+" "+(b.code||"")+" "+b.key).toLowerCase().includes(q)));
+  const f=(BXL_SORTS[BXL.sort]||BXL_SORTS.newest)[1];list=list.slice().sort((a,b)=>f(a)-f(b));
+  let body;
+  if(BXL.sort==="newest"||BXL.sort==="oldest"){
+    const groups=[];const gmap={};
+    list.forEach(b=>{const dt=BOXDATE[b.key];const g=dt?dt.slice(0,4)+"年":"発売日未掲載のコレクション";if(!gmap[g]){gmap[g]=[];groups.push(g)}gmap[g].push(b)});
+    if(groups.includes("発売日未掲載のコレクション")){groups.splice(groups.indexOf("発売日未掲載のコレクション"),1);groups.push("発売日未掲載のコレクション")}
+    body=groups.map(g=>`<section class="byear"><h3><span>${g}</span><small>（${gmap[g].length}件）</small></h3><div class="bgrid">${gmap[g].map(b=>bxCard(b,free)).join("")}</div></section>`).join("");
+  }else body=`<div class="bgrid">${list.map(b=>bxCard(b,free)).join("")}</div>`;
+  return {n:list.length,html:body};}
+function renderBoxV2(free){
+  const all=BOXES.slice();
+  const rk=(dir)=>all.map(b=>({b,x:bxChg(b,0,7)})).filter(o=>o.x&&o.x.diff!==0&&(dir>0?o.x.diff>0:o.x.diff<0)).sort((a,c)=>(c.x.pct-a.x.pct)*dir).slice(0,5);
+  const rkHtml=(title,dir)=>{const r=rk(dir);return `<section class="brk"><div class="brh"><h2>${title}</h2><span class="chip">7日間</span><a class="more" href="#box" data-bs="${dir>0?"rise7":"fall7"}">もっと見る ›</a></div>
+    ${r.length?`<div class="brl">${r.map((o,i)=>`<a class="brc ${i===0&&dir>0?"top":""}" href="#bx-${o.b.key}"><span class="brn">${i+1}</span><div class="bimg">${bxThumb(o.b,"md")}</div><div class="bnm">${esc(bxShort(o.b))}</div><div class="bpr"><b>${yen(bxPrice(o.b))}</b></div><div class="${dir>0?"up":"down"} bpct">${o.x.pct>=0?"+":""}${o.x.pct.toFixed(1)}%（${o.x.diff>=0?"+":""}${yen(o.x.diff)}）</div></a>`).join("")}</div>`
+    :`<div class="empty">データが2日分以上たまると表示されます</div>`}</section>`};
+  const {n:cnt,html:body}=bxBody(free);
+  const kinds=[["","すべて"],["bp","ブースター"],["eb","エクストラ"],["prb","プレミアム"],["pcc","カードコレクション"]];
+  app.innerHTML=`${statusNote()}<section class="bhero"><span class="live"><span class="dot"></span>${DATES.length?`最新相場 ${DATES[DATES.length-1].slice(5).replace("-","/")}`:"データを読み込み中"}</span>
+    <h1><span class="grad">ワンピカ BOX相場</span>一覧</h1><p>未開封BOXの相場・価格推移を一覧で比較できます（全${all.length}件）</p>
+    <div class="bsearch"><input id="bq" type="search" placeholder="BOX名・型番で検索（例：神の支配、OP-18）" value="${esc(BXL.q)}"></div></section>
+  <div class="brks">${rkHtml("BOX高騰ランキング",1)}${rkHtml("BOX下落ランキング",-1)}</div>
+  <div class="ball"><div class="bah"><h2>すべてのBOX</h2><span class="foot" id="bcnt">${cnt}件のBOXが見つかりました</span>
+    <select id="bxs2">${Object.entries(BXL_SORTS).map(([k,[l]])=>`<option value="${k}" ${BXL.sort===k?"selected":""}>${l}</option>`).join("")}</select></div>
+    <div class="toolbar"><span class="seg">${kinds.map(([k,l])=>`<button class="btn ${BXL.kind===k?"on":""}" data-k="${k}">${l}</button>`).join("")}</span></div>
+    <div id="bbody">${body}</div></div>
+  <p class="foot">${free?"相場はショップ販売・買取・フリマの価格の中央値です。":"テープ付き＝カードラッシュの未開封BOX販売価格（状態A・在庫ありを優先した最安値。なければフリマのテープ付き売却相場）。テープカット＝Yahoo!フリマ・メルカリのテープカット品の売却相場。変動率は7日間。"}発売日は公式サイトの商品情報より。</p>
+  ${free&&typeof upsell==="function"?upsell("BOXの販売・買取・フリマ相場の内訳は有料プランで見られます"):""}`;
+  if(typeof bindUpsell==="function")bindUpsell();
+  const save=()=>LS.set("mugi-bxl",{sort:BXL.sort,kind:BXL.kind});
+  app.querySelectorAll("[data-k]").forEach(e=>e.onclick=()=>{BXL.kind=e.dataset.k;save();renderBoxV2(free)});
+  app.querySelectorAll("[data-bs]").forEach(e=>e.onclick=ev=>{ev.preventDefault();BXL.sort=e.dataset.bs;save();renderBoxV2(free);document.querySelector(".ball").scrollIntoView({behavior:"smooth"})});
+  document.getElementById("bxs2").onchange=e=>{BXL.sort=e.target.value;save();renderBoxV2(free)};
+  const bq=document.getElementById("bq");let t=0;const upd=()=>{BXL.q=bq.value;const r=bxBody(free);document.getElementById("bbody").innerHTML=r.html;document.getElementById("bcnt").textContent=r.n+"件のBOXが見つかりました"};
+  bq.addEventListener("input",e=>{if(e.isComposing)return;clearTimeout(t);t=setTimeout(upd,200)});bq.addEventListener("compositionend",()=>{clearTimeout(t);t=setTimeout(upd,50)});
+}
+
 // ================= 会員（ゲスト／無料／有料） =================
 // 無料：全ショップの相場の中央値だけ（公開データ data/pub）。マイリスト・PSA10・ショップ別の価格や履歴は見えない
 // 有料：これまでどおりの詳細データ（暗号化データをサーバー関数 premium が復号して返す）＋マイリスト
@@ -1209,11 +1294,10 @@ async function loadPlan(){
   try{const {data}=await SB.from("profiles").select("plan,current_period_end").eq("id",USER.id).maybeSingle();PROFILE=data;
     PLAN=data&&data.plan==="paid"&&(!data.current_period_end||new Date(data.current_period_end).getTime()>Date.now()-3*864e5)?"paid":"free";
   }catch(e){PLAN="free"}
-  if(PAID())await pullMylist();
 }
 function applyPlanUi(){
   document.documentElement.classList.toggle("free",!PAID());
-  NAV.length=0;NAV_ALL.filter(n=>PAID()||(n[0]!=="mylist"&&n[0]!=="psa")).forEach(n=>NAV.push(n));
+  NAV.length=0;NAV_ALL.filter(n=>PAID()||n[0]!=="psa").forEach(n=>NAV.push(n));
   const nt=document.getElementById("ntop");if(nt)nt.innerHTML="";
   const b=document.getElementById("acct");
   if(b&&!MEMBERS){b.style.display="none"}
@@ -1267,7 +1351,7 @@ loadDb=async function(){
 
 // --- 有料プランの案内 ---
 function upsell(title,lead){
-  const feats=["ショップ別の価格（カードラッシュの状態別・メルカード買取・スニダン・フリマ）","状態別・買取・スニダン・フリマの価格推移グラフ","毎日の相場の履歴表と、フリマ相場の参考にした出品","マイリスト（ウォッチ・ポートフォリオ）をアカウントに保存","PSA10相場、BOXの販売・買取・フリマ相場の内訳"];
+  const feats=["ショップ別の価格（カードラッシュの状態別・メルカード買取・スニダン・フリマ）","状態別・買取・スニダン・フリマの価格推移グラフ","毎日の相場の履歴表と、フリマ相場の参考にした出品","PSA10相場、BOXの販売・買取・フリマ相場の内訳"];
   const btn=PLAN==="guest"?`<button class="btn pri" data-acct="signup">無料で会員登録</button><button class="btn" data-acct="login">ログイン</button>`
     :PLAN==="free"?(STRIPE_LINK?`<a class="btn pri" href="${STRIPE_LINK}?client_reference_id=${USER.id}&prefilled_email=${encodeURIComponent(USER.email||"")}" rel="noopener">有料プランに登録（${PRICE_LABEL}）</a>`:`<span class="btn" aria-disabled="true">有料プランは準備中です</span>`):"";
   return `<div class="panel upsell"><div class="lk">🔒</div><h3>${esc(title||"有料プランで見られます")}</h3>${lead?`<p class="foot">${esc(lead)}</p>`:""}
@@ -1316,8 +1400,6 @@ function acctDialog(mode){
 
 // --- 無料プラン用の画面 ---
 const _renderDetail=renderDetail,_renderBoxDetail=renderBoxDetail,_renderMylist=renderMylist,_renderPsa=renderPsa,_renderHome=renderHome,_renderCards=renderCards,_renderBox=renderBox;
-const _saveMy=saveMy;saveMy=function(){_saveMy();pushMylist()};
-renderMylist=function(){if(PAID())return _renderMylist();app.innerHTML=`<h1 class="pt">マイリスト</h1>${upsell("マイリストは有料プランの機能です","気になるカードのウォッチや、持っているカードの評価額（ポートフォリオ）をアカウントに保存できます。")}`;bindUpsell()};
 renderPsa=function(){if(PAID())return _renderPsa();app.innerHTML=`<h1 class="pt">PSA10相場</h1>${upsell("PSA10相場は有料プランの機能です")}`;bindUpsell()};
 renderHome=function(){_renderHome();if(PAID())return;
   const p=app.querySelector(".hero p");if(p)p.textContent="複数のショップ・フリマの相場から中央値を出して毎日記録。高騰・下落もすぐわかります。";
@@ -1352,19 +1434,7 @@ renderDetail=function(uid){
     charts.push(new Chart(document.getElementById("pc"),{type:"line",data:{labels:DATES.slice(-n).map(d=>d.slice(5).replace("-","/")),datasets:[{data:series(c,"cm").slice(-n),borderColor:"#ff5c8a",backgroundColor:"#ff5c8a22",fill:true,borderWidth:2,pointRadius:n<=31?2:0,tension:.25,spanGaps:true}]},
       options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>yen(x.raw)}}},scales:{y:{ticks:{callback:v=>v>=10000?(v/10000)+"万":v.toLocaleString()},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}}));}
 };
-renderBox=function(){
-  if(PAID())return _renderBox();
-  let list=BOXES.filter(b=>!BXV.kind||b.kind===BXV.kind).slice().sort((a,b)=>a.order-b.order);
-  const kinds=[["","すべて"],["bp","ブースター"],["eb","エクストラ"],["prb","プレミアム"],["pcc","カードコレクション"]];
-  app.innerHTML=`${statusNote()}<h1 class="pt">未開封BOX 相場</h1><p class="lead">ショップ販売・買取・フリマの価格から中央値を出して毎日記録しています（${BOXES.length}種）</p>
-  <div class="toolbar"><span class="seg">${kinds.map(([k,l])=>`<button class="btn ${BXV.kind===k?"on":""}" data-k="${k}">${l}</button>`).join("")}</span></div>
-  <div class="panel" style="padding:0;overflow:auto"><table class="bxt"><thead><tr><th>商品</th><th>相場（中央値）</th><th>7日</th><th>30日</th></tr></thead><tbody>
-  ${list.map(b=>`<tr data-box="${b.key}" class="clk"><td><div class="bxn">${bxThumb(b,"sm")}<div><b>${esc(b.name)}</b><div class="foot">${BOX_KIND[b.kind]}</div></div></div></td><td class="num" data-l="相場（中央値）">${yen(bxPrice(b))}</td><td data-l="7日">${pctBadge(bxChg(b,0,7))}</td><td data-l="30日">${pctBadge(bxChg(b,0,30))}</td></tr>`).join("")}
-  </tbody></table></div>${upsell("BOXの販売・買取・フリマ相場の内訳は有料プランで見られます")}`;
-  bindUpsell();
-  app.querySelectorAll("[data-k]").forEach(e=>e.onclick=()=>{BXV.kind=e.dataset.k;renderBox()});
-  app.querySelectorAll("[data-box]").forEach(e=>e.onclick=ev=>{if(ev.target.closest("a[href]"))return;location.hash="bx-"+e.dataset.box});
-};
+renderBox=function(){renderBoxV2(!PAID())};
 renderBoxDetail=function(key){
   if(PAID())return _renderBoxDetail(key);
   const b=BYBOX[key];if(!b){location.hash="box";return}
