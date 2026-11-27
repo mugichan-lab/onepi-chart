@@ -1203,7 +1203,6 @@ function countUp(){
 }
 document.getElementById("hs").onsubmit=e=>{e.preventDefault();LIST.q=document.getElementById("hq").value.trim();LIST.n=60;LIST.pack=LIST.rar=LIST.par="";if(location.hash==="#cards")render();else location.hash="cards";};
 window.addEventListener("hashchange",()=>{render();window.scrollTo(0,0)});
-render();
 // ================= BOX相場一覧（ポケカチャート風） =================
 const BOXDATE={op18:"2026-11-21",eb05:"2026-10-31",op17:"2026-08-22",op16:"2026-05-30",op15:"2026-02-28",eb04:"2026-01-31",op14:"2025-11-22",eb03:"2025-10-25",op13:"2025-08-23",prb02:"2025-07-26",op12:"2025-05-31",op11:"2025-03-01",eb02:"2025-01-25",op10:"2024-11-30",op09:"2024-08-31",prb01:"2024-07-27",op08:"2024-05-25",op07:"2024-02-24",eb01:"2024-01-27",op06:"2023-11-25",op05:"2023-08-26",op04:"2023-05-27",op03:"2023-02-11",op02:"2022-11-04",op01:"2022-07-22","pcc-mera":"2026-10-03","pcc-kumamoto":"2026-02-22",base1:"2025-12-05","pcc-uta":"2023-10-07",family:"2023-04-29"};
 const BXKIND_S={bp:"BP",eb:"EB",prb:"PRB",pcc:"PCC",etc:"SET"};
@@ -1273,7 +1272,7 @@ const PRICE_LABEL="月額500円";
 // 公開前の確認用：URLに ?members=1 を付けて開くと会員制の画面になる（?members=0 で解除）
 const MEMBERS_LIVE=false;
 const MEMBERS=(()=>{try{const q=new URLSearchParams(location.search).get("members");if(q==="1")localStorage.setItem("mugi-members","1");if(q==="0")localStorage.removeItem("mugi-members");return MEMBERS_LIVE||localStorage.getItem("mugi-members")==="1"}catch(e){return MEMBERS_LIVE}})();
-let SB=null,USER=null,PLAN="guest",PROFILE=null;
+let SB=null,USER=null,PLAN=MEMBERS?"guest":"open",PROFILE=null;
 const PAID=()=>PLAN==="paid"||PLAN==="open";
 const NAV_ALL=NAV.slice();
 
@@ -1451,7 +1450,7 @@ renderBoxDetail=function(key){
     options:{maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>yen(x.raw)}}},scales:{y:{ticks:{callback:v=>v>=10000?(v/10000)+"万":v.toLocaleString()},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false}}}}}));}
 };
 
-initAuth().then(loadDb);
+render();initAuth().then(loadDb);
 
 // 画像の拡大表示（詳細ページのカード・BOX画像をクリック）
 (function(){
