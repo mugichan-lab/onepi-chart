@@ -749,8 +749,7 @@ function renderHome(){
   ${(()=>{const top=sorted(DATA,"priceHigh").filter((c,i,a)=>a.findIndex(x=>x.ki===c.ki)===i).slice(0,16);if(!top.length||loadState!=="ok")return "";
     const card=c=>`<div class="mqc" data-uid="${c.uid}">${thumb(c,"md")}<div class="nm">${esc(c.name)}</div><div class="pr">${yen(price(c))}</div></div>`;
     return `<div class="mqh"><h2>高額カード</h2><span class="bh"><span class="src">カードラッシュ</span></span></div><div class="mq"><div class="mqt" style="--mqd:${top.length*4}s">${top.map(card).join("")}${top.map(card).join("")}</div></div>`})()}
-  <div class="blocks">${HOME_BLOCKS.map(blk).join("")}</div>
-  <p class="foot" style="margin-top:14px">販売価格・在庫：<a href="https://www.cardrush-op.jp/" target="_blank" rel="noopener">カードラッシュ</a>（状態なし品）／買取価格：<a href="https://akihabara-cardshop.com/onepice-kaitori/" target="_blank" rel="noopener">メルカード秋葉原</a>。当サイトはファンによる非公式サイトで、各社とは関係ありません。（ページ更新：${BUILD}）</p>`;
+  <div class="blocks">${HOME_BLOCKS.map(blk).join("")}</div>`;
   bindCards(app);
   app.querySelectorAll("[data-sort]").forEach(a=>a.onclick=()=>{LIST.sort=a.dataset.sort;LIST.n=60;saveList();});
   // 高額カードの帯：常に自動で横に流す（マウスを乗せている間だけゆっくり減速して止まる）
@@ -812,7 +811,7 @@ function updateCards(){
   const note=sk!==LIST.sort?"（価格データの読み込み後に選んだ並び順で表示されます）":(S.nz&&r.ranked<list.length?`（変動データのある${r.ranked.toLocaleString()}件を先に、残りを価格順に表示）`:"");
   const res=document.getElementById("lres");
   const act=[LIST.pack&&("収録弾："+(LIST.pack.startsWith("promo")?"":LIST.pack.toUpperCase()+" ")+PACKS[LIST.pack]),LIST.rar&&("レアリティ："+LIST.rar),LIST.par&&(LIST.par==="p"?"パラレルのみ":"スーパーパラレル等のみ")].filter(Boolean);
-  res.innerHTML=`${act.length?`<div class="banner" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">絞り込み中：${act.map(esc).join(" ／ ")}<button class="btn" id="fx2" style="margin-left:auto">絞り込みを解除</button></div>`:""}<p class="count"><span class="foot" style="float:right">ページ更新：${BUILD}</span>${LIST.q?`「${esc(LIST.q)}」の検索結果：`:""}${list.length.toLocaleString()}件のカードが見つかりました${note}</p>
+  res.innerHTML=`${act.length?`<div class="banner" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">絞り込み中：${act.map(esc).join(" ／ ")}<button class="btn" id="fx2" style="margin-left:auto">絞り込みを解除</button></div>`:""}<p class="count">${LIST.q?`「${esc(LIST.q)}」の検索結果：`:""}${list.length.toLocaleString()}件のカードが見つかりました${note}</p>
   ${LIST.view==="grid"
     ?`<div class="grid">${shown.map((c,i)=>`<div class="gcard" data-uid="${c.uid}"><span class="rkb">${i+1}</span>${thumb(c,"md")}<div class="nm">${esc(c.name)}</div><div class="st">${esc(c.id)} ・ ${esc(c.set)}</div><div class="lbl">現在価格</div><div class="row2"><span class="pv">${yen(price(c))}${isRef(c)?`<span class="foot">（参考）</span>`:""}</span>${extra(c)}</div></div>`).join("")}</div>`
     :shown.map((c,i)=>`<div class="lrow" data-uid="${c.uid}"><div class="rk">${i+1}</div>${thumb(c,"sm")}<div><div class="nm">${esc(c.name)}</div><div class="st"><span class="chip">${esc(c.id)}</span><span class="chip">${esc(c.rar)}</span>${esc(c.set)}</div></div><div class="pr">${yen(price(c))}${isRef(c)?`<span class="foot">（参考）</span>`:""}<br>${extra(c)}</div></div>`).join("")}
