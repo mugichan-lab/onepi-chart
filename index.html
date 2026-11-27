@@ -699,7 +699,7 @@ function navs(active){
     nt.querySelectorAll("a").forEach(a=>{a.onmouseenter=()=>{nt.classList.add("hov");movePill(a)};});
     nt.onmouseleave=()=>{nt.classList.remove("hov");movePill(nt.querySelector("a.on"))};
     window.addEventListener("resize",()=>movePill(nt.querySelector("a.on")));
-    (document.fonts?document.fonts.ready:Promise.resolve()).then(()=>movePill(nt.querySelector("a.on")));}
+    (document.fonts?document.fonts.ready:Promise.resolve()).then(()=>requestAnimationFrame(()=>movePill(nt.querySelector("a.on"))));setTimeout(()=>movePill(nt.querySelector("a.on")),300);}
   nt.querySelectorAll("a").forEach(a=>a.classList.toggle("on",a.dataset.k===active));
   if(!nt.classList.contains("hov"))movePill(nt.querySelector("a.on"));
   document.getElementById("nbot").innerHTML=NAV.filter(n=>n[0]!=="psa"&&n[0]!=="compare").map(([k,l,i])=>`<a href="#${k}" class="${k===active?"on":""}"><span class="ic">${i}</span>${l}</a>`).join("");
