@@ -1267,16 +1267,15 @@ const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 const STRIPE_LINK="";   // Stripe の支払いリンク（月額500円）。設定されるまでは「準備中」表示
 const STRIPE_PORTAL=""; // Stripe のカスタマーポータル（解約・カード変更）
 const PRICE_LABEL="月額500円";
-// 会員制はまだ公開しない。公開するときは MEMBERS_LIVE を true にし、Supabase の app_secrets の members_live も 'true' にする
-// 公開前の確認用：URLに ?members=1 を付けて開くと会員制の画面になる（?members=0 で解除）
+// 詳細データは常にログインした有料会員だけ（サーバー側で確認）。
+// ログインボタン・有料の案内は MEMBERS_LIVE=true にするまで表に出さない。運営者は URLに ?members=1 を付けるとログインボタンが出る（?members=0 で解除）
 const MEMBERS_LIVE=false;
 const MEMBERS=(()=>{try{const q=new URLSearchParams(location.search).get("members");if(q==="1")localStorage.setItem("mugi-members","1");if(q==="0")localStorage.removeItem("mugi-members");return MEMBERS_LIVE||localStorage.getItem("mugi-members")==="1"}catch(e){return MEMBERS_LIVE}})();
-let SB=null,USER=null,PLAN=MEMBERS?"guest":"open",PROFILE=null;
+let SB=null,USER=null,PLAN="guest",PROFILE=null;
 const PAID=()=>PLAN==="paid"||PLAN==="open";
 const NAV_ALL=NAV.slice();
 
 async function initAuth(){
-  if(!MEMBERS){PLAN="open";applyPlanUi();return}
   try{
     if(!window.supabase)throw 0;
     SB=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
@@ -1298,7 +1297,7 @@ function applyPlanUi(){
   NAV.length=0;NAV_ALL.filter(n=>PAID()||n[0]!=="psa").forEach(n=>NAV.push(n));
   const nt=document.getElementById("ntop");if(nt)nt.innerHTML="";
   const b=document.getElementById("acct");
-  if(b&&!MEMBERS){b.style.display="none"}
+  if(b&&!MEMBERS&&!USER){b.style.display="none"}
   else if(b){b.innerHTML=PLAN==="paid"?`<span class="pl paid">有料</span>マイページ`:PLAN==="free"?`<span class="pl">無料</span>マイページ`:`ログイン`;b.onclick=acctDialog;}
 }
 
@@ -1310,7 +1309,7 @@ async function pullMylist(){
 }
 let pushT=0;
 function pushMylist(){
-  if(!MEMBERS||PLAN!=="paid"||!SB||!USER)return;clearTimeout(pushT);
+  if(PLAN!=="paid"||!SB||!USER)return;clearTimeout(pushT);
   pushT=setTimeout(async()=>{try{
     const rows=[...WATCH.map(uid=>({user_id:USER.id,uid,kind:"watch"})),...Object.entries(PORT).map(([uid,p])=>({user_id:USER.id,uid,kind:"port",qty:p.qty||1,cost:Math.round(p.cost||0)}))];
     await SB.from("mylist").delete().eq("user_id",USER.id);
@@ -1324,8 +1323,8 @@ loadDb=async function(){
   try{
     let docs=[];
     if(PAID()){
-      let tok=SB_KEY;if(MEMBERS){const {data}=await SB.auth.getSession();tok=data.session.access_token}
-      const r=await fetch(SB_URL+"/functions/v1/premium"+(MEMBERS&&!MEMBERS_LIVE?"?members=1":""),{headers:{Authorization:"Bearer "+tok,apikey:SB_KEY}});
+      const {data}=await SB.auth.getSession();const tok=data.session.access_token;
+      const r=await fetch(SB_URL+"/functions/v1/premium",{headers:{Authorization:"Bearer "+tok,apikey:SB_KEY}});
       if(!r.ok)throw new Error("premium "+r.status);
       const j=await r.json();docs=(j.days||[]).filter(d=>d&&d.date&&(d.cm||d.mb||d.bx||d.bxf));
       FCARD=j.flea_cards||{};FCARDP=Promise.resolve(FCARD);
@@ -1349,6 +1348,7 @@ loadDb=async function(){
 
 // --- 有料プランの案内 ---
 function upsell(title,lead){
+  if(!MEMBERS)return "";
   const feats=["ショップ別の価格（カードラッシュの状態別・メルカード買取・スニダン・フリマ）","状態別・買取・スニダン・フリマの価格推移グラフ","毎日の相場の履歴表と、フリマ相場の参考にした出品","PSA10相場、BOXの販売・買取・フリマ相場の内訳"];
   const btn=PLAN==="guest"?`<button class="btn pri" data-acct="signup">無料で会員登録</button><button class="btn" data-acct="login">ログイン</button>`
     :PLAN==="free"?(STRIPE_LINK?`<a class="btn pri" href="${STRIPE_LINK}?client_reference_id=${USER.id}&prefilled_email=${encodeURIComponent(USER.email||"")}" rel="noopener">有料プランに登録（${PRICE_LABEL}）</a>`:`<span class="btn" aria-disabled="true">有料プランは準備中です</span>`):"";
