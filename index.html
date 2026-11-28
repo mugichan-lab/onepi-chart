@@ -500,6 +500,90 @@ html.iosbar body{padding-bottom:100px!important}
 .th.boxpic img{object-fit:contain!important;border-radius:0;filter:drop-shadow(0 8px 14px rgba(0,0,0,.5))}
 .bimg{background:radial-gradient(70% 70% at 50% 45%,rgba(255,255,255,.10),rgba(255,255,255,.02) 70%)!important;padding:10px}
 .dtop .th.boxpic{background:radial-gradient(70% 70% at 50% 45%,rgba(255,255,255,.10),transparent 70%)!important;border-radius:14px}
+/* カード個別ページ（Steamマーケット風） */
+.sthero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:24px;align-items:center;padding:26px 28px;border-radius:18px;background:radial-gradient(120% 140% at 25% 40%,rgba(143,182,255,.16),rgba(255,255,255,.02) 55%),linear-gradient(160deg,#1b2033,#121424);border:1px solid var(--line)}
+.stpic{display:flex;justify-content:center}
+.stpic .th.lg{width:min(250px,60vw);border-radius:4.5%/3.2%}
+.stname{font-size:26px;font-weight:900;color:#ff6b8f;margin:0 0 10px;line-height:1.3}
+.stsetl{display:flex;gap:10px;align-items:center;font-size:13px;margin-bottom:14px}
+.stico{display:grid;place-items:center;min-width:38px;height:38px;padding:0 4px;border-radius:6px;background:linear-gradient(150deg,#f5c451,#d77a2e);color:#1b1306;font-weight:900;font-size:11px}
+.stnow .bigprice{font-size:34px}
+.stchgs{display:flex;gap:14px;margin-top:4px}
+.stchg{font-size:12px;color:var(--sub)}.stchg b{margin-left:5px;font-size:14px}
+.stchg b.up{color:#3ddc97}.stchg b.down{color:#ff6b6b}
+.stact{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.stw{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:4px;background:rgba(255,255,255,.12);color:var(--ink);padding:7px 12px;font:inherit;font-size:13px;cursor:pointer;text-decoration:none}
+.stw:hover{background:rgba(255,255,255,.2)}
+.sttags{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;margin:14px 0 4px;font-size:13px}
+.sttags i{font-style:normal;color:var(--sub);margin-right:3px}
+.sttags a{color:var(--ink)}
+.stvars{display:flex;gap:2px;overflow-x:auto;margin:18px 0 0;padding:0 2px;scrollbar-width:none;border-bottom:1px solid var(--line)}
+.stvars::-webkit-scrollbar{display:none}
+.stv{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 14px;border-radius:8px 8px 0 0;color:var(--sub);text-decoration:none;font-size:12px;max-width:190px}
+.stv span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.stv b{color:var(--ink);font-size:14px}
+.stv.on{background:rgba(255,255,255,.09);color:var(--ink);box-shadow:inset 0 2px 0 #ff6b8f}
+.stv:hover{background:rgba(255,255,255,.06)}
+.stsec{margin-top:24px}
+.sthd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.sthd h2,.sth2{font-size:19px;font-weight:700;margin:0 0 8px}
+.sthd h2{margin:0}
+.sthd .seg{background:rgba(255,255,255,.05);border-radius:6px;padding:3px}
+.sthd .seg .btn{border:0;background:transparent;border-radius:4px!important;margin:0;padding:6px 16px;width:auto;min-height:0}
+.sthd .seg .btn.on{background:rgba(255,255,255,.14);color:var(--ink);box-shadow:none}
+.stsrc{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-bottom:8px}
+.stsrc button{flex:0 0 auto;border:1px solid var(--line);background:transparent;color:var(--sub);border-radius:99px;padding:4px 11px;font:inherit;font-size:12px;cursor:pointer}
+.stsrc button.on{background:rgba(255,107,143,.16);border-color:#ff6b8f;color:var(--ink)}
+.stchart{background:rgba(0,0,0,.22);border:1px solid var(--line);border-radius:10px;padding:12px}
+.storder{display:flex;flex-wrap:wrap;gap:8px 24px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.stoi{display:flex;align-items:center;gap:8px;font-size:14px}.stoi b{font-size:16px}
+.stoic{opacity:.8}
+.stbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px}
+.stfbtn{border:0;border-radius:4px;background:rgba(255,255,255,.12);color:var(--ink);padding:8px 16px;font:inherit;cursor:pointer}
+.stcnt{color:var(--sub);font-size:13px}
+.stviews{margin-left:auto;display:flex;gap:2px}
+.stviews button{border:0;background:transparent;color:var(--sub);font-size:18px;padding:2px 6px;cursor:pointer;line-height:1}
+.stviews button.on{color:var(--ink)}
+.stsort{font-size:13px;color:var(--sub);display:flex;align-items:center;gap:6px}
+.stsort select{background:rgba(255,255,255,.1);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:6px 8px;font:inherit}
+.stsort select option{color:#111}
+.stfil{display:flex;flex-wrap:wrap;gap:10px 24px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:10px;font-size:13px}
+.stfil[hidden]{display:none}
+.stfty{display:flex;flex-wrap:wrap;gap:6px 14px}
+.stfpr input{width:90px;background:rgba(0,0,0,.25);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:5px 7px;font:inherit}
+.stlist.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.stlist.list{display:flex;flex-direction:column;gap:4px}
+.stt{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));border:1px solid var(--line);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.stt.t-sell{border-color:rgba(255,107,143,.35)}.stt.t-buy{border-color:rgba(92,200,255,.35)}.stt.t-trade{border-color:rgba(107,227,168,.3)}
+.stt.so{opacity:.6}
+.stth{display:flex;flex-direction:column;gap:1px;font-size:14px}
+.sttl{font-size:11px;color:var(--sub)}
+.stimg{display:flex;justify-content:center;padding:4px 0}
+.stimg .th.sm{width:78px}
+.stlab{font-size:12px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stft{display:flex;align-items:center;gap:8px;margin-top:auto}
+.stsub{font-size:11px;color:var(--sub);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stpr{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+.stbuy{background:linear-gradient(180deg,#8ab531,#5e8a12);color:#fff!important;font-size:12px;font-weight:700;padding:4px 12px;border-radius:2px;text-decoration:none;white-space:nowrap}
+.stbuy:hover{filter:brightness(1.12)}
+.stlist.list .stt{display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr) auto;align-items:center;gap:12px;padding:9px 12px}
+.stlist.list .stft{margin:0}
+.stlist.list .stsub{flex:0 1 auto;max-width:110px}
+@media(max-width:760px){
+.sthero{grid-template-columns:1fr;padding:18px 16px;gap:14px}
+.stpic .th.lg{width:min(220px,62vw)}
+.stname{font-size:21px}
+.stnow .bigprice{font-size:28px}
+.stact .stw{flex:1;justify-content:center;padding:10px}
+.sttags{justify-content:flex-start;gap:4px 14px}
+.sthd h2,.sth2{font-size:17px}
+.sthd .seg .btn{padding:6px 11px}
+.stlist.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.stlist.grid .stft{flex-wrap:wrap;justify-content:flex-end}.stlist.grid .stsub{flex:1 1 100%}.stlist.grid .stsub:empty{display:none}
+.stlist.list .stt{grid-template-columns:1fr;gap:4px}
+.stsort{width:100%}.stsort select{flex:1}
+.stviews{margin-left:auto}
+}
 </style>
 </head>
 <body>
@@ -1455,6 +1539,137 @@ renderBoxDetail=function(key){
   if(nd>=2){const a=bxSer(b,0);charts.push(new Chart(document.getElementById("bc"),{type:"line",data:{labels:DATES.map(d=>d.slice(5).replace("-","/")),datasets:[{data:a,borderColor:"#ffb36b",backgroundColor:"#ffb36b22",fill:true,borderWidth:2,pointRadius:2,tension:.25,spanGaps:true}]},
     options:{maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>yen(x.raw)}}},scales:{y:{ticks:{callback:v=>v>=10000?(v/10000)+"万":v.toLocaleString()},grid:{color:"rgba(255,255,255,.08)"}},x:{grid:{display:false}}}}}));}
 };
+
+// ================= カード個別ページ（Steamマーケット風） =================
+const ST_RANGES=[[7,"週"],[30,"月"],[365,"年"],[9999,"通算"]];
+let STL={types:null,min:"",max:"",sort:"asc",view:"grid",open:false};
+const varLabel=(x,c)=>{let s=x.name.slice(x.base.length).replace(/^[\s　]+/,"");s=s.replace(/[()（）]+/g," ").replace(/【|】/g," ").trim().replace(/\s+/g,"・");
+  if(!s)s="通常";if(x.pack!==c.pack)s+=` ・${x.pack.startsWith("promo")?"プロモ":x.pack.toUpperCase()}`;return s};
+function stListings(c){
+  const L=[];const add=o=>{if(o.price!=null)L.push(o)};
+  [["cm","cs","ci","状態A（美品）"],["ua","ka","ia","状態A-"],["ub","kb","ib","状態B"],["uc","kc","ic","状態C"],["cp","kp","ip","PSA10"]].forEach(([pf,kf,idf,lab])=>{
+    const pv=cur(c,pf);if(pv==null)return;const kv=cur(c,kf);
+    add({t:"sell",tl:"販売",shop:"カードラッシュ",lab,price:pv,sub:kv>0?`在庫 ${kv}枚`:"在庫なし",soldout:!(kv>0),url:crLink(c,idf),btn:"購入"})});
+  add({t:"buy",tl:"買取",shop:"メルカード秋葉原",lab:"買取",price:cur(c,"mb"),sub:/^(OP|ST|EB|PRB|P)\d*-\d{3}$/.test(c.id)?"型番で検索":"",url:"https://akihabara-cardshop.com/onepice-kaitori/",btn:"買取表",copy:/^(OP|ST|EB|PRB|P)\d*-\d{3}$/.test(c.id)?c.id:""});
+  const si=cur(c,"si");
+  if(si){add({t:"trade",tl:"取引相場",shop:"スニーカーダンク",lab:"状態A",price:cur(c,"sa"),sub:cur(c,"sn")!=null?`30日で${cur(c,"sn")}件`:"",url:"https://snkrdunk.com/apparels/"+si,btn:"見る"});
+    add({t:"trade",tl:"取引相場",shop:"スニーカーダンク",lab:"PSA10",price:cur(c,"sp"),sub:"",url:"https://snkrdunk.com/apparels/"+si,btn:"見る"})}
+  const e=FCARD&&c.ki>=0?FCARD[KEYS[c.ki]]:null;
+  if(e)[["y","Yahoo!フリマ"],["m","メルカリ"]].forEach(([s,l])=>{const v=e[s]||[];
+    add({t:"flea",tl:"フリマ相場",shop:l,lab:"売り切れの中央値",price:v[0],sub:v[1]?`直近${v[1]}件`:"",url:"",btn:""});
+    (v[2]||[]).forEach(([id,p,t,d])=>add({t:"sold",tl:"売り切れ",shop:l,lab:t||id,price:p,sub:d||"",url:fleaItemUrl(s,id),btn:"見る",nf:1}))});
+  if(c.ysell!=null||c.ybuy!=null){add({t:"ref",tl:"参考",shop:"遊々亭",lab:"販売（"+(c.pack==="op18"?"2026/11/22":YUYU_DATE)+"）",price:c.ysell,sub:"",url:"",btn:""});
+    add({t:"ref",tl:"参考",shop:"遊々亭",lab:"買取（"+(c.pack==="op18"?"2026/11/22":YUYU_DATE)+"）",price:c.ybuy,sub:"",url:"",btn:""})}
+  return L;
+}
+const ST_TYPES=[["sell","販売"],["buy","買取"],["trade","取引相場"],["flea","フリマ相場"],["sold","売り切れ出品"],["ref","参考"]];
+function stTiles(c,root){
+  const all=stListings(c);const types=STL.types||ST_TYPES.map(t=>t[0]);
+  const mn=+STL.min||0,mx=+STL.max||Infinity;
+  let L=all.filter(o=>types.includes(o.t)&&o.price>=mn&&o.price<=mx);
+  const ord=ST_TYPES.map(t=>t[0]);
+  L.sort(STL.sort==="asc"?(a,b)=>a.price-b.price:STL.sort==="desc"?(a,b)=>b.price-a.price:(a,b)=>ord.indexOf(a.t)-ord.indexOf(b.t)||a.price-b.price);
+  root.querySelector(".stcnt").textContent=`${L.length}件の価格が見つかりました`;
+  root.querySelector(".stlist").className="stlist "+STL.view;
+  root.querySelector(".stlist").innerHTML=L.length?L.map(o=>`<div class="stt t-${o.t}${o.soldout?" so":""}">
+    <div class="stth"><span class="sttl">${o.tl}</span><b>${esc(o.shop)}</b></div>
+    ${STL.view==="grid"?`<div class="stimg">${thumb(c,"sm")}</div>`:""}
+    <div class="stlab">${esc(o.lab)}</div>
+    <div class="stft"><span class="stsub">${esc(o.sub)}</span><span class="stpr">${yen(o.price)}</span>${o.url?`<a class="stbuy" href="${o.url}" target="_blank" rel="noopener${o.nf?" nofollow":""}"${o.copy?` data-copy="${esc(o.copy)}"`:""}>${o.btn}</a>`:""}</div></div>`).join(""):`<div class="empty">条件に合う価格がありません</div>`;
+  root.querySelectorAll("[data-copy]").forEach(a=>a.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(a.dataset.copy);toast("型番をコピーしました。買取表の検索欄に貼り付けてください")}catch(e){}}));
+}
+function renderCardV2(uid,free){
+  const c=BYUID[uid];if(!c){location.hash="cards";return}
+  const live=loadState==="ok"&&c.ki>=0,p=price(c),c7=chg(c,"cm",7),c30=chg(c,"cm",30),nd=DATES.length;
+  if(!ST_RANGES.some(r=>r[0]===DET.range))DET.range=30;
+  if(free)DET.f="cm";
+  const rel=DATA.filter(x=>x!==c&&x.base!==c.base&&x.pack===c.pack&&price(x)!=null).sort((a,b)=>(price(b)||0)-(price(a)||0)).slice(0,12);
+  const vars=DATA.filter(x=>x.base===c.base&&x.id===c.id).sort((a,b)=>(a.ver>b.ver)-(a.ver<b.ver)||a.porder-b.porder||(price(a)||0)-(price(b)||0)).slice(0,12);
+  const ch=(x,l)=>`<div class="stchg"><span>${l}</span><b class="${x?(x.diff>=0?"up":"down"):""}">${x?(x.diff>=0?"+":"")+x.pct.toFixed(1)+"%":"—"}</b></div>`;
+  const imgSrc=imgOf(c)?(/^fa-/.test(IMG[c.uid]||"")?`<a href="https://fullahead-onepiece-cardgame.com/shopdetail/${String(IMG[c.uid]).slice(3).padStart(12,"0")}/" target="_blank" rel="noopener">フルアヘッド</a>`:"公式カードリスト"):"";
+  const sell=!free&&c.ki>=0?[["cm","cs"],["ua","ka"],["ub","kb"],["uc","kc"]].map(([pf,kf])=>({p:cur(c,pf),k:cur(c,kf)})).filter(o=>o.p!=null&&o.k>0).sort((a,b)=>a.p-b.p)[0]:null;
+  const mb=!free?cur(c,"mb"):null;
+  app.innerHTML=`${statusNote()}<div class="crumb"><a href="#home">ホーム</a> &gt; <a href="#cards">カード一覧</a> &gt; <a href="#cards" data-pack="${c.pack}">${esc(c.set)}</a> &gt; ${esc(c.name)}</div>
+  <div class="sthero">
+    <div class="stpic">${thumb(c,"lg")}</div>
+    <div class="stinfo">
+      <h1 class="stname">${esc(c.name)}</h1>
+      <div class="stsetl"><span class="stico">${esc((c.pack.startsWith("promo")?"P":c.pack.toUpperCase().replace(/(\D+)0?(\d+)/,"$1$2")).slice(0,5))}</span><div><div>${esc(c.set||"プロモ")}</div><div class="foot">${esc(c.rar)} ・ ${esc(c.id)}</div></div></div>
+      <div class="stnow"><div class="foot">${live?(free?"相場（全ショップの中央値）":"相場（カードラッシュ 状態A）"):"参考価格（遊々亭・"+YUYU_DATE+"）"}</div><div class="bigprice">${yen(p)}</div>
+        <div class="stchgs">${ch(c7,"7日")}${ch(c30,"30日")}</div></div>
+      <div class="stact"><button class="stw" id="dc"><span>⊕</span> 比較に追加</button>${offUrl(c)?`<a class="stw" href="${offUrl(c)}" target="_blank" rel="noopener">公式カードリスト ↗</a>`:""}</div>
+    </div>
+  </div>
+  <div class="sttags"><span><i>型番:</i> ${esc(c.id)}</span><span><i>レアリティ:</i> ${esc(c.rar)}</span><span><i>収録:</i> ${esc(c.set||"プロモ")}</span><span><i>仕様:</i> ${c.ver==="sp"?"スーパーパラレル等":c.ver==="p"?"パラレル":"通常"}</span>${imgSrc?`<span><i>画像:</i> ${imgSrc}</span>`:""}</div>
+  ${IMGEST[c.uid]?`<p class="foot" style="text-align:center">同じ型番の別仕様の画像が表示されている可能性があります</p>`:""}
+  ${vars.length>1?`<div class="stvars">${vars.map(x=>`<a class="stv ${x===c?"on":""}" href="#card-${x.uid}"><span>${esc(varLabel(x,c))}</span><b>${yen(price(x))}</b></a>`).join("")}</div>`:""}
+  ${c.ki>=0?`<div class="stsec"><div class="sthd"><h2>相場の推移</h2><span class="seg">${ST_RANGES.map(([d,l])=>`<button class="btn ${DET.range===d?"on":""}" data-r="${d}">${l}</button>`).join("")}</span></div>
+    ${free?"":`<div class="stsrc">${[["cm","状態A"],["ua","A-"],["ub","B"],["uc","C"],["cp","PSA10"],["mb","買取"],["sa","スニダン"],["sp","スニダンPSA10"],["fc","フリマ"]].map(([f,l])=>`<button class="${DET.f===f?"on":""}" data-f="${f}">${l}</button>`).join("")}</div>`}
+    <div class="stchart">${nd>=2||DET.f==="sa"?`<div class="chartwrap"><canvas id="pc"></canvas></div>`:`<div class="empty">推移グラフは2日分以上のデータがたまると表示されます</div>`}</div></div>
+  ${free?"":`<div class="stsec"><h2 class="sth2">売買の目安：</h2><div class="storder">
+    <div class="stoi"><span class="stoic">🛒</span>${sell?`<b>${yen(sell.p)}</b>から販売中（カードラッシュ・在庫${sell.k}枚）`:"在庫のある販売はありません"}</div>
+    <div class="stoi"><span class="stoic">💴</span>${mb!=null?`<b>${yen(mb)}</b>で買取中（メルカード秋葉原）`:"買取価格の記録はありません"}</div></div></div>
+  <div class="stsec stls"><div class="stbar"><button class="stfbtn" id="stf">フィルター</button><span class="stcnt"></span>
+    <span class="stviews"><button data-v="list" class="${STL.view==="list"?"on":""}" aria-label="リスト表示">☰</button><button data-v="grid" class="${STL.view==="grid"?"on":""}" aria-label="グリッド表示">▦</button></span>
+    <label class="stsort">並べ替え条件：<select id="sts"><option value="asc">価格（低～高）</option><option value="desc">価格（高～低）</option><option value="type">種類順</option></select></label></div>
+    <div class="stfil" ${STL.open?"":"hidden"}><div class="stfty">${ST_TYPES.map(([t,l])=>`<label><input type="checkbox" value="${t}" ${(STL.types||ST_TYPES.map(x=>x[0])).includes(t)?"checked":""}> ${l}</label>`).join("")}</div>
+      <div class="stfpr">価格 <input id="stmin" inputmode="numeric" placeholder="¥" value="${esc(STL.min)}"> - <input id="stmax" inputmode="numeric" placeholder="¥" value="${esc(STL.max)}"></div></div>
+    <div class="stlist"></div>
+    <p class="foot">状態はカードラッシュの基準です。状態A＝状態表記なし（小さな白カケ・擦れ程度）、A-＝小さな傷・光沢痕など、B＝目立つ白カケ・凹み・軽い折れなど、C＝折れ跡が残る・全体に傷が多い。フリマ相場は相場5,000円以上のカードだけを対象に3日に1回集計し、タイトルに型番が入った1枚の売り切れ出品（鑑定品・まとめ売り・傷あり・海外版を除く）のうち同じ仕様と判定できたものの中央値です。</p></div>
+  <div class="stsec"><h2 class="sth2">直近の相場</h2><div class="panel" style="padding:0;overflow:auto"><table><thead><tr><th>日付</th><th>A（美品）</th><th>A-</th><th>B</th><th>C</th><th>PSA10</th><th>買取</th><th>スニダン</th><th>在庫(A)</th></tr></thead><tbody>
+  ${DATES.map((d,i)=>i).reverse().slice(0,14).map(i=>{const g=f=>SER[f][i]?SER[f][i][c.ki]??null:null;const am=SER.ua[i]?g("ua"):g("cu");return `<tr><td>${DATES[i]}</td><td>${yen(g("cm"))}</td><td>${yen(am)}</td><td>${yen(g("ub"))}</td><td>${yen(g("uc"))}</td><td>${yen(g("cp"))}</td><td>${yen(g("mb"))}</td><td>${yen(g("sa"))}</td><td>${g("cs")??"—"}</td></tr>`}).join("")||`<tr><td colspan="9">データなし</td></tr>`}
+  </tbody></table></div></div>`}
+  ${free?upsell("ショップ別の価格・販売履歴は有料プランで見られます","カードラッシュの状態別価格と在庫、メルカードの買取価格、スニダンの取引相場、フリマの売却相場と参考にした出品、毎日の履歴をすべて確認できます。"):""}`
+  :`<div class="panel" style="margin-top:14px"><p class="foot" style="margin:0">このカード（プロモ・ドン!!カードなど）は毎日の価格取得の対象外です。遊々亭の参考価格（${YUYU_DATE}）：販売 ${yen(c.ysell)} ／ 買取 ${yen(c.ybuy)}</p></div>`}
+  ${rel.length?`<div class="stsec"><h2 class="sth2">同じ弾の人気カード</h2><div class="rel">${rel.map(x=>`<a href="#card-${x.uid}">${thumb(x,"sm")}<span>${esc(x.name)}<b>${yen(price(x))}</b></span></a>`).join("")}</div></div>`:""}`;
+  if(free)bindUpsell();
+  const pk=app.querySelector("[data-pack]");if(pk)pk.onclick=e=>{e.preventDefault();LIST.pack=pk.dataset.pack;location.hash="cards"};
+  document.getElementById("dc").onclick=()=>{let s=LS.get("opc-cmp",[]);if(!s.includes(uid)){s=[...s,uid].slice(-3);LS.set("opc-cmp",s)}location.hash="compare"};
+  app.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{DET.range=+b.dataset.r;renderDetail(uid)});
+  app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{DET.f=b.dataset.f;renderDetail(uid)});
+  const ls=app.querySelector(".stls");
+  if(ls){const sel=ls.querySelector("#sts");sel.value=STL.sort;sel.onchange=()=>{STL.sort=sel.value;stTiles(c,ls)};
+    ls.querySelector("#stf").onclick=()=>{STL.open=!STL.open;ls.querySelector(".stfil").hidden=!STL.open};
+    ls.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{STL.view=b.dataset.v;ls.querySelectorAll("[data-v]").forEach(x=>x.classList.toggle("on",x===b));stTiles(c,ls)});
+    ls.querySelectorAll(".stfty input").forEach(i=>i.onchange=()=>{STL.types=[...ls.querySelectorAll(".stfty input:checked")].map(x=>x.value);stTiles(c,ls)});
+    ["stmin","stmax"].forEach(id=>{const i=ls.querySelector("#"+id);i.oninput=()=>{STL[id==="stmin"?"min":"max"]=i.value.replace(/[^\d]/g,"");stTiles(c,ls)}});
+    stTiles(c,ls)}
+  if(!free&&c.ki>=0&&!FCARD)loadFleaCards().then(()=>{if(location.hash==="#card-"+uid)renderDetail(uid)});
+  if(!free&&c.ki>=0&&DET.f==="sa"&&!SNKH){loadSnkHist().then(()=>{if(location.hash==="#card-"+uid)renderDetail(uid)});}
+  let snkSer=null;
+  if(!free&&c.ki>=0&&DET.f==="sa"&&SNKH){const m=new Map((SNKH[KEYS[c.ki]]||[]));DATES.forEach((d,i)=>{const v=SER.sa[i]?SER.sa[i][c.ki]:null;if(v!=null)m.set(d,v)});
+    const ds=[...m.keys()].sort();if(ds.length){const cut=new Date(Date.now()-DET.range*864e5).toISOString().slice(0,10);const use=ds.filter(d=>DET.range>=9999||d>=cut);snkSer={lab:use.map(d=>d.slice(2).replace(/-/g,"/")),val:use.map(d=>m.get(d))}}}
+  if(c.ki>=0&&(nd>=2||snkSer)&&document.getElementById("pc")){
+    const n=Math.min(DET.range,nd),lab=snkSer?snkSer.lab:DATES.slice(-n).map(d=>d.slice(5).replace("-","/"));
+    const col={cm:"#ff5c8a",ua:"#c9b8ff",ub:"#ffb36b",uc:"#9aa4b5",cp:"#f5c451",mb:"#5cc8ff",sa:"#6be3a8",sp:"#ffd27a",fc:"#ffa36b"}[DET.f]||"#ff5c8a";
+    const stockF={cm:"cs",ua:"ka",ub:"kb",uc:"kc",cp:"kp"}[DET.f];
+    const ds=[{type:"line",data:snkSer?snkSer.val:series(c,DET.f).slice(-n),borderColor:col,backgroundColor:col+"22",fill:true,borderWidth:2,pointRadius:(snkSer?snkSer.val.length:n)<=31?2:0,tension:.25,spanGaps:true,yAxisID:"y",order:1}];
+    const vol=!free&&!snkSer&&stockF?series(c,stockF).slice(-n):null;
+    if(vol&&vol.some(v=>v!=null))ds.push({type:"bar",label:"在庫",data:vol,backgroundColor:"rgba(92,140,220,.35)",borderWidth:0,yAxisID:"y2",order:2,barPercentage:.9,categoryPercentage:1});
+    const hasVol=ds.length>1;
+    charts.push(new Chart(document.getElementById("pc"),{data:{labels:lab,datasets:ds},
+      options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.dataset.label==="在庫"?"在庫 "+(x.raw??"—")+"枚":yen(x.raw)}}},
+      scales:{y:{title:{display:hasVol,text:"価格",color:"#8fd18f"},ticks:{callback:v=>v>=10000?(v/10000)+"万":v.toLocaleString()},grid:{color:"rgba(255,255,255,.08)"}},
+        y2:{display:hasVol,position:"right",beginAtZero:true,title:{display:true,text:"在庫",color:"#7fb0ff"},grid:{display:false},ticks:{precision:0}},
+        x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}}));
+  }
+}
+renderDetail=function(uid){renderCardV2(uid,!PAID())};
+
+// BOX詳細：このBOXのレアカード一覧は無料でも表示
+function bxCardsHtml(key,free){
+  if(!free){const bv=c=>{const m=cur(c,"mb");return m!=null?[m,0]:c.ybuy!=null?[c.ybuy,1]:null};
+    const L=DATA.filter(c=>c.pack===key).map(c=>({c,b:bv(c)})).filter(o=>o.b&&o.b[0]>=1000).sort((x,y)=>y.b[0]-x.b[0]);
+    if(!L.length)return "";const ref=L.some(o=>o.b[1]);
+    return `<h3 class="sh">このBOXの買取1,000円以上のカード<span class="foot">（${L.length}種・メルカード買取価格の高い順）</span></h3><div class="panel bxcards">${L.map((o,i)=>`<div class="mini" data-uid="${o.c.uid}"><div class="rk ${i<3?"r"+(i+1):""}">${i+1}</div>${thumb(o.c,"sm")}<div><div class="nm">${esc(o.c.name)}</div><div class="sub">${esc(o.c.id)} ・ ${esc(o.c.rar)}</div></div><div class="pr">${yen(o.b[0])}${o.b[1]?"<small>*</small>":""}<br><span class="badge flat">販売 ${yen(price(o.c))}</span></div></div>`).join("")}</div>${ref?`<p class="foot">* メルカードの買取価格がまだ無いカードは遊々亭の買取価格（参考）を表示しています。</p>`:""}`}
+  const L=DATA.filter(c=>c.pack===key&&price(c)!=null&&price(c)>=1000).sort((x,y)=>price(y)-price(x));
+  if(!L.length)return "";
+  return `<h3 class="sh">このBOXから出る1,000円以上のカード<span class="foot">（${L.length}種・相場の高い順）</span></h3><div class="panel bxcards">${L.map((c,i)=>{const d=chg(c,"cm",7);return `<div class="mini" data-uid="${c.uid}"><div class="rk ${i<3?"r"+(i+1):""}">${i+1}</div>${thumb(c,"sm")}<div><div class="nm">${esc(c.name)}</div><div class="sub">${esc(c.id)} ・ ${esc(c.rar)}</div></div><div class="pr">${yen(price(c))}${d?`<br><span class="badge ${d.diff>=0?"up":"down"}">${d.diff>=0?"+":""}${d.pct.toFixed(1)}%</span>`:""}</div></div>`}).join("")}</div>`;
+}
+{const _bd=renderBoxDetail;renderBoxDetail=function(key){_bd(key);if(PAID()||!BYBOX[key])return;
+  const h=bxCardsHtml(key,true);if(!h)return;const up=app.querySelector(".upsell");const w=document.createElement("div");w.innerHTML=h;
+  const frag=document.createDocumentFragment();[...w.childNodes].forEach(n=>frag.appendChild(n));
+  if(up)up.before(frag);else app.appendChild(frag);bindCards(app)}}
 
 render();initAuth().then(loadDb);
 
